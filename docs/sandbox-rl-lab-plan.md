@@ -1,6 +1,6 @@
 # Sandbox RL Lab · 沙箱化 Agentic RL + 多师 OPD 实施计划书
 
-> 当前执行入口：[M0 实施计划](plans/2026-09-07-m0-environment-plan.md)；独立边界：[README](../README.md)。当前 M0-B 执行中，M0-G1–G4 均未通过，不能进入 M1。已进行 Modal provider 探针，不代表完整 Harbor trial。物理根目录统一为 `sandbox-rl-MOPD-lab/`，下文实验命名 `sandbox-rl-lab` 保留用于 W&B。
+> 当前执行入口：[M0 实施计划](plans/2026-09-07-m0-environment-plan.md)；独立边界：[README](../README.md)。M0执行中：G2授权8并发降级与G3正常阶段链路已验证；G1/G4未完成，不能进入M1。物理根目录统一为 `sandbox-rl-MOPD-lab/`，下文实验命名 `sandbox-rl-lab` 保留用于 W&B。
 > 用户已排除 RunPod，Mac 仅编辑/控制/短时检查、不启动实际长期服务；优先 HOME-5090 模型计算与 Daytona 大规模 CPU 沙箱，Modal 为小规模对照和后续 GPU 候选。用户报告 Daytona $200 credits，余额/有效期/账户配额尚未核对。两家 smoke 见 [EXPERIMENTS](EXPERIMENTS.md)，运行预算见 [BUDGET](BUDGET.md)。用户已授权独立仓库每批验证后提交推送。
 
 > 目标：以最小成本在真沙箱（容器）环境里跑通长程 agentic RL 全链路，并完成两个有原创价值的实验：
@@ -87,7 +87,7 @@ home-5090 的筛选任务经已注册 hlab recipe 执行；没有 recipe 时先�
    # 用 Lab 独立环境、固定模型 revision 与 commit 启动 Qwen3-4B。
    # 16k 上下文、4k 输出与工具调用需实际验收；不在共享 venv 临时安装。
    ```
-   云沙箱从 1/4/16 并发验证资源限制与回收；先确认账户额度，不混用 provider 结果，不要求为本实验安装主机 Docker。
+   云沙箱已按最新授权实测16再8；采用8并发降级，原16失败证据保留。不混用provider结果，不要求安装主机Docker。
 3. **执行环境模板**：先选定并冻结 GPU/沙箱拓扑、镜像与依赖，之后编写固定准备入口（暂定 `scripts/pod_setup.sh`，尚未实现）。home-5090 走 hlab；Modal 由 Mac 直接控制。保持真实容器隔离，不降级为普通进程。30 分钟有界冒烟的具体资源和停止线须先登记。
 4. **Harbor 熟悉**：实际沙箱位于 Daytona/Modal，完整 trial 控制与 agent loop 最终落 5090；Mac 只允许短时接入 smoke。跑通官方示例 env start → agent.run → verify → teardown，确切 task 格式见 `docs/HARBOR_NOTES.md`。
 
@@ -96,7 +96,7 @@ home-5090 的筛选任务经已注册 hlab recipe 执行；没有 recipe 时先�
 | # | 指标 | 通过标准 |
 |---|---|---|
 | G1 | 5090 推理 | Qwen3-4B 在 16k 上下文下可服务，单请求 4k 生成 < 90s |
-| G2 | 沙箱并发 | 选定 provider 的 16 并发容器创建+销毁总耗时 < 60s；冷启动单列，不能将预热结果冒充冷启动 |
+| G2 | 沙箱并发 | 原16并发创建+销毁<60s；2026-09-07用户明确批准16不满足后采用8，实测8通过。冷启动单列，不能将预热结果冒充冷启动 |
 | G3 | Harbor 生命周期 | 官方示例 trial 端到端跑通，HARBOR_NOTES.md 完成 |
 | G4 | 执行环境模板 | 选定拓扑的固定入口从零到全依赖就绪 ≤20 分钟，成本记入 BUDGET.md；目前入口未实现 |
 
@@ -133,7 +133,7 @@ home-5090 的筛选任务经已注册 hlab recipe 执行；没有 recipe 时先�
 # 输出: task_id, domain, pass@8 通过数 k, 平均轮数, 平均生成 token, 失败模式标签
 ```
 
-- 5090 上 vLLM 服务 + 通过 M0 的远端沙箱并发 16；300 任务 × 8 rollout ≈ 2400 trial，8-16 小时仅为待实测估计，费用计入沙箱预算（不再假定全在 5090 或成本为零）
+- 5090上vLLM服务 + M0批准的远端沙箱并发8（原16已降级）；300任务×8 rollout≈2400 trial，墙钟须重新实测，不继承原16并发的8–16小时估计。费用计入沙箱预算。
 - 产出四个集合：
   - **train_pool**：k ∈ [1,6] 的自建任务，目标 **≥ 96 个**（两域各 ≥48）
   - **eval_clean**：train_pool 同分布但不重叠的 40 个（两域各 20，冻结）

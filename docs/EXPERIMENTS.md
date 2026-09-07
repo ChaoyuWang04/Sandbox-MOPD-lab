@@ -1,5 +1,24 @@
 # 实验记录
 
+## M0-G3 · Harbor正负对照与正常阶段隔离 PASS
+
+- 固定上游commit `4407eb5227a2ff4f0d3f16b2eb48849382fdf276` 的hello-world，源码在tasks/m0-hello-world，许可证与PROVENANCE保留。六个行为文件对照官方raw：三个完全相同、三个只有空白差异。
+- 本地首次构造失败：Daytona适配器不支持候选配置的guarantee；未创建云资源。沿真实资源校验路径改为request，增加离线回归；真实沙箱阶段另读cgroup，不将request当硬保证。
+- Lab适配器在最终_create_sandbox给image/snapshot请求补ttl_minutes=5、public=False。独立审阅发现上游创建层有额外重试；测试先观察3次而非1次，再显式stop_after_attempt(1)，保留上游取消保护与ID捕获。三个本地测试通过。
+- NOP `mopd-g3-nop-deeca65f`：54.81秒，reward=0，exception_info=null；CTRF两项测试确实因hello.txt不存在失败。agent START/END均实际执行私有路径不存在与memory.max=1073741824、cpu.max="100000 100000"断言，exit0。沙箱32d83671-6adf-49b5-af36-36208fd2db80独立get NOT_FOUND、标签列表空。退出时上游客户端atexit跨事件循环清理抛CancelledError；不影响已落盘奖励，后续oracle在原事件循环显式关闭客户端。
+- Oracle `mopd-g3-oracle-6b3c4a84`：36.99秒，reward=1，exception_info=null；agent START私有路径与cgroup断言exit0。沙箱ef49d15a-f848-4ced-af28-1ff15df47c42独立get NOT_FOUND、标签列表空。NOP与oracle间新增LICENSE/PROVENANCE导致task目录checksum不同，六个行为文件未改；不得比较该checksum为完全一致。
+- 两个trial的result.json、config.json、lock.json、verifier/ctrf.json、reward.txt、test-stdout.txt和oracle轨迹在artifacts/m0/harbor各run目录。官方verifier在线安装，实际Python3.14.0；此结果不证明G4全部依赖冻结。
+- 隔离边界：NOP正常agent阶段没有私有材料；oracle按定义会读取solution，verifier随后上传tests到同一沙箱。未证明恶意后台进程跨阶段不可读，M1前不得把这种阶段检查当强对抗隔离。
+
+## M0-G2 · 8并发授权降级 PASS，原16门槛未通过
+
+2026-09-07用户批准直接测16，不满足后测8，无需修改账户权限。每个资源与停止方案见BUDGET的G2预注册。AsyncDaytona同时发起所有create，全部返回后再同时delete(wait=True)，不是滚动复用少量沙箱。
+
+- 16批次 `mopd-g2-b4c1ab045421`：10创建成功，6个DaytonaBadRequestError；全部创建请求结束7.36秒，至全部成功对象删除返回10.48秒。只保留异常类别，不能据此确认为配额拒绝。
+- 8批次 `mopd-g2-f3e3514e1e9a`：8/8成功，全部就绪3.15秒，至全部删除返回4.97秒，低于60秒。按用户明确授权采用8并发，不改写原16成功率。
+- 两批delete后即时list仍返回部分旧条目；后续独立客户端按精确标签查询均为空，确认18个实际创建对象全部回收。计时不含延迟列表复核；镜像此前用过，缓存状态未知，不声称冷启动性能。
+- 证据 artifacts/m0/daytona-concurrency.json（实测输出整理）。无GPU、未提额/充值/改权限。完整M0仍须G1/G3/G4。
+
 ## Daytona 认证与单沙箱 · PASS（不是完整 M0）
 
 - 用户已在本地受控 secrets/.env 配置 API key，并要求完整推进 M0。未打印、提交或上传该 key；它仅用于控制端认证，未注入沙箱。
@@ -7,14 +26,13 @@
 - 沙箱 `f02d8061-20ad-4a2f-b5a3-000be5734aba`：python:3.12-slim，1 vCPU、1 GiB、3 GiB 磁盘、5 分钟 TTL、1 分钟空闲停止、ephemeral、禁止出站网络。创建并就绪 3.09 秒，到 exec 结果 3.87 秒；文件字节往返 PASS，正例0/负例1，exec exit0。
 - cgroup 实读 memory.max=1073741824、cpu.max="100000 100000"，配置读数符合本次1 GiB/1 CPU；不是OOM故障注入测试，也不推广为全部provider已认证。
 - delete(wait=True) PASS，独立 get 返回 NOT_FOUND。没有留下本次沙箱。
-- 组织额度查询：官方HTTP接口返回401，经成功认证SDK底层 OrganizationsApi 复查仍为 UnauthorizedException。不能确认账户tier/余额/16并发许可；不调整权限或强行创建16个沙箱。
+- 组织额度查询：官方HTTP接口返回401，经成功认证SDK底层 OrganizationsApi 复查仍为 UnauthorizedException。账户tier/余额仍未知；后续按用户新授权完成16/8直接试验，见G2结果，不再要求组织查询权限作为前置。
 - 证据：artifacts/m0/daytona-auth-smoke.json。首次成功不代表冷/热性能统计、G2或G3通过。
 
 ## M0 后续前置与已准备配置
 
 - G1/G4：5090只读检查时主内存available=28531146752 bytes、显存free=31435 MiB、利用率0%；仅见sunshine计算进程。资源时点不等于预约，未启动任何GPU工作。hlab仍无Lab项目。共享设施协作者确认需要精确commit的source checkout落位、固定prepare入口、评审后的controller配置和上线授权；不能临时SSH安装后冒充受控接入。
-- G3：官方Harbor v0.22.0 annotated tag已解析为commit `4407eb5227a2ff4f0d3f16b2eb48849382fdf276`，六个hello-world文件读取成功。候选配置 `configs/m0-harbor-oracle.json` 固定该源码，1次/1并发/无job重试，资源覆盖为1CPU/1GiB/3GiB。原示例为2GiB/10GiB，覆盖不是任务内容修改。
-- 此配置尚未执行：官方verifier需要apt/curl/uvx下载依赖，不能继承前一smoke的全禁网；Harbor 0.22.0适配器提供auto-stop/auto-delete但未暴露Daytona新wall-clock TTL，不能静默将kwargs当作已生效TTL。先补齐有界执行/清理设计、固定依赖和缓存路径，再运行完整G3。官方oracle能读参考解，不替代普通agent的隔离负检查。
+- G3的已执行结果、配置修正与真实隔离范围见本页顶部；不再将旧候选配置当未执行前置。
 
 ## 双平台功能 smoke · 预注册
 

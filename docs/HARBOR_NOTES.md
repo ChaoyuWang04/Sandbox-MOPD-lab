@@ -1,14 +1,16 @@
 # Harbor 与依赖核对
 
-核对日期：2026-09-07。已完成官方来源检查与 Mac Harbor CPU 环境安装/锁检查，尚未执行 trial。上游 main 和网页可变化，执行前必须钉住 commit、模型 revision 与镜像 digest。
+核对日期：2026-09-07。Daytona8并发授权降级和官方Harbor NOP/oracle完整trial已验证，详情只维护在EXPERIMENTS。G1/G4未完成。上游main与网页会变化，不从历史调查直接继承运行身份。
 
 ## 任务格式与生命周期
 
 [Harbor Task Structure](https://www.harborframework.com/docs/tasks) 使用 `instruction.md`、`task.toml`、`environment/`，并支持 `solution/` 和 `tests/`。Docker 环境可使用 Dockerfile、Compose 或配置中的预构建镜像。原总计划的 prompt.md/setup.sh/verify.py 只代表指令、初始化、判分职责，不能当作实际文件名约定。
 
-[官方教程](https://www.harborframework.com/docs/tasks/task-tutorial) 提供任务环境启动示例。正式 M0-G3 应先固定版本，查看该版本 CLI help，再跑官方示例和保存结果；本轮没有 trial 通过证据。
+[官方教程](https://www.harborframework.com/docs/tasks/task-tutorial) 提供任务环境启动示例。当前采用固定commit的hello-world，任务来源与差异见tasks/m0-hello-world/PROVENANCE.md；本地固定任务路径避免Harbor默认写HOME缓存。
 
-任务的私有判分脚本必须在 agent 阶段不可见。不得把 tests/、solution/、宿主机目录或 Docker socket 暴露给 agent。需用实际访问失败的负向检查证明隔离，不能从目录名推断。判分步骤必须明确如何读取 agent 终态；奖励与 teardown 都须落文件。
+普通agent阶段的私有判分脚本必须不可见；oracle是读取参考解的特殊正对照。NOP实际START/END均验证/tests和/solution不存在。Harbor随后将tests上传同一环境，这是阶段隔离，不是对恶意后台进程的强安全保证；宿主机目录、秘密和Docker socket始终不得暴露。奖励、判分轨迹和回收证据见EXPERIMENTS。
+
+Lab适配器 lab_runtime/daytona.py 使用0.22.0最终_create_sandbox边界补5分钟TTL，并用上游tenacity retry_with关闭创建重试；不修改已安装包。CPU/memory策略为Daytona支持的request，实际cgroup另测；不能沿用Modal的guarantee。单元测试覆盖真实客户端调用边界的TTL和失败只调用一次。
 
 ## 依赖与真实接口
 
@@ -20,7 +22,7 @@
 | SkyRL | [安装说明](https://docs.skyrl.ai/docs/getting-started/installation)：CUDA 13.0、驱动 r580+，推荐 Ray 2.57.0/Python 3.12；有对应 FSDP 镜像 | 镜像未拉取、digest 未固定 |
 | SkyRL 依赖文件 | [main pyproject](https://github.com/NovaSky-AI/SkyRL/blob/main/pyproject.toml) 的 raw 请求仅收 4077/21017 bytes 后超时；片段含 Ray 2.57.0、vLLM 0.28.0、Torch 2.11.0 条目 | 不完整，不能据此断定组合兼容；重取完整文件后按 extra 检查 |
 | Mercor recipe | [官方仓库](https://github.com/Mercor-Intelligence/ApexAgents-SkyRL-Recipe) 可查到；raw pyproject 请求连接超时 | commit、依赖约束待取回 |
-| Qwen | [官方模型页](https://huggingface.co/Qwen/Qwen3-4B) 可访问 | 未取权重，revision 和模板参数待固定 |
+| Qwen | [官方模型页](https://huggingface.co/Qwen/Qwen3-4B) 与模型API | 未取权重；本轮API revision=1cfa9a7208912126459214e8b04321603b3df60c，未部署 |
 
 依赖“最新版”和“能一起安装”是两项检查。下一阶段需取回完整上游配置及锁文件，确定兼容的 extra、模型模板与 LoRA 路径，再生成 Lab 自己的环境。父项目的 Torch/verl 锁不得直接复制。
 
@@ -34,7 +36,7 @@
 |---|---|---|---|
 | home-5090 vLLM + 本机 Docker 沙箱 | Linux GPU 可见；Harbor 有 Docker provider | Docker 未检出，且当前不要求共享设施为本实验安装 | 非当前首选 |
 | home-5090 vLLM + Modal Sandbox | Harbor 原生 Modal 环境，平台支持 exec、文件操作、终止 | Mac 已认证与创建，但 exec/清理 RPC 有失败；服务器 API 通路未验 | 小规模对照、备用 |
-| home-5090 vLLM + Daytona | SDK认证、单沙箱exec/正负判据/cgroup读数/删除均已验证 | 组织额度查询无权限，16并发与完整Harbor trial未验 | 大规模 CPU 沙箱首选，先过 M0 |
+| home-5090 vLLM + Daytona | SDK、8并发、Harbor正负对照与cgroup/回收已验证 | 5090模型与从零部署未完成；16原门槛失败 | CPU沙箱首选，按批准采用8并发 |
 | Modal GPU + Modal Sandbox | GPU 与 Sandbox 分开由同一平台管理 | 需新 Lab 镜像/Volume、完整依赖、容量和端到端 trial 认证 | M2 训练候选，避免要求家庭服务器向公网开放工具端口 |
 
 [Harbor Core Concepts](https://www.harborframework.com/docs/core-concepts) 明确 Modal、Daytona 等环境共用 BaseEnvironment。[Getting Started](https://www.harborframework.com/docs/getting-started) 给出 `--env daytona` 的调用方式。不能把 provider 名存在写成当前项目已经接通。
@@ -51,7 +53,7 @@ Modal 与 Daytona 都提供远端沙箱，不替代 SkyRL 或 Harbor。Modal 同
 
 [Modal VM Sandbox](https://modal.com/docs/guide/vm-sandboxes) 说明默认 gVisor 与完整 VM 的区别；不能要求默认隔离环境暴露宿主机 cgroup，先前 cgroup 路径缺失不是限额无效的证明。改用 VM 是额外选型，不为读到一个文件擅自切换。
 
-[Daytona Sandboxes](https://www.daytona.io/docs/en/sandboxes/) 提供 wall-clock TTL、auto-stop、ephemeral/auto-delete；停止与删除不同，必须防止保留磁盘持续计费。[Daytona Limits](https://www.daytona.io/docs/en/limits/) 公布 Tier 1 总计 10 vCPU/20 GiB，16 个各 1 vCPU 并发需要更高额度；账户实际 tier 未查询。Modal 的 physical CPU core 与 Daytona vCPU 不应视为相同算力，同名规格不能直接做性能归因。
+[Daytona Sandboxes](https://www.daytona.io/docs/en/sandboxes/) 提供 wall-clock TTL、auto-stop、ephemeral/auto-delete；停止不等于删除。[Daytona Limits](https://www.daytona.io/docs/en/limits/)本轮页面的两张Tier1表内存分别写10/20GiB，CPU均10vCPU、磁盘30GiB；不能据此确定账户额度，实际16/8结果见EXPERIMENTS。Modal physical core与Daytona vCPU不等价。
 
 ## home-5090 控制层实查
 
@@ -87,7 +89,7 @@ Lab 已按用户授权独立 Git 管理；hlab 只同步 commit，正式接入�
 
 已与 interviewprep 的“服务器改造”任务直接核对（任务 ID `01a06a06-efd0-7a62-99cd-454678f517c7`）：共享设施只考虑通用健康检查语义小修与固定 recipe，不安装 Docker、不处理 OASIS unit、不增加 Harbor/RL 控制器功能。对方确认安装版严格 preflight 会拒绝 degraded，但普通 plan/submit/status/logs/cancel 不调用该 preflight；不得将 degraded 一概写成所有命令不可用。接受 degraded 并保留警告的修正仍需测试、评审和部署批准，尚未上线。
 
-无容器后端的 CPU 检查仅验证安装/格式，不是 oracle trial。用户新增 Mac 资源边界后，取消本地 Docker trial，转向 Modal 单沙箱；home-5090 承担模型服务，不因本实验强行安装主机设施。已执行一次批准的 Modal provider 验证并确认停止，完整 Harbor trial 尚未执行。三端预算只维护在 BUDGET。
+无容器后端的CPU检查仅验证安装/格式；完整Harbor trial已在Daytona执行。Mac不启动本地容器；home-5090拟承担模型服务，不因本实验安装主机Docker。三端预算只维护在BUDGET。
 
 已安装 Harbor 官方 Modal extra，锁定 SDK 1.5.5，并补齐其官方 api-proxy-support extra。真实 `ModalEnvironment` 对象离线检查显示：默认 memory AUTO 返回标量请求，并非硬上限；显式 CPU/memory `guarantee` 分别返回 `(1,1)`、`(1024,1024)`，sandbox timeout 设为 300 秒。环境配置在 `configs/modal-m0-environment.json`，只是 Harbor EnvironmentConfig 片段，不是完整 job，也不证明云端 cgroup 已生效。Harbor 的 task/override CPU 字段只接受整数，0.5 被验证器拒绝；用户已确认 1 核规格。
 
@@ -97,6 +99,6 @@ Lab 已初始化独立 Git，父仓库忽略整个目录，远端为 ChaoyuWang0
 
 已安装源码的 `harbor/agents/oracle.py` 明确把 solution 上传到 `/solution`；oracle 正例不能证明普通模型 agent 看不到参考解。wheel 自带 template-task 的 schema 1.4 能解析，但 solve/test 是占位内容，不能当可判分的完整官方示例。
 
-候选 provider 用相同单容器任务做 oracle 正例、故意错误负例、私有 verifier 不可见检查、文件回读、超时与资源回收，先 1 后 4 再 16 并发，记录冷/热启动、每次 exec、存活时间和账单。普通 timeout/退出验证与 M3 主动故障注入分开。任何一臂不满足隔离或回收都停止晋级。
+Daytona采用已批准的8并发降级，16原目标未满足；当前功能正负对照见EXPERIMENTS。冷启动统计、账单及强对抗隔离仍须分别认证。普通timeout/退出与M3主动故障注入分开，任何一臂不满足适用隔离或回收门槛都停止晋级。
 
 M3 三个臂必须固定同一 provider、镜像、区域与资源；换 provider 另做系统对照。平台 stop/terminate 与 Docker kill 的错误表现可能不同，要核对“工具超时、沙箱死亡、verifier 假阴性”的实际观察字段后再冻结注入协议。

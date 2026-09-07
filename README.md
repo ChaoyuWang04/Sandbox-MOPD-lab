@@ -4,7 +4,7 @@
 
 本目录独立 Git 跟踪，父仓库通过 `/sandbox-rl-MOPD-lab/` 忽略整个目录；不是 submodule。GitHub 仓库为 https://github.com/ChaoyuWang04/Sandbox-MOPD-lab ，origin 使用 HTTPS（本次 SSH 公钥认证失败，HTTPS refs 查询成功）。用户已授权每批完成并验证后提交、推送本仓库，不包含父仓库改动。原始 artifacts 保留本地，远程文档中的相应路径表示本地证据，不保证克隆后存在。
 
-独立的容器 Agentic RL 与多教师在线蒸馏实验。当前进入 M0-B：独立 CPU 环境、Harbor 接口验证与最小远端接入准备；已进行 Modal CPU 沙箱探针，未运行 GPU，完整 M0 尚未通过。
+独立的容器 Agentic RL 与多教师在线蒸馏实验。M0执行中：Daytona授权8并发降级与Harbor正负对照/正常阶段隔离已验证，沙箱全部回收；G1的5090推理与G4从零部署尚未完成。未运行GPU，不能进入M1。
 
 ## 入口与状态
 
@@ -32,7 +32,7 @@
 | `docs/` | 总计划、当前实施计划、实验与预算账本 |
 | `tasks/` | Harbor 任务源码、切分清单；运行实例进入 data/ |
 | `recipe/`、`opd/` | 后续 RL 集成与蒸馏源码；当前只预留目录 |
-| `scripts/`、`tests/` | 后续固定入口和验收；当前未写训练程序 |
+| `lab_runtime/`、`scripts/`、`tests/` | Lab有界provider适配与测试；当前未写训练程序 |
 | `secrets/` | `.env`，不提交、不输出到日志 |
 | `models/`、`data/`、`checkpoints/` | 模型、运行数据和训练产物，不提交 |
 | `cache/`、`logs/`、`artifacts/` | 缓存、日志、机器证据，不提交 |
