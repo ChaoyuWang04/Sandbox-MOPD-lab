@@ -23,6 +23,49 @@ from .home5090 import (ROOT, UV, VENV, MODEL, SETTINGS, check_host,
                        model_download_argv, qualifies_cold_prepare)
 
 SOURCE = Path(__file__).resolve().parents[1]
+HEADER_SHA256 = '864360533639b45256258475c7843ac7c56f9bf556b356753f21f7e3012fea67'
+HEADER_URL = 'https://mirrors.aliyun.com/ubuntu/pool/main/p/python3.12/libpython3.12-dev_3.12.3-1ubuntu0.16_amd64.deb'
+
+
+def header_manifest(root, deadline):
+    result = {}
+    for path in sorted(root.rglob('*')):
+        remaining(deadline)
+        if path.is_symlink():
+            raise ValueError('header symlinks are not permitted')
+        if path.is_file():
+            result[str(path.relative_to(root))] = sha(path, deadline)
+    if not result:
+        raise ValueError('empty Python headers')
+    return result
+
+
+def header_environment(root):
+    env = isolated_env(os.environ)
+    env['CPATH'] = f'{root}/usr/include/python3.12:{root}/usr/include'
+    return env
+
+
+def prepare_headers(run, deadline, log):
+    # Verified Ubuntu payload, unpacked privately: never apt install or sudo.
+    archive = safe_path(run/'python-dev.deb')
+    command(['/usr/bin/curl', '-q', '--fail', '--location', '--max-time', '120',
+             '--max-filesize', '6000000', '--output', str(archive), HEADER_URL], deadline, log)
+    if sha(archive, deadline) != HEADER_SHA256:
+        raise ValueError('Python header package hash mismatch')
+    root = safe_path(run/'python-headers')
+    root.mkdir()
+    command(['/usr/bin/dpkg-deb', '--extract', str(archive), str(root)], deadline, log)
+    include = safe_path(root/'usr/include')
+    manifest = header_manifest(include, deadline)
+    source = safe_path(run/'header-check.c')
+    source.write_text('#include <Python.h>\n#if PY_MAJOR_VERSION != 3 || PY_MINOR_VERSION != 12\n#error wrong Python ABI\n#endif\nint main(void) { return 0; }\n')
+    command(['/usr/bin/gcc', '-fsyntax-only', '-I'+str(include/'python3.12'),
+             '-I'+str(include), str(source)], deadline, log)
+    return {'root': str(root), 'package_sha256': HEADER_SHA256,
+            'manifest': manifest, 'syntax_check': True,
+            'version': '3.12.3-1ubuntu0.16',
+            'scope': 'headers only; system Python and libraries unchanged'}
 
 
 def remaining(deadline):
@@ -277,6 +320,7 @@ def prepare():
             if path.startswith(str(ROOT) + '/cache/'):
                 safe_path(Path(path)).mkdir(parents=True, exist_ok=True)
         requirements = install_environment(run, deadline, log)
+        state['python_headers'] = prepare_headers(run, deadline, log)
         state['requirements_sha256'] = sha(requirements, deadline)
         command(model_download_argv(), deadline, log)
         state['pip_freeze'] = command([str(UV), 'pip', 'freeze', '--python', str(VENV/'bin/python')], deadline, log)
@@ -388,6 +432,13 @@ def probe():
         source_sha = source_identity(deadline, log)
         lock_sha = sha(SOURCE/'environments/home5090/uv.lock', deadline)
         validate_prepared(prepared, lock_sha, source_sha)
+        headers = prepared['python_headers']
+        header_root = safe_path(Path(prepared['run_dir'])/'python-headers')
+        if headers['root'] != str(header_root) or headers['package_sha256'] != HEADER_SHA256:
+            raise ValueError('prepared header identity mismatch')
+        if header_manifest(safe_path(header_root/'usr/include'), deadline) != headers['manifest']:
+            raise ValueError('prepared headers drifted')
+        state['python_headers'] = {'root': str(header_root), 'package_sha256': HEADER_SHA256}
         state['source_git_sha'] = source_sha
         state['lock_sha256'] = lock_sha
         expected_manifest_path = safe_path(Path(prepared['run_dir'])/'model-manifest.json')
@@ -412,7 +463,7 @@ def probe():
         state['post_model_check'] = 'not_checked'
         handles = {}
         child = subprocess.Popen(server_argv(), stdout=log, stderr=log,
-                                 env=isolated_env(os.environ), start_new_session=True)
+                                 env=header_environment(header_root), start_new_session=True)
         try:
             _probe_requests(child, handles, run, state, deadline, log)
         finally:
