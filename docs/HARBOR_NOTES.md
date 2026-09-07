@@ -57,6 +57,8 @@ Modal 与 Daytona 都提供远端沙箱，不替代 SkyRL 或 Harbor。Modal 同
 
 ## home-5090 控制层实查
 
+最新复核：Mac与服务器git HEAD都返回52b327d398b461d0e36b617c19ebf5c1c5c12b1c，hlab --help包含runs。负责人回报通用健康检查/资源准入升级已上线；Lab仍待自己的两个真实入口与project recipe注册。以下9e91671清点是升级前历史证据，不作为当前能力限制。
+
 手册及其链接的 agent-runbook、architecture、README 已完整读取。只读命令：`hlab --help`、`hlab doctor`、`hlab projects`、`hlab recipes control`、`hlab recipes syncopate`；必要补充使用手册允许的原始 SSH 只读诊断。
 
 - Mac 和服务器 HEAD 均为 `9e91671e226441460d06f90d4f6e73ca6d4d21ba`。未对安装目录作修改。
@@ -75,7 +77,7 @@ Modal 与 Daytona 都提供远端沙箱，不替代 SkyRL 或 Harbor。Modal 同
 
 Lab 模型、环境、缓存、数据和业务产物仍位于服务器独立 Lab 根下。hlab 自动管理的 mirror/worktree/run manifest 和 systemd 元数据位于手册规定的控制器目录，是采用 hlab 必须明确的系统例外；使用独立 Lab project ID 分类，不共用 syncopate ID。控制器 registry 接入必须在其开发副本完成并评审部署，不能修改安装副本或只在 Lab 放个 TOML 就声称已注册。本轮仅把接入需求存于 Lab 文档。
 
-Lab 已按用户授权独立 Git 管理；hlab 只同步 commit，正式接入必须使用可审查的已提交身份。当前 runner 使用最小环境和系统 PATH，故 uv 必须用绝对路径，缓存变量全部显式指向 Lab；云凭据不能放在 recipe 明文 env/manifest，需先设计受控凭据读取。独占资源检查/只读 bindings 的新版能力未部署，不能依赖。
+Lab已独立Git管理；hlab只同步commit，正式接入使用完整已提交身份。uv用绝对路径，缓存全部指向Lab；云凭据不得放recipe明文env/manifest。本批prepare与GPU probe不消费Daytona key。新版设施已上线，接入前仍须核对具体recipe。
 
 ## 成本口径（2026-09-07 公开标价，仅估算）
 
@@ -87,7 +89,7 @@ Lab 已按用户授权独立 Git 管理；hlab 只同步 commit，正式接入�
 
 ## 下一步与验收
 
-已与 interviewprep 的“服务器改造”任务直接核对（任务 ID `01a06a06-efd0-7a62-99cd-454678f517c7`）：共享设施只考虑通用健康检查语义小修与固定 recipe，不安装 Docker、不处理 OASIS unit、不增加 Harbor/RL 控制器功能。对方确认安装版严格 preflight 会拒绝 degraded，但普通 plan/submit/status/logs/cancel 不调用该 preflight；不得将 degraded 一概写成所有命令不可用。接受 degraded 并保留警告的修正仍需测试、评审和部署批准，尚未上线。
+已与interviewprep的“服务器改造”任务直接核对（01a06a06-efd0-7a62-99cd-454678f517c7）：通用升级已上线，两端SHA实查见上节；不安装Docker、不处理OASIS unit、不增加Harbor/RL控制器功能。当前精确阻断是Lab缺少prepare/GPU固定入口，正在Lab内实现；入口提交后对方负责不可覆盖source落位与最小静态recipe注册。
 
 无容器后端的CPU检查仅验证安装/格式；完整Harbor trial已在Daytona执行。Mac不启动本地容器；home-5090拟承担模型服务，不因本实验安装主机Docker。三端预算只维护在BUDGET。
 

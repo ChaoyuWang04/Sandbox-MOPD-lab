@@ -19,7 +19,7 @@
 
 用户已排除 RunPod；本 Lab 优先使用 home-5090 做模型推理与调度，Daytona 做大规模沙箱首选、Modal 做有界对照与云训练候选。遵循 `/Users/samwong/Desktop/1Project/HOME-5090.md`，不改变父项目 Modal/B200 规则。Mac 不跑长期服务。已完成 M0-A、平台调查与独立 Git 推送；尚无 Lab hlab recipe。共享设施协作结论见 HARBOR_NOTES。未安装服务器依赖，未租 GPU、训练或故障注入。
 
-所有 Lab 自有文件均保存在 Lab 根目录下。Mac 根目录为本目录；5090 拟用 `/home/samwang/code/projects/sandbox-rl-MOPD-lab`（仅核对父目录存在，尚未创建）；云端在选定持久挂载后使用其下独立的 `sandbox-rl-MOPD-lab/`，不借用父项目 Volume。容器内工作目录只能映射 Lab 自有路径，禁止挂载父仓库、宿主机 HOME、密钥目录或 Docker socket 给 agent。
+Mac所有Lab文件在本目录。5090源码拟落位`/home/samwang/code/projects/sandbox-rl-MOPD-lab`，控制器按commit创建只读来源的运行worktree；持久环境/模型/cache/artifacts统一在独立`/home/samwang/data/sandbox-rl-MOPD-lab`，不写回source_repo。这是控制器源码与资产分离边界，不是借用其他项目资源。云端使用独立Lab路径，不借用父项目Volume。禁止将父仓库、宿主机HOME、密钥目录或Docker socket挂给agent。
 
 第三方系统程序、驱动、Docker 管理的镜像层和平台托管 Secret 是存储边界的明确例外。按 HOME-5090 手册采用 hlab 后，它管理的 mirror/worktree/运行元数据也位于固定控制器目录，须以独立 Lab project ID 隔离。数据、模型、checkpoint、缓存、业务运行日志、W&B 本地文件和实验原始证据仍须显式定向 Lab。远端大文件留在远端 Lab 根下，Mac 保存清单与取回的必要证据。
 

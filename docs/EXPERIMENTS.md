@@ -1,5 +1,15 @@
 # 实验记录
 
+## M0-G1/G4 · 固定入口代码准备（不是目标环境验收）
+
+共享控制器负责人回报通用升级已上线；本任务只读核对两端git HEAD均为52b327d398b461d0e36b617c19ebf5c1c5c12b1c，hlab --help包含runs。未替其他任务清理或重启任何进程。
+
+- environments/home5090的独立Linux/Python3.12锁实际解析246包（vLLM0.28.0、Harbor0.22.0），锁内没有只提供sdist的依赖；这不是所有目标wheel已安装/可运行的证明。Mac未安装这些GPU依赖。官方Qwen模型API固定revision为1cfa9a7208912126459214e8b04321603b3df60c。
+- 准备scripts/prepare_environment.py和scripts/qwen3_4b_m0_probe.py，真实实现位于lab_runtime/home5090*.py；参数/路径/模型身份只有共享模块一个来源。source必须clean detached；持久资产移到独立data根，防止写source_repo。准确资源、时限、状态路径见实施计划与BUDGET。
+- TDD覆盖短输出、输入不足、token ID不足、90秒边界、错误工具参数、Mac拒绝、隐式凭据过滤、锁竞争、未知目录、源码身份、模型漂移、端口所属进程组、显存对象、超时/信号清理等。主进程重跑36项离线测试PASS，Mac132包锁和Linux246包锁均offline check PASS。
+- 独立规格审阅拦下“抢锁失败覆盖latest”和“cleanup被总超时打断”的问题，修复与负向回归后复审通过；失败post-model-check明确not_checked，成功才标verified。独立代码质量review无阻断；目标机安装与运行仍待plan审批。
+- 未进行服务器依赖安装、模型下载、GPU生成或从零20分钟计时；不把入口代码通过当M0-G1/G4通过。将精确commit交控制器负责人注册，实际prepare/probe均需精确plan和用户approval note。
+
 ## M0-G3 · Harbor正负对照与正常阶段隔离 PASS
 
 - 固定上游commit `4407eb5227a2ff4f0d3f16b2eb48849382fdf276` 的hello-world，源码在tasks/m0-hello-world，许可证与PROVENANCE保留。六个行为文件对照官方raw：三个完全相同、三个只有空白差异。

@@ -43,8 +43,22 @@ G1 必须区分 4k 输出上限与实际生成满 4k，避免短回答误过速�
 
 ## hlab 接入需求（待实现，不是已注册 recipe）
 
+### 固定入口实施批次（用户已批准继续完整M0）
+
+共享设施负责人已回报部署52b327d398b461d0e36b617c19ebf5c1c5c12b1c，通用设施不再阻断；本Lab仍须补真实入口，旧部署调查是历史值。以下是当前施工计划，不是运行通过声明。
+
+- [x] 在environments/home5090/固定独立Linux/Python3.12 serving依赖，uv生成真实锁，Mac不安装GPU包。M0环境包括vLLM+Harbor/Daytona；SkyRL训练栈属于M2另行冻结。
+- [x] tests/test_home5090.py先验证固定路径/参数、满4096 token与90秒边界、工具调用内容和不满足时失败；再实现lab_runtime/home5090.py共享契约及两个scripts固定入口。
+- [x] prepare入口使用/usr/bin/python3、/home/samwang/.local/bin/uv，所有环境/模型/cache/artifacts固定在/home/samwang/data/sandbox-rl-MOPD-lab；source_repo只读。环境按锁SHA键控，frozen/no-build sync，固定模型revision，幂等目录、互斥锁、原子状态文件、最长1200秒。
+- [x] GPU入口固定Qwen3-4B BF16、16384上下文、4096实际输出、loopback18741；显存规划0.70，1秒采样本次进程组>24GiB停止，不宣称硬限额；只读资源不足即拒绝不杀人。只终止本次Popen精确进程组。最长600秒，耗时/输出/失败保存独立证据及固定latest状态索引。上述为代码已实现，尚未目标实跑。
+- [ ] 本地离线测试、独立评审、提交推送，将精确SHA/argv/输出契约交控制器负责人注册。GPU计划实际提交前再展示精确plan与资源并取得用户approval note；不把准备授权当GPU已获准运行。
+
+机器可读结果固定为data根下artifacts/m0/home5090/prepare-latest.json和probe-latest.json；每次原始日志/请求/结果保存在同目录下唯一run目录。G4从零计时与缓存复用明确区分。禁止自由shell字符串、用户可变模型/预算参数或调用父项目代码。注册时控制器先不可覆盖创建data根供disk_path准入；recipe超时1260/660秒分别覆盖工作预算和清理余量。
+
+本批本地36项tests、Mac/Linux两份锁离线检查通过，规格与代码质量独立review均无剩余阻断。最终命令为`/usr/bin/python3 scripts/prepare_environment.py`与`/usr/bin/python3 scripts/qwen3_4b_m0_probe.py`；工作目录为detached worktree根。当前锁ID=5431fdaf92e6，持久解释器为data根下envs/m0-serving-5431fdaf92e6/bin/python，probe实际直接读取data根下固定revision模型（没有宣称systemd只读binding）。成功前后模型hash核对；失败可记录not_checked。清理自身monitor/进程组最多另约13秒，控制器留60秒余量。prepare与probe均登记risk=training并逐plan要求用户批准。
+
 建议先准备两个有界入口：CPU 环境/Harbor oracle 验证、Qwen3-4B 单请求验证。每个入口需固定 argv、Lab Python 绝对路径、工作目录、cache/data/artifacts 路径、超时、风险类与退出检查。长时任务筛选单独登记 training 类 recipe，不能用 control-smoke 替代。
 
 接入需要在控制器开发副本中注册新的 Lab project ID，完成测试、独立评审和同 SHA 部署；禁止改当前安装副本。Lab 已独立 Git 管理，用户已授权提交推送；hlab 接入需提供该仓库的完整 commit SHA。控制器管理的 mirror/worktree/run 元数据属于工具目录例外，业务资产仍归 Lab。
 
-手册要求 user systemd=running；共享设施任务已区分严格 preflight 与普通运行接口，并提出保留 degraded 警告的通用语义修正，尚未部署。不得为推进 Lab 擅自清除 OASIS 失败状态。当前部署版不提供 runs、独占 GPU 检查或新版 bindings，接入方案必须基于已验证能力，或另行评审升级。Lab 已独立 Git 管理，source_repo 与 working_directory 仍须分别登记。协作结论与后端选择以 HARBOR_NOTES 的“下一步与验收”为准。
+当前两端控制器已现场核对为52b327d398b461d0e36b617c19ebf5c1c5c12b1c，支持runs；负责人确认通用资源拒绝、bindings及degraded警告语义已部署。不得清除OASIS失败状态。剩余依赖是本Lab固定入口和静态recipe注册，不再是泛化设施升级。source_repo、working_directory、完整commit、解释器和输出路径将交负责人精确登记；GPU运行仍必须展示plan并取得用户approval note。
