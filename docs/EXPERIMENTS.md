@@ -7,10 +7,11 @@
 - T1源码63b8416：4族32实例（每族train/eval各4），独立oracle和严格grader；7项离线测试逐实例验证oracle=1、NOP及排序/数值/缺项/类型/输入修改等反例=0；JSON<5及==5边界、Harbor30/180秒解析和字节确定性通过。两轮独立审阅通过。冻结清单路径及SHA只维护在M1计划；模型尚未读过这些评测实例。
 - T2源码5cf2ad4：10项接口测试通过，覆盖多轮工具观测、token累计/模板漂移、异常finish、预算、私有路径检查、失败工具轨迹、HTTP取消收敛及usage未知标记。规格和质量审阅通过；mock不证明真实模型或沙箱链路。
 - T3固定入口及持久campaign已实现、规格与质量复审通过：跨run消费pilot/全部32实例控制证据，未知创建或清理阻断后续创建；T6汇总保留全部尝试和未分类错误，不把未知usage算成零。主任务独立执行全套89项离线测试通过（6.894秒），质量审阅者独立重跑89项通过，其中真实Harbor Trial构造验证未连接provider。实际时限、云生命周期与基线尚未验证。
-- 只读hlab doctor/recipes/runs确认本Lab活动任务0，GPU空闲31411MiB，磁盘734599720960bytes，为时点读数不构成预留。M1固定入口待远端登记；服务器负责人确认可用现有recipe机制接入，无新共享特性。
+- 只读hlab doctor/recipes/runs确认本Lab活动任务0，GPU空闲31411MiB，磁盘734599720960bytes，为时点读数不构成预留。服务器负责人已部署控制器d4b62e6608b4f6019d512fa8ed6a8d9329e92cee；本任务现场recipes核对m1-small-pool登记一致，无新共享特性。
 - 远端Lab secrets目录的只读SSH元数据检查被权限策略拒绝，未执行、未读密钥、未用其他路径绕过。真实云运行前需解决凭据可达性并遵守精确plan人工门控。
 - 本批尚无M1云创建、推理结果或基线；Daytona实际账单/credits抵扣未验证。
-- 已评审执行源码`b9fc5787aeff6883fbb72100f574b028bd1701fb`已push到`origin/codex/m1-small-pool`，并由hlab从独立Lab主checkout同步到`refs/hlab/b9fc5787aeff6883fbb72100f574b028bd1701fb`（working_tree_not_synced=false）。linked worktree被客户端self-contained检查拒绝后，改用同一仓库主checkout传送同一已提交对象；未合并或同步脏文件。服务器负责人已确认独立Lab边界、普通recipe扩展不涉及Syncopate主线迁移，正在核对登记；尚无M1 plan/run，不得把源码同步当成运行。
+- 已评审执行源码`b9fc5787aeff6883fbb72100f574b028bd1701fb`已push到`origin/codex/m1-small-pool`，并由hlab从独立Lab主checkout同步到`refs/hlab/b9fc5787aeff6883fbb72100f574b028bd1701fb`（working_tree_not_synced=false）。linked worktree被客户端self-contained检查拒绝后，改用同一仓库主checkout传送同一已提交对象；未合并或同步脏文件。服务器负责人已确认独立Lab边界，普通recipe扩展不涉及Syncopate主线迁移。
+- 首pilot4精确计划已生成但未提交：`plan-sandbox-rl-mopd-20260907t175341z-82fc6534`，执行上述b9fc578源码，argv `[/usr/bin/python3, scripts/m1_run.py]`、cwd `.`、env/bindings空、timeout3660秒、risk=training、approval_required=true；registry_digest `f8a2d202abe6fe6b7d7e57bea915d1219e41a971c94af0f387c3771c7290c2d5`。需要用户批准该精确plan及专用Daytona凭据检查/缺失时安全供应；尚无M1 run，不得把计划生成当成运行。
 
 ## M0 收尾 · PASS（2026-09-08，用户修订验收范围）
 
