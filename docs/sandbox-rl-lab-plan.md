@@ -1,6 +1,6 @@
 # Sandbox RL Lab · 沙箱化 Agentic RL + 多师 OPD 实施计划书
 
-> 当前执行入口：[M0 实施计划](plans/2026-09-07-m0-environment-plan.md)；独立边界：[README](../README.md)。M0已完成：G1推理、G2授权8并发降级、G3正常阶段链路通过；2026-09-08用户取消M0-G4冷准备速度门槛，非将历史失败改成通过。M1尚未启动。物理根目录统一为 `sandbox-rl-MOPD-lab/`，下文实验命名 `sandbox-rl-lab` 保留用于 W&B。
+> 当前执行入口：[M1 小池实施计划](plans/2026-09-08-m1-small-pool-plan.md)；独立边界：[README](../README.md)。M0已完成：G1推理、G2授权8并发降级、G3正常阶段链路通过；2026-09-08用户取消M0-G4冷准备速度门槛，非将历史失败改成通过。M1已获批准，实施中，尚未验收。物理根目录统一为 `sandbox-rl-MOPD-lab/`，下文实验命名 `sandbox-rl-lab` 保留用于 W&B。
 > 用户已排除 RunPod，Mac 仅编辑/控制/短时检查、不启动实际长期服务；优先 HOME-5090 模型计算与 Daytona 大规模 CPU 沙箱，Modal 为小规模对照和后续 GPU 候选。用户报告 Daytona $200 credits，余额/有效期/账户配额尚未核对。两家 smoke 见 [EXPERIMENTS](EXPERIMENTS.md)，运行预算见 [BUDGET](BUDGET.md)。用户已授权独立仓库每批验证后提交推送。
 
 > 目标：以最小成本在真沙箱（容器）环境里跑通长程 agentic RL 全链路，并完成两个有原创价值的实验：
@@ -101,56 +101,10 @@ home-5090 的筛选任务经已注册 hlab recipe 执行；没有 recipe 时先�
 
 ---
 
-## M1 · 任务池构建与筛选：解决零奖励问题（1-2 天，成本 ≈ $0，全在 5090）
+## M1 · 小池先行：可信任务与真实基线
 
-**核心原则**：训练集必须落在 pass@8 ∈ **[12.5%, 75%]** 的"梯度甜区"（即 8 次采样至少 1 次过、至多 6 次过）。全 0 组无梯度，全 1 组无信息。
+2026-09-08用户批准修订：真实多轮链路、可信判分、冻结隔离切分、双域overfit_16和完整基线/错误/费用证据为硬闸。取消300候选、96训练、固定甜区中位数和50外部任务的数量硬闸；Daytona有费用，不再估为$0。详细参数及当前唯一生效Gate见[M1实施计划](plans/2026-09-08-m1-small-pool-plan.md)。旧设计由Git保留，不再作为当前门槛。
 
-### 1.1 任务来源（三路并行，目标候选池 ≥ 300）
-
-**来源 A · 自建微型终端任务（主力，目标 200+）**：用 Claude 批量生成"文件系统/文本处理/数据加工"类任务，每个任务一个 Harbor task 目录：
-
-- `prompt.md`：任务描述（如"仓库里有 logs/ 目录若干 .log 文件，统计所有 ERROR 行按小时分布，结果写入 report.csv，列为 hour,count"）
-- `setup.sh`：构造初始世界（生成带随机内容的文件树——**内容随机化保证任务不可背题**）
-- `verify.py`：**私有判分脚本**（agent 不可见），检查终态文件/输出，返回 0/1
-- 任务模板族（每族 ≥25 个变体）：日志统计、CSV 清洗合并、JSON 重排、git 操作序列、文本抽取重组、目录整理、简单 pandas 计算、正则批量替换
-- **公私分离**：prompt 里可给 1 个示例输入输出（public），verify.py 用不同的随机数据实例判分（private）——AIDE² 纪律
-- 生成后人工抽查 20 个：任务可解、verifier 正确、无歧义
-
-**来源 B · Terminal-Bench easy 子集（外部效度锚，目标 ~50）**：从 Terminal-Bench 仓库导入标记为简单的任务，转成 Harbor 格式。这批**只进评测集不进训练集**（保持外部基准纯净）。
-
-**来源 C · SWE-smith/SWE-Gym 短程子集（可选加餐，目标 ~50）**：筛"单文件、改动 <30 行、测试运行 <60s"的实例。若导入成本超 0.5 天则放弃，在 EXPERIMENTS.md 记录放弃理由。
-
-### 1.2 域划分（为 M4 OPD 预埋）
-
-自建任务打 `domain` 标签：**Domain-FS**（文件/文本/git 系）与 **Domain-DATA**(csv/json/pandas 计算系）。两域任务量各 ≥100。
-
-### 1.3 筛选流程
-
-```bash
-# scripts/screen_tasks.py
-# 对候选池每个任务: Qwen3-4B, temperature 1.0, 跑 8 个 rollout(走完整 Harbor trial)
-# 输出: task_id, domain, pass@8 通过数 k, 平均轮数, 平均生成 token, 失败模式标签
-```
-
-- 5090上vLLM服务 + M0批准的远端沙箱并发8（原16已降级）；300任务×8 rollout≈2400 trial，墙钟须重新实测，不继承原16并发的8–16小时估计。费用计入沙箱预算。
-- 产出四个集合：
-  - **train_pool**：k ∈ [1,6] 的自建任务，目标 **≥ 96 个**（两域各 ≥48）
-  - **eval_clean**：train_pool 同分布但不重叠的 40 个（两域各 20，冻结）
-  - **eval_external**：Terminal-Bench easy 子集（冻结）
-  - **overfit_16**：从 train_pool 挑 k ∈ [2,5] 的 16 个（M2 用）
-- 同时产出**基线报告**：base 模型在 eval_clean / eval_external 上的 pass@1（temperature 0.6 × 3 遍均值）——这是全项目的 0 号数字
-
-### Gate M1
-
-| # | 指标 | 通过标准 |
-|---|---|---|
-| G1 | 池规模 | train_pool ≥ 96（两域各 ≥48）；不足则回 1.1 补造任务，**禁止放宽甜区区间** |
-| G2 | 甜区分布 | train_pool 的 k 分布直方图落在 [1,6]，中位数 ∈ [2,5] |
-| G3 | verifier 可靠性 | 随机抽 15 个任务人工核对判分：误判 ≤ 1 个（≈93% 准确）；flaky 检查——同一成功轨迹重判 3 遍结果一致率 100% |
-| G4 | 基线冻结 | base 在 eval_clean 与 eval_external 的 pass@1 数字写入 EXPERIMENTS.md |
-| G5 | 非模型错误率 | 筛选全程沙箱/harness 侧错误（超时、容器失败、MCP断连等非模型原因）占 trial 比例 **< 2%**（Mercor 纪律：训练前把非模型错误压到接近零）|
-
----
 
 ## M2 · 训练管线 bring-up + 过拟合验证（1-2 天，成本 ≈ $30-60）
 

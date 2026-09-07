@@ -1,6 +1,6 @@
 # Sandbox MOPD Lab
 
-本目录是独立 Git 仓库，不是父项目子模块。先读 README.md、docs/plans/2026-09-07-m0-environment-plan.md、docs/EXPERIMENTS.md 和 docs/BUDGET.md。当前状态以本仓库文档和真实证据为准，不继承父项目模型、数据、环境或运行授权。
+本目录是独立 Git 仓库，不是父项目子模块。先读 README.md、README链接的当前实施计划、docs/EXPERIMENTS.md 和 docs/BUDGET.md。当前状态以本仓库文档和真实证据为准，不继承父项目模型、数据、环境或运行授权。
 
 - 所有 Lab 文件放本目录；模型、缓存、密钥、环境、运行产物保持忽略。不要提交秘密或大文件。
 - Mac 日常办公至少保留 12 GiB，两个实验合计最多 12 GiB。本 Lab 不新增 Mac 常驻负载或本地模型/沙箱；优先 home-5090 模型与 Daytona 大规模 CPU 沙箱，Modal 做小规模对照和 GPU 候选。账户 credits 不代表配额或无限运行授权。
