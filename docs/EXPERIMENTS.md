@@ -1,5 +1,11 @@
 # 实验记录
 
+## M0-G1 · 首次GPU smoke：缺少系统Python开发头文件
+
+- 用户批准已展示的单卡660秒计划后，唯一提交`plan-sandbox-rl-mopd-20260907t150221z-d7c07fa5`，run `run-sandbox-rl-mopd-20260907t152121z-ecf732e7`，源码`cf91c2395f32ead8fbfa8f07f85bf8e12ca697ed`。15:21:21Z开始、15:22:12Z控制器终止，failed/exit1；脚本46.121秒。
+- 模型3分片完整加载，日志报告7.56GiB模型内存；随后Triton编译cuda_utils.c报`fatal error: Python.h: No such file or directory`。sysconfig指向`/usr/include/python3.12`，实际Python.h不存在，dpkg-query确认python3.12-dev/libpython3.12-dev未安装。这是系统开发依赖缺口，不是模型下载失败或已证明的网络问题。[Ubuntu官方包说明](https://packages.ubuntu.com/noble/libpython3.12-dev)列出对应开发头文件包；已交服务器改造任务核对最小补齐，不修改网络/驱动/他人进程。
+- 未进入请求验收，G1未通过；峰值按秒采样9178MiB，owned_group_gone=true，失败后post_model_check=not_checked。固定probe-latest.json SHA256 `aa89b45a8a71ef92d2c2e8462c525add2159112127db6a26166cc432b685014d`；原始证据在`/home/samwang/data/sandbox-rl-MOPD-lab/artifacts/m0/home5090/probe-20260907T152121Z-bdcd36ebde7f4b84a6f9f534dea4e884`。不重复提交已消费plan，不关闭编译绕过根因。
+
 ## M0 · 网络实测与自适应续装配置
 
 2026-09-07用户明确授权：先实测源站/镜像，根据实际情况调整下载限制并继续安装，不为这些参数重复要求操作。安装恢复不改GPU授权、共享系统或实验结论。
