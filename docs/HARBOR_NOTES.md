@@ -34,7 +34,7 @@
 |---|---|---|---|
 | home-5090 vLLM + 本机 Docker 沙箱 | Linux GPU 可见；Harbor 有 Docker provider | Docker 未检出，且当前不要求共享设施为本实验安装 | 非当前首选 |
 | home-5090 vLLM + Modal Sandbox | Harbor 原生 Modal 环境，平台支持 exec、文件操作、终止 | Mac 已认证与创建，但 exec/清理 RPC 有失败；服务器 API 通路未验 | 小规模对照、备用 |
-| home-5090 vLLM + Daytona | Harbor 原生 provider；有隔离沙箱及生命周期 API | 当前无 Lab API key，配额与真实执行未验 | 大规模 CPU 沙箱首选，先过 M0 |
+| home-5090 vLLM + Daytona | SDK认证、单沙箱exec/正负判据/cgroup读数/删除均已验证 | 组织额度查询无权限，16并发与完整Harbor trial未验 | 大规模 CPU 沙箱首选，先过 M0 |
 | Modal GPU + Modal Sandbox | GPU 与 Sandbox 分开由同一平台管理 | 需新 Lab 镜像/Volume、完整依赖、容量和端到端 trial 认证 | M2 训练候选，避免要求家庭服务器向公网开放工具端口 |
 
 [Harbor Core Concepts](https://www.harborframework.com/docs/core-concepts) 明确 Modal、Daytona 等环境共用 BaseEnvironment。[Getting Started](https://www.harborframework.com/docs/getting-started) 给出 `--env daytona` 的调用方式。不能把 provider 名存在写成当前项目已经接通。

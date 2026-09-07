@@ -1,5 +1,21 @@
 # 实验记录
 
+## Daytona 认证与单沙箱 · PASS（不是完整 M0）
+
+- 用户已在本地受控 secrets/.env 配置 API key，并要求完整推进 M0。未打印、提交或上传该 key；它仅用于控制端认证，未注入沙箱。
+- 认证：SDK 0.210.0 使用 ListSandboxesQuery 的列表查询 PASS。最初一次探针误用旧版 list 接口报 AttributeError，修正为当前接口后成功，不属于认证故障。
+- 沙箱 `f02d8061-20ad-4a2f-b5a3-000be5734aba`：python:3.12-slim，1 vCPU、1 GiB、3 GiB 磁盘、5 分钟 TTL、1 分钟空闲停止、ephemeral、禁止出站网络。创建并就绪 3.09 秒，到 exec 结果 3.87 秒；文件字节往返 PASS，正例0/负例1，exec exit0。
+- cgroup 实读 memory.max=1073741824、cpu.max="100000 100000"，配置读数符合本次1 GiB/1 CPU；不是OOM故障注入测试，也不推广为全部provider已认证。
+- delete(wait=True) PASS，独立 get 返回 NOT_FOUND。没有留下本次沙箱。
+- 组织额度查询：官方HTTP接口返回401，经成功认证SDK底层 OrganizationsApi 复查仍为 UnauthorizedException。不能确认账户tier/余额/16并发许可；不调整权限或强行创建16个沙箱。
+- 证据：artifacts/m0/daytona-auth-smoke.json。首次成功不代表冷/热性能统计、G2或G3通过。
+
+## M0 后续前置与已准备配置
+
+- G1/G4：5090只读检查时主内存available=28531146752 bytes、显存free=31435 MiB、利用率0%；仅见sunshine计算进程。资源时点不等于预约，未启动任何GPU工作。hlab仍无Lab项目。共享设施协作者确认需要精确commit的source checkout落位、固定prepare入口、评审后的controller配置和上线授权；不能临时SSH安装后冒充受控接入。
+- G3：官方Harbor v0.22.0 annotated tag已解析为commit `4407eb5227a2ff4f0d3f16b2eb48849382fdf276`，六个hello-world文件读取成功。候选配置 `configs/m0-harbor-oracle.json` 固定该源码，1次/1并发/无job重试，资源覆盖为1CPU/1GiB/3GiB。原示例为2GiB/10GiB，覆盖不是任务内容修改。
+- 此配置尚未执行：官方verifier需要apt/curl/uvx下载依赖，不能继承前一smoke的全禁网；Harbor 0.22.0适配器提供auto-stop/auto-delete但未暴露Daytona新wall-clock TTL，不能静默将kwargs当作已生效TTL。先补齐有界执行/清理设计、固定依赖和缓存路径，再运行完整G3。官方oracle能读参考解，不替代普通agent的隔离负检查。
+
 ## 双平台功能 smoke · 预注册
 
 2026-09-07 用户批准 Modal/Daytona 各做有界 smoke，后续大规模沙箱优先 Daytona（用户报告 $200 credits，账户余额/期限未核实）。每家最多一个、串行推进，不是性能排名；资源名义 1 CPU/1 GiB，但 Modal physical core 与 Daytona vCPU 不等价。Modal 最大存活 300 秒、空闲 60 秒；Daytona 必须在认证后先确认可设置服务端 wall-clock TTL/auto-stop/auto-delete 再创建。无 GPU、业务凭据、宿主机挂载或端口暴露。

@@ -14,6 +14,8 @@
 
 ## M0-B（执行中）
 
+最新状态：用户要求完整推进M0；Daytona认证、单沙箱文件/正负判据、cgroup资源读数和删除复核均PASS。G1–G4仍未完成。Daytona组织额度查询无权限，16并发待账户配额确认；5090需要受控source落位与固定入口接入，不触碰他人进程。G3官方源码已固定，候选配置准备但尚未执行，具体前置见EXPERIMENTS的“M0 后续前置与已准备配置”。
+
 当前执行点：用户已批准 1 核/1 GiB/300 秒一次验证；Mac 本地 trial 已因用户内存边界取消。已补齐 Modal 官方代理 extra，同步 SDK ClientHello 通过，并启动一次 provider 验证；资源检查因沙箱内缺少预期 cgroup 路径未通过，完整 Harbor trial 尚未执行。原始结果及回收状态见 EXPERIMENTS，三端资源唯一预算见 BUDGET。不得将参数传递或文件往返冒充硬限额/完整 trial 验收。
 
 2026-09-07 用户进一步批准继续下一步，并授权与 interviewprep 的“服务器改造”任务直接协调通用设施。Lab 当前先准备 Python 3.12、固定 Harbor 0.22.0 及 CLI/官方示例核对；使用 Lab 自有 .venv/cache，原始证据进入 artifacts/m0。服务器共享设施由对方核对，不在本 Lab 实现控制器特化功能。此步骤不启动 GPU、批量筛选或付费沙箱。
