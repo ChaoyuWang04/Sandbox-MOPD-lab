@@ -42,7 +42,7 @@ def stats(records):
     known_costs = [value for value in costs if type(value) in (int, float) and math.isfinite(value) and value >= 0]
     return {'attempts': len(records), 'valid_attempts': len(clean), 'successes': successful,
             'model_failures': sum(reward(r) == 0 for r in clean),
-            'infra_errors': len(records)-len(clean),
+            'invalid_attempts': len(records)-len(clean),
             'pass_at_1': successful/len(clean) if clean else None,
             'success_fraction_all_attempts': successful/len(records) if records else None,
             'termination_counts': dict(Counter(r.get('termination') or 'unknown' for r in records)),
@@ -89,9 +89,14 @@ def audit(manifest, summaries, expected_pool_sha):
             if identity is None or any(record.get(k) != identity[k] for k in ('family', 'domain', 'split')):
                 raise ValueError('record identity mismatch')
             expected_temperature = None if mode=='controls' else 0.6 if mode=='eval' else 1.0
-            if record.get('mode', mode) != mode or record.get('temperature') != expected_temperature or type(record.get('seed')) is not int or record['seed'] != identity['seed']*100+record['repetition']:
+            diagnostic = record.get('diagnostic_index', 0)
+            if type(diagnostic) is not int or diagnostic not in ((0,1) if mode=='pilot' else (0,)):
+                raise ValueError('diagnostic identity mismatch')
+            if record.get('mode', mode) != mode or record.get('temperature') != expected_temperature or type(record.get('seed')) is not int or record['seed'] != identity['seed']*100+record['repetition']+diagnostic*100000000:
                 raise ValueError('sampling identity mismatch')
             key = (mode, record['instance'], record['repetition'], record['agent'])
+            if mode == 'pilot':
+                key += (diagnostic,)
             if key in rows:
                 duplicates.append(list(key))
             if type(record['repetition']) is not int or record['repetition'] < 0:
@@ -131,7 +136,7 @@ def audit(manifest, summaries, expected_pool_sha):
     return {'schema_version': 1, 'scope': 'summary-matrix audit; raw traces and lifecycle evidence still require verification',
             'evidence_complete': complete, 'pool_manifest_sha256': expected_pool_sha,
             'summary_matrix_complete': not missing, 'duplicate_attempts': duplicates,
-            'infra_errors': infra, 'requires_error_review': bool(infra or duplicates),
+            'errors_requiring_attribution': infra, 'requires_error_review': bool(infra or duplicates),
             'agent_source_sha256': next(iter(agent_shas), None), 'sources': sources,
             'missing_attempts': [list(key) for key in missing], 'cleanup_confirmed': cleanup_ok,
             'controls_correct': controls_ok and not any(key[0]=='controls' for key in missing),

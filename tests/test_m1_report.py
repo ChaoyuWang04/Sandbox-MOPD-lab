@@ -43,7 +43,7 @@ class M1ReportTest(unittest.TestCase):
         self.assertTrue(result['requires_error_review'])
         self.assertEqual(len(result['overfit_16']), 16)
         self.assertEqual(result['eval_clean']['valid_attempts'], 47)
-        self.assertEqual(result['eval_clean']['infra_errors'], 1)
+        self.assertEqual(result['eval_clean']['invalid_attempts'], 1)
 
     def test_duplicates_drift_and_cleanup_fail_closed(self):
         m = self.module()
@@ -95,6 +95,15 @@ class M1ReportTest(unittest.TestCase):
         second = m.audit(manifest, summaries, 'pool')['overfit_16']
         self.assertEqual(first, second)
         self.assertEqual(first, [])
+
+    def test_second_pilot_seed_is_explicit_diagnostic_not_formal_duplicate(self):
+        m = self.module()
+        manifest, summaries = self.fixtures()
+        row = summaries[1]['records'][0]
+        pilots = [dict(row, mode='pilot', diagnostic_index=i, seed=row['seed']+i*100000000) for i in (0,1)]
+        summaries.append(dict(summaries[1], mode='pilot', records=pilots))
+        result = m.audit(manifest, summaries, 'pool')
+        self.assertEqual(result['duplicate_attempts'], [])
         for field, value in (('model_revision', 'wrong'), ('serving_lock_sha256', 'wrong'), ('runtime_limits', {})):
             manifest, summaries = self.fixtures()
             summaries[-1][field] = value
