@@ -10,6 +10,7 @@
 - 只读hlab doctor/recipes/runs确认本Lab活动任务0，GPU空闲31411MiB，磁盘734599720960bytes，为时点读数不构成预留。M1固定入口待远端登记；服务器负责人确认可用现有recipe机制接入，无新共享特性。
 - 远端Lab secrets目录的只读SSH元数据检查被权限策略拒绝，未执行、未读密钥、未用其他路径绕过。真实云运行前需解决凭据可达性并遵守精确plan人工门控。
 - 本批尚无M1云创建、推理结果或基线；Daytona实际账单/credits抵扣未验证。
+- 已评审执行源码`b9fc5787aeff6883fbb72100f574b028bd1701fb`已push到`origin/codex/m1-small-pool`，并由hlab从独立Lab主checkout同步到`refs/hlab/b9fc5787aeff6883fbb72100f574b028bd1701fb`（working_tree_not_synced=false）。linked worktree被客户端self-contained检查拒绝后，改用同一仓库主checkout传送同一已提交对象；未合并或同步脏文件。服务器负责人已确认独立Lab边界、普通recipe扩展不涉及Syncopate主线迁移，正在核对登记；尚无M1 plan/run，不得把源码同步当成运行。
 
 ## M0 收尾 · PASS（2026-09-08，用户修订验收范围）
 
