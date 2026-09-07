@@ -18,7 +18,9 @@ import time
 import uuid
 
 from .home5090 import (ROOT, UV, VENV, MODEL, SETTINGS, check_host,
-                       isolated_env, server_argv, validate_completion, validate_tool_call)
+                       isolated_env, server_argv, validate_completion, validate_tool_call,
+                       PREPARE_SECONDS, PACKAGE_INDEX, DOWNLOAD_ENV,
+                       model_download_argv, qualifies_cold_prepare)
 
 SOURCE = Path(__file__).resolve().parents[1]
 
@@ -242,9 +244,25 @@ def source_identity(deadline, log):
     return command(git + ['rev-parse', 'HEAD'], deadline, log).strip()
 
 
+def install_environment(run, deadline, log):
+    # A frozen uv sync uses artifact URLs from uv.lock even with an index override.
+    # Export the unchanged lock so the transport index may change, but not hashes/versions.
+    requirements = run/'requirements.txt'
+    project = SOURCE/'environments/home5090'
+    command([str(UV), 'export', '--frozen', '--offline', '--no-dev', '--no-emit-project',
+             '--project', str(project), '--format', 'requirements-txt',
+             '--output-file', str(requirements)], deadline, log)
+    if not VENV.exists():
+        command([str(UV), 'venv', '--python', '/usr/bin/python3', str(VENV)], deadline, log)
+    command([str(UV), 'pip', 'sync', str(requirements), '--require-hashes', '--no-build',
+             '--default-index', PACKAGE_INDEX, '--python', str(VENV/'bin/python')], deadline, log)
+    command([str(UV), 'pip', 'check', '--python', str(VENV/'bin/python')], deadline, log)
+    return requirements
+
+
 def prepare():
     check_host(sys.argv, platform.system(), platform.machine())
-    with run_context('prepare', 1200) as (run, state, deadline, log):
+    with run_context('prepare', PREPARE_SECONDS) as (run, state, deadline, log):
         if shutil.disk_usage(ROOT).free < 80 * 1024**3:
             raise ValueError('less than 80 GiB disk free')
         safe_path(VENV)
@@ -253,17 +271,21 @@ def prepare():
         project = SOURCE/'environments/home5090'
         state['lock_sha256'] = sha(project/'uv.lock', deadline)
         state['source_git_sha'] = source_identity(deadline, log)
+        state['download_policy'] = {'package_index': PACKAGE_INDEX, **DOWNLOAD_ENV,
+                                    'model_workers': 2, 'work_budget_seconds': PREPARE_SECONDS}
         for path in isolated_env(os.environ).values():
             if path.startswith(str(ROOT) + '/cache/'):
                 safe_path(Path(path)).mkdir(parents=True, exist_ok=True)
-        command([str(UV), 'sync', '--frozen', '--no-build', '--project', str(project), '--python', '/usr/bin/python3'], deadline, log)
-        command([str(VENV/'bin/hf'), 'download', SETTINGS['model'], '--revision', SETTINGS['revision'], '--local-dir', str(MODEL)], deadline, log)
+        requirements = install_environment(run, deadline, log)
+        state['requirements_sha256'] = sha(requirements, deadline)
+        command(model_download_argv(), deadline, log)
         state['pip_freeze'] = command([str(UV), 'pip', 'freeze', '--python', str(VENV/'bin/python')], deadline, log)
         manifest = model_manifest(deadline)
         write_json(run/'model-manifest.json', manifest)
         state['model_manifest'] = str(run/'model-manifest.json')
         state['allocated_disk_bytes'] = asset_usage(deadline, log)
-        state['g4_candidate'] = state['cold_start'] and remaining(deadline) > 0
+        state['g4_candidate'] = qualifies_cold_prepare(state['cold_start'],
+                                                     PREPARE_SECONDS - remaining(deadline))
         state['gpu_validated'] = False
 
 

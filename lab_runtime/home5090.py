@@ -18,6 +18,28 @@ SETTINGS = {
     "port": 18741,
 }
 MODEL = ROOT / "models/Qwen3-4B" / SETTINGS["revision"]
+PREPARE_SECONDS = 7200
+G4_SECONDS = 1200
+PACKAGE_INDEX = "https://mirrors.aliyun.com/pypi/simple/"
+DOWNLOAD_ENV = {
+    "UV_HTTP_TIMEOUT": "120",
+    "UV_CONCURRENT_DOWNLOADS": "4",
+    "HF_ENDPOINT": "https://huggingface.co",
+    "HF_HUB_DOWNLOAD_TIMEOUT": "120",
+    "HF_HUB_ETAG_TIMEOUT": "30",
+    # Use the HTTP transfer path measured by the network probe, not untested Xet fan-out.
+    "HF_HUB_DISABLE_XET": "1",
+}
+
+
+def qualifies_cold_prepare(cold_start, elapsed):
+    return bool(cold_start) and 0 < elapsed <= G4_SECONDS
+
+
+def model_download_argv():
+    return [str(VENV / "bin/hf"), "download", SETTINGS["model"],
+            "--revision", SETTINGS["revision"], "--local-dir", str(MODEL),
+            "--max-workers", "2"]
 
 
 def validate_completion(result, elapsed):
@@ -77,6 +99,7 @@ def isolated_env(parent):
         "DO_NOT_TRACK": "1",
         "HF_HUB_DISABLE_TELEMETRY": "1",
     })
+    env.update(DOWNLOAD_ENV)
     return env
 
 

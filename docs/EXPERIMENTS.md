@@ -1,5 +1,15 @@
 # 实验记录
 
+## M0 · 网络实测与自适应续装配置
+
+2026-09-07用户明确授权：先实测源站/镜像，根据实际情况调整下载限制并继续安装，不为这些参数重复要求操作。安装恢复不改GPU授权、共享系统或实验结论。
+
+- 5090直接HTTPS无凭据测速，curl -q、禁用显式代理、每次最多8MiB/20秒，payload不落盘。相同vLLM0.28.0 wheel的SHA与原锁一致。串行两轮速度（MiB/s）：PyPI1.03/0.89、华为0.51/0.90、阿里0.99/1.37；清华主域和专用域各6秒TLS超时。PyPI两路不同区间16MiB合计8.587秒，约1.86MiB/s。此为短测，不是持续吞吐或4并发收益保证。
+- 固定Qwen分片HTTP范围下载：HF官方0.76MiB/s、hf-mirror0.91MiB/s，均HTTP206/8MiB，最终同落us.aws.cdn.hf.co；不能据此宣称独立镜像更快。保留HF官方HTTP传输，2文件并发，暂不用未经此轮测量的Xet扇出。没有修改DNS/VPN/驱动、系统代理或共享环境。
+- 本次选择阿里作包传输候选。原uv.lock完全不变：离线冻结export后得到245个固定包/511个原锁允许SHA；无direct-URL requirements。运行时导出到本次run目录，uv pip sync显式专属venv、require-hashes、no-build、default-index，后接pip check；不会让镜像重新选版本。40项测试（4项新RED→GREEN）及独立规格/代码review通过，两份锁offline check通过。
+- UV读取120秒/并发4；HF读取120秒/元数据30秒/官方CLI1.30.0的max-workers2。prepare最多7200秒，控制器7260秒；G4仍独立判cold且≤1200秒。缓存续装不能抹去下面的首次冷准备失败。预计需几十分钟到约两小时，实际由完整文件下载决定。
+- 原始测速摘要：artifacts/m0/network-source-probe.json；官方依据：[uv环境参数](https://docs.astral.sh/uv/configuration/environment/)、[HF环境参数](https://huggingface.co/docs/huggingface_hub/package_reference/environment_variables)、[清华镜像说明](https://mirror.tuna.tsinghua.edu.cn/help/pypi/)。服务器同事负责单独更新prepare时限，Lab负责同步精确新commit后启动一次新plan。
+
 ## M0-G4 · 首次受控 prepare FAIL（网络读取超时）
 
 - 用户看过精确计划后批准原文：“可以没问题, 请开始吧”。仅批准准备环境和固定模型下载，不含 GPU 运行。
@@ -8,7 +18,7 @@
 - 服务器原始证据目录：`/home/samwang/data/sandbox-rl-MOPD-lab/artifacts/m0/home5090/prepare-20260907T134805Z-52eb52a14ccc4140a3c56db06cd9db1d`。`prepare-latest.json` 在入口 finally 发布，运行时不存在不表示入口未执行。
 - 状态文件SHA256 `9836553164b9878b963cbbb68b2db7004e5daec6f49bb74f58ffd7557c9ef75c`，success=false/cold_start=true。终态精确unit MainPID=0、inactive/dead。保留envs 94208bytes、cache 3352326144bytes、models空目录4096bytes（du分配读数）；没有删除或重试。一次运行中unit MemoryCurrent=4108701696、MemoryPeak=6301720576 bytes，只是采样时点、包含计入缓存，不是最终峰值证明。
 - `hlab runs` 遇到运行中 `finished_at=null` 的索引校验缺陷；精确 status/logs 仍可用。已交共享设施负责人核对，不改运行记录、不重投、不停止任务。准入磁盘 available=755107246080 bytes，为时点读数；未启动 GPU。小型证据摘要在artifacts/m0/home5090-prepare-first.json，原始日志保留服务器。
-- 后续方案尚未实施：按[uv官方环境变量文档](https://docs.astral.sh/uv/configuration/environment/#uv_http_timeout)调查HTTP读取时限与下载并发，候选为读取120s、并发4，总工作时限仍1200s；不换锁、不改系统网络。即使缓存续跑成功也不能改写本次冷启动失败，G4须另行证明。下一次执行需新的精确plan批准，prepare成功前不生成probe plan。
+- 后续安装策略已按用户新授权经实测更新，见本页顶部；使用新commit/plan，不复用已消费计划、不改写本次冷启动失败。
 
 ## M0-G1/G4 · 固定入口代码准备（不是目标环境验收）
 

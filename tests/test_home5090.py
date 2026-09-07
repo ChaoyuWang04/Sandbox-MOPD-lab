@@ -4,6 +4,31 @@ from lab_runtime.home5090 import SETTINGS, validate_completion, validate_tool_ca
 
 
 class Home5090ContractTest(unittest.TestCase):
+    def test_download_policy_is_explicit_and_bounded(self):
+        env = isolated_env({"UV_HTTP_TIMEOUT": "1", "HF_ENDPOINT": "https://wrong.invalid"})
+        self.assertEqual(env.get("UV_HTTP_TIMEOUT"), "120")
+        self.assertEqual(env.get("UV_CONCURRENT_DOWNLOADS"), "4")
+        self.assertEqual(env.get("HF_HUB_DOWNLOAD_TIMEOUT"), "120")
+        self.assertEqual(env.get("HF_HUB_ETAG_TIMEOUT"), "30")
+        self.assertEqual(env.get("HF_HUB_DISABLE_XET"), "1")
+        self.assertEqual(env.get("HF_ENDPOINT"), "https://huggingface.co")
+
+    def test_install_budget_does_not_relax_cold_acceptance(self):
+        from lab_runtime import home5090 as contract
+        self.assertEqual(getattr(contract, "PREPARE_SECONDS", None), 7200)
+        self.assertTrue(contract.qualifies_cold_prepare(True, 1199))
+        self.assertFalse(contract.qualifies_cold_prepare(True, 1201))
+        self.assertFalse(contract.qualifies_cold_prepare(False, 10))
+        self.assertFalse(contract.qualifies_cold_prepare(True, -1))
+
+    def test_hf_download_uses_fixed_revision_and_two_workers(self):
+        from lab_runtime import home5090 as contract
+        self.assertTrue(hasattr(contract, "model_download_argv"))
+        argv = contract.model_download_argv()
+        self.assertEqual(argv[argv.index("--max-workers")+1], "2")
+        self.assertEqual(argv[argv.index("--revision")+1], SETTINGS["revision"])
+        self.assertNotIn("--force-download", argv)
+
     def test_mac_and_free_arguments_are_rejected(self):
         with self.assertRaises(ValueError):
             check_host(["entry.py"], "Darwin", "arm64")

@@ -6,6 +6,28 @@ from unittest.mock import Mock, patch
 
 
 class FixedRuns(unittest.TestCase):
+    def test_mirror_install_preserves_frozen_hashes_and_own_venv(self):
+        m = self.module()
+        self.assertTrue(hasattr(m, 'install_environment'))
+        with tempfile.TemporaryDirectory() as directory:
+            run = Path(directory).resolve()
+            venv = run/'env'
+            with patch.object(m, 'VENV', venv), patch.object(m, 'command', return_value='') as command:
+                m.install_environment(run, m.time.monotonic()+10, Mock())
+            argv = [call.args[0] for call in command.call_args_list]
+            export = next(a for a in argv if 'export' in a)
+            for flag in ('--frozen', '--offline', '--no-dev', '--no-emit-project'):
+                self.assertIn(flag, export)
+            self.assertEqual(export[export.index('--output-file')+1], str(run/'requirements.txt'))
+            sync = next(a for a in argv if 'sync' in a)
+            self.assertEqual(sync[1:3], ['pip','sync'])
+            self.assertIn('--require-hashes', sync)
+            self.assertIn('--no-build', sync)
+            self.assertEqual(sync[sync.index('--python')+1], str(venv/'bin/python'))
+            self.assertEqual(sync[sync.index('--default-index')+1], 'https://mirrors.aliyun.com/pypi/simple/')
+            self.assertTrue(any(a[1:3]==['pip','check'] for a in argv))
+            self.assertFalse(any('--system' in a or '--refresh' in a for a in argv))
+
     def module(self):
         spec = importlib.util.find_spec('lab_runtime.home5090_run')
         self.assertIsNotNone(spec, 'fixed runner is missing')

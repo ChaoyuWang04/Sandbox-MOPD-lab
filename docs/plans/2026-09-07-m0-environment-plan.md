@@ -14,6 +14,17 @@
 
 ## M0-B（执行中）
 
+### 网络实测后续装（2026-09-07用户已授权自适应安装）
+
+用户明确要求先比较实际网络/镜像，再调整限制继续安装，不重复询问安装参数。该授权仅用于本Lab安装恢复，不修改共享DNS/VPN/驱动、不清缓存、不启动GPU。安装预算与G4冷启动验收分离：最多7200秒工作预算、控制器7260秒；G4仍只认cold_start且完整准备≤1200秒，缓存恢复只能算环境就绪。
+
+方案：阿里PyPI为本次短测最快候选，HF官方与镜像同落AWS CDN，保留HF官方。原uv.lock保持不变；`uv export --frozen --offline --no-dev --no-emit-project --format requirements-txt`将带hash要求写入唯一run目录，再对原锁ID专属venv执行`uv pip sync --require-hashes --no-build --default-index https://mirrors.aliyun.com/pypi/simple/`，随后`uv pip check`。镜像仅负责传输，不能改变允许的版本或hash；不用`uv sync --frozen`加index环境变量假装已改其锁内下载URL。UV读取120秒、并发4；HF读取120秒、元数据30秒、2文件并发，禁用Xet以使用本次实测的HTTP路径（不是Xet故障结论）。可复用已登记缓存，不删失败见证。
+
+- [x] tests/test_home5090.py先RED：下载环境/模型worker契约、安装7200与G4判据1200分离；tests/test_home5090_run.py先RED：冻结export、hash约束sync、目标venv与依赖检查。
+- [x] 修改lab_runtime/home5090.py与home5090_run.py最小实现；保持无参脚本、模型revision、锁、目录和GPU参数不变。prepare状态记录下载策略、导出requirements hash、实际耗时。
+- [x] 用Lab .venv运行全套40项tests、245包/511hash离线冻结export与两份锁检查、diff检查；独立规格及代码review无阻断。测速摘要放artifacts/m0/network-source-probe.json，结论更新EXPERIMENTS/BUDGET。
+- [ ] 共享设施负责人仅调整prepare超时并测试部署；同步新SHA、生成新plan，以本轮明确用户原文授权提交一次。记录唯一run-id，观察网络下载进展，完成后核对包版本、模型manifest与退出，不为故障重提同一plan。
+
 最新状态：G2授权8并发降级与G3官方NOP/oracle正负对照、正常阶段隔离均有真实结果，全部沙箱独立确认回收。5090受控source与两个固定入口已接入；用户逐plan批准后的首次prepare在650.242秒因vLLM wheel网络读取超时失败，已退出，未下载模型或启动GPU。G1/G4未通过。精确run身份、保留缓存与后续候选方案只维护在EXPERIMENTS；不触碰他人进程、不自动重投。
 
 Mac本地容器trial已因用户内存边界取消；当前只运行短时云控制进程。Modal历史失败不阻断已验证的Daytona路径，两家证据不能混用。三端资源唯一预算见BUDGET，G1/G4准备与共享设施接入仍待完成。
