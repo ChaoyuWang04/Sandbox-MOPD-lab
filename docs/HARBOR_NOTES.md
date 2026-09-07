@@ -28,13 +28,13 @@
 
 ## 平台约束
 
-用户于 2026-09-07 明确排除 RunPod，优先按 `/Users/samwong/Desktop/1Project/HOME-5090.md` 使用现有服务器；允许调查 home-5090 Docker、Modal Sandbox、Daytona。沙箱与 GPU 不必同机。以下结论属于选型调查，尚无 provider 实跑或账号认证结果。
+用户于 2026-09-07 明确排除 RunPod，优先按 HOME-5090 手册使用现有服务器；Mac 不跑长期服务。用户最新选择是 Daytona 优先用于大规模沙箱，Modal 做有界对照；credits 余额/有效期尚未核实。真实 smoke 状态见 EXPERIMENTS，不能将官方支持等同实际接通。
 
 | 路径 | 已确认能力 | 本项目代价/缺口 | 建议 |
 |---|---|---|---|
-| home-5090 vLLM + 本机 Docker 沙箱 | Linux GPU 可见；Harbor 有 Docker provider | Docker 未检出；安装前置、资源限制和 hlab recipe 尚未完成 | 优先用于 M0/M1，减少长时间筛选的云沙箱费用 |
-| home-5090 vLLM + Modal Sandbox | Harbor 原生 Modal 环境，平台支持 exec、文件操作、终止 | 需要服务器对 Modal 的真实认证 API 通路、配额与超时清理实测 | 本地 Docker 路径受阻时的候选；云训练阶段优先调查 |
-| home-5090 vLLM + Daytona | Harbor 官方列为原生 provider；Daytona 有隔离沙箱及生命周期 API | 独立凭据、配额、文件传输和删除验证待做 | 保留替代，不仅凭标价选胜者 |
+| home-5090 vLLM + 本机 Docker 沙箱 | Linux GPU 可见；Harbor 有 Docker provider | Docker 未检出，且当前不要求共享设施为本实验安装 | 非当前首选 |
+| home-5090 vLLM + Modal Sandbox | Harbor 原生 Modal 环境，平台支持 exec、文件操作、终止 | Mac 已认证与创建，但 exec/清理 RPC 有失败；服务器 API 通路未验 | 小规模对照、备用 |
+| home-5090 vLLM + Daytona | Harbor 原生 provider；有隔离沙箱及生命周期 API | 当前无 Lab API key，配额与真实执行未验 | 大规模 CPU 沙箱首选，先过 M0 |
 | Modal GPU + Modal Sandbox | GPU 与 Sandbox 分开由同一平台管理 | 需新 Lab 镜像/Volume、完整依赖、容量和端到端 trial 认证 | M2 训练候选，避免要求家庭服务器向公网开放工具端口 |
 
 [Harbor Core Concepts](https://www.harborframework.com/docs/core-concepts) 明确 Modal、Daytona 等环境共用 BaseEnvironment。[Getting Started](https://www.harborframework.com/docs/getting-started) 给出 `--env daytona` 的调用方式。不能把 provider 名存在写成当前项目已经接通。
@@ -42,6 +42,16 @@
 [Harbor Modal 实现 main](https://github.com/harbor-framework/harbor/blob/main/src/harbor/environments/modal.py) 可看到镜像构造、沙箱清理和 app/timeout 配置；[Modal Sandbox API](https://modal.com/docs/guide/sandboxes) 支持 exec、退出码与 terminate。使用原生 Sandbox，无须在训练容器里自行运行 dockerd。检查的是可变 main；Harbor 0.22.0 对应源码未完整取回，准确 kwargs 必须随安装版重新核对。
 
 [Daytona Sandboxes](https://www.daytona.io/docs/en/sandboxes/) 支持创建、停止与 ephemeral 生命周期；自动停止不应替代显式清理。试验前先核对当前 Harbor 适配器如何处理 timeout、上传/下载与删除，不擅自继承 SDK 默认行为。
+
+## SkyRL、Harbor 与平台分工
+
+[SkyRL Agent Integration](https://docs.skyrl.ai/docs/tutorials/agent-integration) 描述训练侧 Generator 契约：收集轨迹 token、mask、reward 等交给训练。SkyRL 是 RL 训练框架，不是云平台。Harbor 是任务执行/评测框架，统一任务、agent、环境启动、verifier 和结果；[Harbor Agents](https://www.harborframework.com/docs/agents) 支持模型/agent 适配。两者不是开箱即可完成本项目全部算法，TITO/logprob/LoRA/OPD 接缝仍需 M2/M4 验证。
+
+Modal 与 Daytona 都提供远端沙箱，不替代 SkyRL 或 Harbor。Modal 同时有云函数/GPU 与 Sandbox，适合把 GPU 计算和工具沙箱分别部署；Daytona 面向 agent 计算机，提供文件、进程、Git、快照和生命周期能力，也有 GPU/VM 产品，不能简单说 Daytona 不支持 GPU。本项目只评估 Daytona CPU 沙箱。
+
+[Modal VM Sandbox](https://modal.com/docs/guide/vm-sandboxes) 说明默认 gVisor 与完整 VM 的区别；不能要求默认隔离环境暴露宿主机 cgroup，先前 cgroup 路径缺失不是限额无效的证明。改用 VM 是额外选型，不为读到一个文件擅自切换。
+
+[Daytona Sandboxes](https://www.daytona.io/docs/en/sandboxes/) 提供 wall-clock TTL、auto-stop、ephemeral/auto-delete；停止与删除不同，必须防止保留磁盘持续计费。[Daytona Limits](https://www.daytona.io/docs/en/limits/) 公布 Tier 1 总计 10 vCPU/20 GiB，16 个各 1 vCPU 并发需要更高额度；账户实际 tier 未查询。Modal 的 physical CPU core 与 Daytona vCPU 不应视为相同算力，同名规格不能直接做性能归因。
 
 ## home-5090 控制层实查
 

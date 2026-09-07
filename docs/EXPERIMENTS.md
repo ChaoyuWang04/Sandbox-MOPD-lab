@@ -1,5 +1,17 @@
 # 实验记录
 
+## 双平台功能 smoke · 预注册
+
+2026-09-07 用户批准 Modal/Daytona 各做有界 smoke，后续大规模沙箱优先 Daytona（用户报告 $200 credits，账户余额/期限未核实）。每家最多一个、串行推进，不是性能排名；资源名义 1 CPU/1 GiB，但 Modal physical core 与 Daytona vCPU 不等价。Modal 最大存活 300 秒、空闲 60 秒；Daytona 必须在认证后先确认可设置服务端 wall-clock TTL/auto-stop/auto-delete 再创建。无 GPU、业务凭据、宿主机挂载或端口暴露。
+
+本批仅验功能层：创建 → exec → 写入/读回固定字节 → 正确判据 exit 0 → 故意错误判据 exit 1 → 精确终止/删除 → 独立终态查询。记录创建返回与可执行分别耗时，不拿空闲单次读数排名；费用与主机资源控制仍单独未验。上次 cgroup 缺失的硬限额 Gate 保持未通过，本批不再拿它阻断其他功能测量，也不把功能成功升级为限额通过。清理失败须独立查精确 ID，禁止新建重试。Daytona 无凭据时记 BLOCKED，不用其他账户或把 key 写入报告。
+
+### 本批结果
+
+- Modal：ClientHello PASS；唯一新沙箱 `sb-hqjAFWCxQnCBj9uqsKay0F`，创建返回 0.86 秒；exec stdout 为空、exit=-1，至该读数 32.95 秒（含网络与就绪，不是纯执行耗时）。文件/正负检查未获结果，功能 smoke FAIL。terminate 调用 ConnectionError；独立新客户端 poll=0，确认远端结束，但不能认定终止 RPC 成功。无追加创建重试。
+- Daytona：安装官方 extra，SDK 0.210.0；验证 CreateSandboxFromImageParams 配置接受 cpu=1、memory=1 GiB、disk=3 GiB、ttl_minutes=5、auto_stop_interval=1、ephemeral=True（auto_delete_interval=0）、public=False、network_block_all=True。离线检查 PASS，不是云端验证。环境变量未配置 DAYTONA_API_KEY，Lab secrets/ 尚无凭据，已请求用户通过本地受控文件提供；真实 smoke BLOCKED，未创建资源、未验证 $200 余额或账户配额。
+- `uv lock --check --offline` PASS，132 个依赖解析；无 SkyRL/GPU 安装。Mac 无本地容器/模型/服务。
+
 每批先登记目的、命令、预测、停止线与产物，再填写结果。证据位于本 Lab artifacts/，不引用父项目结果作为本实验通过依据。
 
 ## M0-A · 隔离与只读清点
