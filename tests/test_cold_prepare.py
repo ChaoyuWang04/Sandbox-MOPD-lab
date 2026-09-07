@@ -34,3 +34,36 @@ class ColdPrepareTest(unittest.TestCase):
             with self.assertRaises(ValueError):
                 with cold.private_roots(root):
                     pass
+
+    def test_outer_time_and_failure_are_published_without_touching_warm_state(self):
+        from lab_runtime import cold_prepare as cold
+        for fail, elapsed in ((False, 1199), (False, 1201), (True, 10)):
+            with self.subTest(fail=fail, elapsed=elapsed), TemporaryDirectory() as tmp:
+                base = Path(tmp).resolve()
+                index = base/'artifacts/m0/home5090'
+                index.mkdir(parents=True)
+                warm = index/'prepare-latest.json'
+                warm.write_text('warm witness')
+
+                def fake_prepare():
+                    self.assertFalse(runner.VENV.exists())
+                    self.assertFalse(runner.MODEL.exists())
+                    self.assertFalse((runner.ROOT/'cache').exists())
+                    own_index = runner.ROOT/'artifacts/m0/home5090'
+                    own_index.mkdir(parents=True)
+                    runner.write_json(own_index/'prepare-latest.json',
+                                      {'success': not fail, 'cold_start': True})
+                    if fail:
+                        raise RuntimeError('test failure')
+
+                with patch.object(runner, 'ROOT', base), patch.object(contract, 'ROOT', base), \
+                     patch.object(contract, 'check_host'), patch.object(runner, 'prepare', fake_prepare), \
+                     patch.object(cold.time, 'monotonic', side_effect=[0, elapsed]):
+                    if fail:
+                        with self.assertRaisesRegex(RuntimeError, 'test failure'):
+                            cold.prepare_cold()
+                    else:
+                        cold.prepare_cold()
+                result = runner.json.loads((index/'cold-prepare-latest.json').read_text())
+                self.assertEqual(result['g4_candidate'], not fail and elapsed <= 1200)
+                self.assertEqual(warm.read_text(), 'warm witness')

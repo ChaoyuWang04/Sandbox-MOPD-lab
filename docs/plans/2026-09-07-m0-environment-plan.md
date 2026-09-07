@@ -31,9 +31,9 @@ SSH恢复，但系统Python.h仍缺失，系统Python包3.12.3-1ubuntu0.11、sud
 - [x] 用Lab .venv运行全套40项tests、245包/511hash离线冻结export与两份锁检查、diff检查；独立规格及代码review无阻断。测速摘要放artifacts/m0/network-source-probe.json，结论更新EXPERIMENTS/BUDGET。
 - [x] 共享设施负责人调整prepare超时并部署；续装唯一run成功，245个版本与锁一致、13个模型文件hash复验通过、进程已退出。精确身份和34分53秒缓存恢复结果见EXPERIMENTS，不重投或重装。
 
-最新状态：G2授权8并发降级与G3官方NOP/oracle正负对照、正常阶段隔离均有真实结果，全部沙箱独立确认回收。5090受控环境及模型已续装成功并复验，未启动GPU；G1未运行，G4冷启动20分钟未通过。精确身份与证据只维护在EXPERIMENTS，不触碰他人进程、不自动重投。
+最新状态：G1满上下文生成及工具调用通过，G2授权8并发降级与G3正常阶段链路通过，进程/沙箱回收已核实。G4冷准备尚待新空目录复测，精确身份与证据见EXPERIMENTS。
 
-下一步GPU计划已生成但未提交：`plan-sandbox-rl-mopd-20260907t150221z-d7c07fa5`，固定Lab SHA `cf91c2395f32ead8fbfa8f07f85bf8e12ca697ed`，recipe `qwen3-4b-m0-probe`，argv `/usr/bin/python3 scripts/qwen3_4b_m0_probe.py`。1张RTX5090 GPU0，工作预算600秒/控制器660秒，仅loopback18741；12,288输入+4,096实际输出构成16k上下文，输出<90秒并验证工具调用。显存比例0.70，按秒采样本次进程组>24GiB停止自身（非硬限额）；准入GPU空闲≥26GiB、MemAvailable≥18GiB、磁盘≥80GiB，内存16GiB仅规划值。日志与缓存仅Lab data根，不新增云资源、不停他人进程。按HOME-5090手册等待用户对首次GPU计划明确批准，不复用prepare批准说明。
+GPU原计划已消费，首次因系统Python.h缺失失败；私有头文件修复后新计划通过，全部精确plan/run身份见EXPERIMENTS，不再提交旧计划。单卡600秒工作/660秒控制器、loopback18741、显存比例0.70、按秒采样自身>24GiB停止；准入GPU空闲≥26GiB、MemAvailable≥18GiB、磁盘≥80GiB，内存16GiB仅规划值，非OS硬限额。用户已再次明确授权持续M0测试与必要下载，同范围不重复询问。
 
 Mac本地容器trial已因用户内存边界取消；当前只运行短时云控制进程。Modal历史失败不阻断已验证的Daytona路径，两家证据不能混用。三端资源唯一预算见BUDGET，G1/G4准备与共享设施接入仍待完成。
 
@@ -43,7 +43,7 @@ Mac本地容器trial已因用户内存边界取消；当前只运行短时云控
 
 | Gate | 原定判据 | 需要的证据 | 当前 |
 |---|---|---|---|
-| M0-G1 | 5090 Qwen3-4B，16k 上下文，单请求 4k 生成 <90s | 模型 revision、原始请求、实际 token 数、耗时及 tool_calls 内容 | 未运行 |
+| M0-G1 | 5090 Qwen3-4B，16k 上下文，单请求 4k 生成 <90s | 模型 revision、原始请求、实际 token 数、耗时及 tool_calls 内容 | PASS：12288输入+4096输出，30.75秒，工具调用正确 |
 | M0-G2 | 原16并发<60s；用户授权失败后8并发 | 单容器状态、总墙钟、清理后容器列表 | 16失败；8降级PASS，4.97秒、全部回收 |
 | M0-G3 | 官方 Harbor 示例完整 trial | 固定源码/版本、指令、轨迹、verifier 奖励和 teardown | NOP=0、oracle=1、阶段隔离和回收PASS；非强对抗隔离证明 |
 | M0-G4 | 选定执行环境从零准备 ≤20min | 已选平台与镜像、依赖锁、计时、账单及停止确认 | 冷prepare失败；缓存续装34分53秒成功，不算冷启动PASS |
@@ -60,7 +60,7 @@ G1 必须区分 4k 输出上限与实际生成满 4k，避免短回答误过速�
 
 上述 M1–M4 项只登记风险，不在 M0-A 改算法或验收数值。
 
-## hlab 接入（已注册，prepare续装成功；GPU待批准）
+## hlab 接入（普通prepare/probe已通过；冷prepare待接入实跑）
 
 ### 固定入口实施批次（用户已批准继续完整M0）
 
