@@ -1,5 +1,6 @@
 """No-argument, bounded home-5090 entrypoints. Importing this module does no work."""
 import contextlib
+import contextvars
 import datetime
 import fcntl
 import hashlib
@@ -23,6 +24,7 @@ from .home5090 import (ROOT, UV, VENV, MODEL, SETTINGS, check_host,
                        model_download_argv, qualifies_cold_prepare)
 
 SOURCE = Path(__file__).resolve().parents[1]
+OWNED_SERVER_PGID = contextvars.ContextVar('owned_server_pgid', default=None)
 HEADER_SHA256 = '864360533639b45256258475c7843ac7c56f9bf556b356753f21f7e3012fea67'
 HEADER_URL = 'https://mirrors.aliyun.com/ubuntu/pool/main/p/python3.12/libpython3.12-dev_3.12.3-1ubuntu0.16_amd64.deb'
 
@@ -201,7 +203,9 @@ def has_runtime_content(path):
 
 
 @contextlib.contextmanager
-def run_context(kind, seconds):
+def run_context(kind, seconds, *, artifact_stage='m0'):
+    if artifact_stage not in ('m0', 'm1'):
+        raise ValueError('unknown artifact stage')
     start = time.monotonic()
     deadline = start + seconds
     safe_path(ROOT)
@@ -209,8 +213,11 @@ def run_context(kind, seconds):
     existed = {k: has_runtime_content(p) for k, p in [('environment', VENV), ('model', MODEL), ('cache', ROOT/'cache')]}
     for path in (ROOT, ROOT/'envs', ROOT/'models', ROOT/'cache', ROOT/'artifacts', ROOT/'artifacts/m0', ROOT/'artifacts/m0/home5090'):
         safe_path(path).mkdir(exist_ok=True)
-    base = ROOT/'artifacts/m0/home5090'
-    run = base / (kind + '-' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + uuid.uuid4().hex)
+    lock_base = ROOT/'artifacts/m0/home5090'
+    base = ROOT/f'artifacts/{artifact_stage}/home5090'
+    safe_path(base.parent).mkdir(exist_ok=True)
+    safe_path(base).mkdir(exist_ok=True)
+    run = base / (kind + '-' + uuid.uuid4().hex if artifact_stage == 'm1' else kind + '-' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ') + '-' + uuid.uuid4().hex)
     run.mkdir()
     state = {'kind': kind, 'success': False, 'run_dir': str(run), 'existed_before': existed,
              'cold_start': not any(existed.values()), 'revision': SETTINGS['revision']}
@@ -226,7 +233,7 @@ def run_context(kind, seconds):
     signal.signal(signal.SIGALRM, timed_out)
     signal.setitimer(signal.ITIMER_REAL, remaining(deadline))
     try:
-        lock = safe_path(base/'run.lock').open('a')
+        lock = safe_path(lock_base/'run.lock').open('a')
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         acquired = True
         with (run/'subprocess.log').open('x') as log:
@@ -395,6 +402,8 @@ def validate_prepared(state, lock_sha, source_sha=None):
 
 def http_json(method, path, payload, deadline):
     # Direct HTTPConnection never uses proxy environment or follows redirects.
+    if OWNED_SERVER_PGID.get() is not None:
+        assert_listener_owned(OWNED_SERVER_PGID.get())
     connection = http.client.HTTPConnection('127.0.0.1', SETTINGS['port'], timeout=remaining(deadline))
     try:
         connection.request(method, path, body=None if payload is None else json.dumps(payload),
@@ -428,59 +437,71 @@ def validate_gpu_identity(output):
 def probe():
     check_host(sys.argv, platform.system(), platform.machine())
     with run_context('probe', 600) as (run, state, deadline, log):
-        prepared = json.loads(safe_path(ROOT/'artifacts/m0/home5090/prepare-latest.json').read_text())
-        source_sha = source_identity(deadline, log)
-        lock_sha = sha(SOURCE/'environments/home5090/uv.lock', deadline)
-        validate_prepared(prepared, lock_sha, source_sha)
-        headers = prepared['python_headers']
-        header_root = safe_path(Path(prepared['run_dir'])/'python-headers')
-        if headers['root'] != str(header_root) or headers['package_sha256'] != HEADER_SHA256:
-            raise ValueError('prepared header identity mismatch')
-        if header_manifest(safe_path(header_root/'usr/include'), deadline) != headers['manifest']:
-            raise ValueError('prepared headers drifted')
-        state['python_headers'] = {'root': str(header_root), 'package_sha256': HEADER_SHA256}
-        state['source_git_sha'] = source_sha
-        state['lock_sha256'] = lock_sha
-        expected_manifest_path = safe_path(Path(prepared['run_dir'])/'model-manifest.json')
-        expected_manifest = json.loads(expected_manifest_path.read_text())
-        actual_manifest = model_manifest(deadline)
-        if expected_manifest != actual_manifest:
-            raise ValueError('prepared model content drifted')
-        write_json(run/'model-manifest.json', actual_manifest)
-        remaining(deadline)
-        state['prepare_run'] = prepared['run_dir']
-        gpu = command(['/usr/bin/nvidia-smi', '--id=0', '--query-gpu=memory.free', '--format=csv,noheader,nounits'], deadline, log)
-        state['gpu_identity'] = validate_gpu_identity(command(['/usr/bin/nvidia-smi', '--id=0', '--query-gpu=uuid,name,driver_version,memory.total', '--format=csv,noheader,nounits'], deadline, log))
-        free = command(['/usr/bin/free', '-b'], deadline, log)
-        state['resource_preflight'] = {'gpu_free_mib': gpu, 'free_bytes': free}
-        if len(gpu.strip().splitlines()) != 1 or int(gpu.strip()) < 26*1024:
-            raise ValueError('requires one GPU with >=26 GiB free')
-        mem = next(line.split() for line in free.splitlines() if line.startswith('Mem:'))
-        if int(mem[-1]) < 18*1024**3:
-            raise ValueError('less than 18 GiB RAM available')
-        with socket.socket() as port:
-            port.bind(('127.0.0.1', SETTINGS['port']))
-        state['post_model_check'] = 'not_checked'
-        handles = {}
-        child = subprocess.Popen(server_argv(), stdout=log, stderr=log,
-                                 env=header_environment(header_root), start_new_session=True)
+        with managed_server(run, state, deadline, log) as child:
+            _probe_requests(child, run, state, deadline, log)
+
+
+@contextlib.contextmanager
+def managed_server(run, state, deadline, log, *, allow_previous_source=False):
+    prepared = json.loads(safe_path(ROOT/'artifacts/m0/home5090/prepare-latest.json').read_text())
+    source_sha = source_identity(deadline, log)
+    lock_sha = sha(SOURCE/'environments/home5090/uv.lock', deadline)
+    validate_prepared(prepared, lock_sha, None if allow_previous_source else source_sha)
+    headers = prepared['python_headers']
+    header_root = safe_path(Path(prepared['run_dir'])/'python-headers')
+    if headers['root'] != str(header_root) or headers['package_sha256'] != HEADER_SHA256:
+        raise ValueError('prepared header identity mismatch')
+    if header_manifest(safe_path(header_root/'usr/include'), deadline) != headers['manifest']:
+        raise ValueError('prepared headers drifted')
+    state['python_headers'] = {'root': str(header_root), 'package_sha256': HEADER_SHA256}
+    state['prepare_source_git_sha'] = prepared.get('source_git_sha')
+    state['source_git_sha'] = source_sha
+    state['lock_sha256'] = lock_sha
+    expected_manifest_path = safe_path(Path(prepared['run_dir'])/'model-manifest.json')
+    expected_manifest = json.loads(expected_manifest_path.read_text())
+    actual_manifest = model_manifest(deadline)
+    if expected_manifest != actual_manifest:
+        raise ValueError('prepared model content drifted')
+    write_json(run/'model-manifest.json', actual_manifest)
+    remaining(deadline)
+    state['prepare_run'] = prepared['run_dir']
+    gpu = command(['/usr/bin/nvidia-smi', '--id=0', '--query-gpu=memory.free', '--format=csv,noheader,nounits'], deadline, log)
+    state['gpu_identity'] = validate_gpu_identity(command(['/usr/bin/nvidia-smi', '--id=0', '--query-gpu=uuid,name,driver_version,memory.total', '--format=csv,noheader,nounits'], deadline, log))
+    free = command(['/usr/bin/free', '-b'], deadline, log)
+    state['resource_preflight'] = {'gpu_free_mib': gpu, 'free_bytes': free}
+    if len(gpu.strip().splitlines()) != 1 or int(gpu.strip()) < 26*1024:
+        raise ValueError('requires one GPU with >=26 GiB free')
+    mem = next(line.split() for line in free.splitlines() if line.startswith('Mem:'))
+    if int(mem[-1]) < 18*1024**3:
+        raise ValueError('less than 18 GiB RAM available')
+    with socket.socket() as port:
+        port.bind(('127.0.0.1', SETTINGS['port']))
+    state['post_model_check'] = 'not_checked'
+    handles = {}
+    child = subprocess.Popen(server_argv(), stdout=log, stderr=log,
+                             env=header_environment(header_root), start_new_session=True)
+    try:
+        _start_server_monitor(child, handles, run, state, deadline, log)
+        token = OWNED_SERVER_PGID.set(child.pid)
         try:
-            _probe_requests(child, handles, run, state, deadline, log)
+            yield child
         finally:
-            try:
-                cleanup_child(child, handles.get('monitor'), handles.get('stop'))
-            finally:
-                state['owned_group_gone'] = not group_exists(child.pid)
-        if handles['monitor'].is_alive():
-            raise RuntimeError('GPU sampler did not stop')
-        if handles['errors']:
-            raise handles['errors'][0]
-        if model_manifest(deadline) != actual_manifest:
-            raise ValueError('probe modified prepared model content')
-        state['post_model_check'] = 'verified'
+            OWNED_SERVER_PGID.reset(token)
+    finally:
+        try:
+            cleanup_child(child, handles.get('monitor'), handles.get('stop'))
+        finally:
+            state['owned_group_gone'] = not group_exists(child.pid)
+    if handles['monitor'].is_alive():
+        raise RuntimeError('GPU sampler did not stop')
+    if handles['errors']:
+        raise handles['errors'][0]
+    if model_manifest(deadline) != actual_manifest:
+        raise ValueError('probe modified prepared model content')
+    state['post_model_check'] = 'verified'
 
 
-def _probe_requests(child, handles, run, state, deadline, log):
+def _start_server_monitor(child, handles, run, state, deadline, log):
     state['server_pid'] = child.pid
     state['server_argv'] = server_argv()
     state['peak_owned_gpu_mib'] = 0
@@ -535,6 +556,9 @@ def _probe_requests(child, handles, run, state, deadline, log):
         except (ConnectionError, socket.timeout, http.client.HTTPException):
             time.sleep(min(1, remaining(ready_deadline)))
     write_json(run/'models.json', models)
+
+
+def _probe_requests(child, run, state, deadline, log):
     tool = {'model': SETTINGS['model'], 'messages': [{'role': 'user', 'content': 'Call add_numbers with a=17 and b=25.'}],
             'tools': [{'type': 'function', 'function': {'name': 'add_numbers', 'parameters': {'type': 'object', 'properties': {'a': {'type': 'integer'}, 'b': {'type': 'integer'}}, 'required': ['a', 'b']}}}],
             'tool_choice': 'auto', 'temperature': 0, 'max_tokens': 256, 'chat_template_kwargs': {'enable_thinking': False}}
@@ -549,8 +573,6 @@ def _probe_requests(child, handles, run, state, deadline, log):
         raise ValueError('invalid fixed 12288 token prompt')
     request = {'model': SETTINGS['model'], 'prompt': tokens, 'n': 1, 'stream': False, 'add_special_tokens': False, 'ignore_eos': True, 'max_tokens': SETTINGS['output_tokens'], 'return_token_ids': True, 'temperature': 0}
     write_json(run/'completion-request.json', request)
-    if errors:
-        raise errors[0]
     start = time.monotonic()
     assert_listener_owned(child.pid)
     result = http_json('POST', '/v1/completions', request, min(deadline, start+90))

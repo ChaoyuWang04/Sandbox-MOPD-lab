@@ -34,16 +34,20 @@
 
 首pilot最多8个模型trial（含诊断余量），CPU费用预留$1；确认链路后筛选16×8及评测16×3，总计176个模型trial，另32×2正负云对照、诊断至多16个，总创建请求上限264。2026-09-08重新查[官方价目](https://www.daytona.io/pricing)：vCPU $0.0504/小时、内存$0.0162/GiB小时、存储$0.000108/GiB小时。保守计3GiB全部收费，264×300秒的运行资源估计$1.4723；旧M0单实例估算不沿用。另预留构建/存储余量，总规划$10，并非平台账单硬限额；若预计超过$10或发现收费口径未知导致无法有界估计，先暂停扩量。credits余额未验证，不能写成免费。
 
-每次5090固定recipe工作≤3600秒、控制器≤3660秒；最多4批，批间核对自身清理与共享资源。实际API故障先诊断，连续3个创建失败暂停本批且清理已知对象，不盲重派。控制进程显式读取0600私有Daytona配置，密钥不进入vLLM、模型prompt、沙箱、产物或Git。原始证据在远端Lab artifacts/m1/<run-id>，Mac只取小摘要。服务必须在finally回收自身进程组；所有云对象按本批身份删除并列表核对，清理不确定则停止新建。
+每次5090固定recipe工作≤3600秒、控制器≤3660秒，批间核对自身清理与共享资源。实现审阅纠正原“4批”的算术：pilot4一批、controls64一批、screen128两批、eval48一批，至少5批；另保留第二pilot4诊断，最多6批，总创建264/$10预留不增加。controls不启动GPU，其余模式累计GPU时间保守预留不超过21600秒，实际按运行记录统计；这不是额外GPU已获逐plan批准的声明。首云运行前须展示精确计划，按HOME-5090的逐plan人工门控执行。
+
+Lab持久campaign账本按冻结pool/agent身份累计预留与实际尝试、pilot≤8、创建≤264、最多6批；正式重复采样不能静默补位，上一run未收尾或清理不确定会锁住后续创建。pilot须有4条有效完整轨迹、双端清理确认且至少1条模型成功；首4全0只允许第二4诊断，仍无成功不扩量。screen/eval前实际消费32实例NOP0/oracle1控制证据。实际API故障先诊断，连续3个创建失败暂停本批且清理已知对象，不盲重派。
+
+控制进程显式读取0600私有Daytona配置，密钥不进入vLLM、模型prompt、沙箱、产物或Git。原始证据在远端Lab artifacts/m1/home5090/<run-id>，Mac只取小摘要。服务必须在finally回收自身进程组；所有云对象按本批身份删除并列表核对，清理不确定则停止新建。新trial必须额外预留至少150秒覆盖Harbor取消等待与云/GPU清理，不得用满3600秒才开始回收。
 
 ## 实施清单
 
 - [x] 隔离worktree、原43项测试通过。
 - [x] T1：lab_runtime/task_pool.py、tests/test_task_pool.py：先写失败测试，再实现确定性任务生成、独立oracle/反例、清单与Harbor格式；输出只到指定空目录，拒绝覆盖；规格与质量审阅通过。
 - [x] T2：lab_runtime/m1_agent.py、tests/test_m1_agent.py：真实Harbor自定义agent，严格工具schema、预算和完整轨迹，错误分层；10项mock接口测试与双阶段审阅通过，不能冒充G1。
-- [ ] T3：lab_runtime/m1_run.py、scripts/m1_run.py、configs/m1.json及测试：复用共享受控server安全函数，持久批次、预算/清理/聚合；新增固定recipe经服务器负责人登记。先只读资源检查，不能任意SSH后台启动。
+- [ ] T3：lab_runtime/m1_run.py、lab_runtime/m1_campaign.py、scripts/m1_run.py、configs/m1.json及测试：复用共享受控server安全函数，持久批次、前置证据账本、预算/清理/聚合；新增固定recipe经服务器负责人登记。先只读资源检查，不能任意SSH后台启动。
 - [x] T4：离线32实例所有正负/变异测试，冻结清单及SHA；独立审阅verifier与split通过，清单configs/m1-pool-manifest.json SHA256为66a844924f96d3de135e8e3040792a4abf084b37e3c21234f7834132c7b830fc。
 - [ ] T5：真实pilot、云正负对照、筛选和冻结评测；逐批记录实际费用估算/错误/清理。若资源不足保留进度报告用户，不停止他人。
-- [ ] T6：基线和overfit_16清单，逐Gate证据复核；更新README、总计划、EXPERIMENTS、BUDGET；审阅、测试、合并并push独立仓库。
+- [ ] T6：lab_runtime/m1_report.py/tests/test_m1_report.py汇总明确run清单，核对身份、矩阵和全部分母（8项离线测试及双阶段审阅已通过）；真实基线和overfit_16仍待运行。逐Gate证据复核；更新README、总计划、EXPERIMENTS、BUDGET；审阅、测试、合并并push独立仓库。
 
 本地命令：从本worktree用Lab主目录.venv/bin/python -m unittest discover -s tests -v。远端命令仅hlab sync/plan/submit/status/logs；精确recipe与源码SHA在T3落定后登记，不预编造run ID。M1完成后停止，不自动启动M2。

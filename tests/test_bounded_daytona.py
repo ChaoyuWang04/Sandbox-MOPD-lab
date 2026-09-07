@@ -44,6 +44,20 @@ class BoundedDaytonaTest(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(wire.resources.memory, 1)
         self.assertEqual(env._sandbox.id, "test")
 
+    async def test_m1_policies_and_create_evidence_reach_client(self):
+        env = object.__new__(BoundedDaytonaEnvironment)
+        env._auto_labels = False
+        env._user_labels = {'lab': 'sandbox-rl-mopd', 'm1_run': 'unit'}
+        env.task_env_config = SimpleNamespace(build_timeout_sec=60)
+        client = SimpleNamespace(create=AsyncMock(return_value=SimpleNamespace(id='m1-unit')))
+        params = CreateSandboxFromImageParams(image='python:3.12-slim', resources=Resources(cpu=1, memory=1, disk=3))
+        await env._create_sandbox(params, client)
+        actual = client.create.call_args.kwargs['params']
+        self.assertTrue(actual.network_block_all)
+        self.assertEqual(actual.auto_stop_interval, 1)
+        self.assertEqual(actual.auto_delete_interval, 0)
+        self.assertEqual(env.m1_create_events[0]['sandbox_id'], 'm1-unit')
+
 
 if __name__ == "__main__":
     unittest.main()
