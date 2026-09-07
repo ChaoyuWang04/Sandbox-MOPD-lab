@@ -1,5 +1,12 @@
 # 实验记录
 
+## M0-G1 · 私有头文件修复后 PASS（2026-09-08本地时间）
+
+- Lab `ebdde738cfb03e4793125d771a23098de22cc930`，43项测试（头文件3项先RED）及独立review通过。系统Python.h仍缺失且sudo需密码；官方APT固定SHA的dev包仅解包到Lab本次prepare run，头文件manifest及无GPU gcc检查通过。系统Python/库/网络/驱动均未改；后续真实Triton编译通过，不能把无GPU语法检查单独当运行兼容证明。
+- 缓存prepare plan `plan-sandbox-rl-mopd-20260907t161339z-887a8f9f`，run `run-sandbox-rl-mopd-20260907t161352z-090708ef` succeeded/exit0，7.236秒，cold_start=false；状态SHA `6dfad4e010e96d553a1ba3404933c30cf248d5969f89e3c964902da7a54bff64`。不是G4通过。
+- GPU plan `plan-sandbox-rl-mopd-20260907t161432z-4a28be05`，唯一run `run-sandbox-rl-mopd-20260907t161450z-131ece78` succeeded/exit0，脚本185.095秒。独立解析实际请求/响应：输入12288、输出4096且4096个token_ids、finish_reason=length，生成墙钟30.751秒<90秒；tool_calls=add_numbers(a=17,b=25)正确。模型前后manifest一致，owned_group_gone=true，显存按秒采样峰值22000MiB（非硬峰值证明）。Triton编译14.63秒，CUDA graph预热66秒，不计入单请求生成时间但计入脚本总时间。
+- 原始目录`/home/samwang/data/sandbox-rl-MOPD-lab/artifacts/m0/home5090/probe-20260907T161451Z-a75fe31757164a239c40b002037438c1`；状态SHA `2f27e10fcbce10e41fd878c0ad35f640adaa4f89162da9f32fa3b5d74a7c2b2a`。tokenizer对构造时140001-token中间序列警告超131072，实际请求已截为12288并独立核实，不是发送超长输入。G1/G2/G3有通过证据，G4仍需真正冷复测。
+
 ## M0-G1 · 首次GPU smoke：缺少系统Python开发头文件
 
 - 用户批准已展示的单卡660秒计划后，唯一提交`plan-sandbox-rl-mopd-20260907t150221z-d7c07fa5`，run `run-sandbox-rl-mopd-20260907t152121z-ecf732e7`，源码`cf91c2395f32ead8fbfa8f07f85bf8e12ca697ed`。15:21:21Z开始、15:22:12Z控制器终止，failed/exit1；脚本46.121秒。

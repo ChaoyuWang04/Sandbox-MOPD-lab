@@ -16,6 +16,8 @@
 
 ### 2026-09-08：用户批准继续M0与必要下载
 
+G4冷复测：新增无参scripts/prepare_cold_environment.py，复用同一prepare实现，独立空根为data/cold-rebuilds/<UUID>，所有venv/model/cache均重新下载建立，禁止借用暖缓存；保留普通环境与失败证据。持有普通Lab互斥锁，不与GPU/普通prepare同时写；不占GPU、不新增云资源。工作预算7200秒/控制器7260秒，端到端冷准备≤1200秒仍为唯一时间门槛，超过即不通过而不是改阈值。预计额外约20–35GiB磁盘，准入空闲≥80GiB。成功需pip check、锁版本、固定revision模型manifest、私有头文件编译检查；固定索引artifacts/m0/home5090/cold-prepare-latest.json，原始文件在冷根。先测试与review、注册固定recipe，再提交；不临时SSH绕过控制器。日后原始公网下载冷缓存与平台CDN缓存需区分，不宣称清空外部CDN。
+
 SSH恢复，但系统Python.h仍缺失，系统Python包3.12.3-1ubuntu0.11、sudo需密码；服务器同事确认不写Lab也不安装系统包。采用Lab私有头文件：固定Ubuntu libpython3.12-dev 3.12.3-1ubuntu0.16、APT SHA256 `864360533639b45256258475c7843ac7c56f9bf556b356753f21f7e3012fea67`，约5.7MB、curl≤120秒，解包仅到prepare唯一run，不安装/替换系统库。头文件同CPython3.12.3基础版本，发行补丁不同，兼容性须实际gcc检查及Triton启动验证，不能仅凭版本号宣称通过。prepare保存头文件manifest；probe校验后仅服务子进程显式CPATH引用，GPU预算与判据不变。模型/锁保持原身份，缓存续装仍不算G4冷启动。先TDD和独立review，再新SHA受控prepare及GPU smoke；已消费plan不重投。必要记录更新EXPERIMENTS/BUDGET，按既有授权精确提交推送。
 
 ### 网络实测后续装（2026-09-07用户已授权自适应安装）
