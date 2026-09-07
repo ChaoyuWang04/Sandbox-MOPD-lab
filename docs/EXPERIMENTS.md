@@ -9,8 +9,10 @@
 - 本次选择阿里作包传输候选。原uv.lock完全不变：离线冻结export后得到245个固定包/511个原锁允许SHA；无direct-URL requirements。运行时导出到本次run目录，uv pip sync显式专属venv、require-hashes、no-build、default-index，后接pip check；不会让镜像重新选版本。40项测试（4项新RED→GREEN）及独立规格/代码review通过，两份锁offline check通过。
 - UV读取120秒/并发4；HF读取120秒/元数据30秒/官方CLI1.30.0的max-workers2。prepare最多7200秒，控制器7260秒；G4仍独立判cold且≤1200秒。缓存续装不能抹去下面的首次冷准备失败。预计需几十分钟到约两小时，实际由完整文件下载决定。
 - 原始测速摘要：artifacts/m0/network-source-probe.json；官方依据：[uv环境参数](https://docs.astral.sh/uv/configuration/environment/)、[HF环境参数](https://huggingface.co/docs/huggingface_hub/package_reference/environment_variables)、[清华镜像说明](https://mirror.tuna.tsinghua.edu.cn/help/pypi/)。服务器同事负责单独更新prepare时限，Lab负责同步精确新commit后启动一次新plan。
-- 续装已提交一次：Lab `cf91c2395f32ead8fbfa8f07f85bf8e12ca697ed`，controller负责人回报`20efa2718139173e31ab7a403f6662eb5e94914f`；主任务recipes实读7260秒。plan `plan-sandbox-rl-mopd-20260907t142308z-f5c8df69`，run `run-sandbox-rl-mopd-20260907t142335z-3c2c88b3`，创建于14:23:35Z。精确status实读running/active，新内部目录`/home/samwang/data/sandbox-rl-MOPD-lab/artifacts/m0/home5090/prepare-20260907T142335Z-41581ab8b61a4844a63fc886c4d6cc39`；日志已导出冻结要求并解析245包（58.01秒），正在安装。终态尚未验收；进行中的prepare-latest仍可能是旧失败结果，应以source_git_sha/run_dir区分。
-- 当前任务已设置每5分钟低频跟进（应用heartbeat id=m0），正常下载保持安静，完成/失败/需要行动才通知；不在Mac新增模型或容器服务。准备完成交付后暂停跟进，不无限保留。下一次恢复先查以上run，再查文档后续记录，禁止重复安装。
+- 续装已成功：Lab `cf91c2395f32ead8fbfa8f07f85bf8e12ca697ed`，controller `20efa2718139173e31ab7a403f6662eb5e94914f`；plan `plan-sandbox-rl-mopd-20260907t142308z-f5c8df69`，唯一run `run-sandbox-rl-mopd-20260907t142335z-3c2c88b3`。14:23:35Z开始、14:58:34Z结束，status=succeeded/exit0，精确unit终态MainPID=0、inactive/dead。脚本2093.272秒（34分53秒），cold_start=false、g4_candidate=false、gpu_validated=false；环境就绪，不是G4冷启动通过。
+- 原始目录`/home/samwang/data/sandbox-rl-MOPD-lab/artifacts/m0/home5090/prepare-20260907T142335Z-41581ab8b61a4844a63fc886c4d6cc39`；固定prepare-latest.json SHA256为`7a851e5884268c056d17be3d16fdc15f1d387c6ac0f1665dcaa1321f5aca793b`，source_git_sha/run_dir均匹配。pip check成功；独立比较245个pip_freeze包名/版本与锁全部相等，固定revision `1cfa9a7208912126459214e8b04321603b3df60c` 的13个模型文件SHA256复验匹配manifest，3个safetensors分片合计8,044,982,000字节。依赖准备13分52秒；模型期间有网络重连但最终完成。
+- 全Lab data根一次du核对19,787,198,464字节（约18.43GiB）；env/cache存在硬链接，不能把分目录du相加当实际总占用。原始日志和模型留在5090，没有删除缓存、新增GPU或云资源。
+- 安装跟进（heartbeat id=m0）在环境完成交付后暂停；不在Mac新增模型或容器服务。禁止重复安装，下一步仅有待批准GPU计划，见实施计划。
 
 ## M0-G4 · 首次受控 prepare FAIL（网络读取超时）
 

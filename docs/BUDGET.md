@@ -18,7 +18,7 @@ Modal累计2个CPU Sandbox，均确认停止；Daytona包含原单沙箱1个、G
 
 ## G1/G4 固定入口准备预算
 
-首个已批准prepare失败：650.242秒，GPU会话0、云资源新增0；保留服务器Lab cache约3.12GiB和空venv骨架，精确分配字节见EXPERIMENTS。尚未下载模型，无删除。下一次若复用缓存须标缓存恢复，不能冒充从零准备。
+首次冷prepare失败后，已批准续装成功，耗时2093.272秒。服务器Lab data根实际占用19,787,198,464字节（约18.43GiB，单次du去重硬链接），依赖和模型均已就绪；不要相加env/cache分项重复计量。GPU会话0、续装新增云资源0，无删除。此为缓存恢复，不是从零20分钟通过；身份与验证见EXPERIMENTS。
 
 代码准备不分配GPU，不在Mac安装Linux/GPU依赖。目标5090持久根为/home/samwang/data/sandbox-rl-MOPD-lab，下设按锁SHA键控的envs/m0-serving-<lock-id>、固定revision的models/Qwen3-4B、cache和artifacts；不写source_repo。用户在网络实测后授权自适应续装：prepare工作预算7200秒、控制器7260秒；G4冷准备≤1200秒是独立验收读数，不再用它中断正常安装。磁盘空闲不足80GiB拒绝；下载公开约4B BF16模型和锁定wheel，不安装Docker/驱动，不编译源码包。预计需要数十GiB存储，实际大小与从零/缓存状态由prepare记录，不宣称已占用。测得PyPI两路约1.86MiB/s，完整准备估计几十分钟至约两小时而非硬保证。新plan沿用已拥有缓存、同锁venv，不清空重造冷起跑。
 
