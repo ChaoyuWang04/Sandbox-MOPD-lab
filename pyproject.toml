@@ -1,0 +1,9 @@
+[project]
+name = "sandbox-rl-mopd-lab"
+version = "0.1.0"
+description = "Independent sandbox agent RL and multi-teacher OPD experiments"
+requires-python = ">=3.12,<3.13"
+dependencies = ["harbor[modal]==0.22.0", "modal[api-proxy-support]==1.5.5"]
+
+[tool.uv]
+package = false
