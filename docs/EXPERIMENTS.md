@@ -1,5 +1,15 @@
 # 实验记录
 
+## M0-G4 · 首次受控 prepare FAIL（网络读取超时）
+
+- 用户看过精确计划后批准原文：“可以没问题, 请开始吧”。仅批准准备环境和固定模型下载，不含 GPU 运行。
+- plan `plan-sandbox-rl-mopd-20260907t132949z-10a59c45`；固定 Lab commit `437590c9eeaf3cba5636dd1979d27fb27c78d272`；controller 部署由负责人回报为 `fc3b7282cb05c04ed32127242ac54839fb7c6b2c`。主任务通过 doctor/projects/recipes 独立核对接入与固定参数。
+- 唯一 run `run-sandbox-rl-mopd-20260907t134805z-b0da49fb`，unit `hlab-run-sandbox-rl-mopd-20260907t134805z-b0da49fb.service`，2026-09-07T13:48:05Z 创建，13:59:00.734935Z 终止。精确 status 实读 failed/exit1；脚本冷启动耗时650.242秒。内部日志确认 clean detached SHA、系统 Python3.12.3 和独立 venv 创建；vLLM0.28.0 wheel下载最终报 network timeout（UV_HTTP_TIMEOUT=30s），未开始hf模型下载。不是已验证的版本冲突或总时限耗尽。
+- 服务器原始证据目录：`/home/samwang/data/sandbox-rl-MOPD-lab/artifacts/m0/home5090/prepare-20260907T134805Z-52eb52a14ccc4140a3c56db06cd9db1d`。`prepare-latest.json` 在入口 finally 发布，运行时不存在不表示入口未执行。
+- 状态文件SHA256 `9836553164b9878b963cbbb68b2db7004e5daec6f49bb74f58ffd7557c9ef75c`，success=false/cold_start=true。终态精确unit MainPID=0、inactive/dead。保留envs 94208bytes、cache 3352326144bytes、models空目录4096bytes（du分配读数）；没有删除或重试。一次运行中unit MemoryCurrent=4108701696、MemoryPeak=6301720576 bytes，只是采样时点、包含计入缓存，不是最终峰值证明。
+- `hlab runs` 遇到运行中 `finished_at=null` 的索引校验缺陷；精确 status/logs 仍可用。已交共享设施负责人核对，不改运行记录、不重投、不停止任务。准入磁盘 available=755107246080 bytes，为时点读数；未启动 GPU。小型证据摘要在artifacts/m0/home5090-prepare-first.json，原始日志保留服务器。
+- 后续方案尚未实施：按[uv官方环境变量文档](https://docs.astral.sh/uv/configuration/environment/#uv_http_timeout)调查HTTP读取时限与下载并发，候选为读取120s、并发4，总工作时限仍1200s；不换锁、不改系统网络。即使缓存续跑成功也不能改写本次冷启动失败，G4须另行证明。下一次执行需新的精确plan批准，prepare成功前不生成probe plan。
+
 ## M0-G1/G4 · 固定入口代码准备（不是目标环境验收）
 
 共享控制器负责人回报通用升级已上线；本任务只读核对两端git HEAD均为52b327d398b461d0e36b617c19ebf5c1c5c12b1c，hlab --help包含runs。未替其他任务清理或重启任何进程。

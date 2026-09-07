@@ -14,7 +14,7 @@
 
 ## M0-B（执行中）
 
-最新状态：用户要求持续完成M0，批准16并发失败后8并发降级，批准5090最小接入准备。G2授权8并发降级与G3官方NOP/oracle正负对照、正常阶段隔离均有真实结果，全部沙箱独立确认回收。G1/G4尚未完成。5090需要受控source落位与固定入口接入，不触碰他人进程。精确证据与局限见EXPERIMENTS。
+最新状态：G2授权8并发降级与G3官方NOP/oracle正负对照、正常阶段隔离均有真实结果，全部沙箱独立确认回收。5090受控source与两个固定入口已接入；用户逐plan批准后的首次prepare在650.242秒因vLLM wheel网络读取超时失败，已退出，未下载模型或启动GPU。G1/G4未通过。精确run身份、保留缓存与后续候选方案只维护在EXPERIMENTS；不触碰他人进程、不自动重投。
 
 Mac本地容器trial已因用户内存边界取消；当前只运行短时云控制进程。Modal历史失败不阻断已验证的Daytona路径，两家证据不能混用。三端资源唯一预算见BUDGET，G1/G4准备与共享设施接入仍待完成。
 
@@ -27,7 +27,7 @@ Mac本地容器trial已因用户内存边界取消；当前只运行短时云控
 | M0-G1 | 5090 Qwen3-4B，16k 上下文，单请求 4k 生成 <90s | 模型 revision、原始请求、实际 token 数、耗时及 tool_calls 内容 | 未运行 |
 | M0-G2 | 原16并发<60s；用户授权失败后8并发 | 单容器状态、总墙钟、清理后容器列表 | 16失败；8降级PASS，4.97秒、全部回收 |
 | M0-G3 | 官方 Harbor 示例完整 trial | 固定源码/版本、指令、轨迹、verifier 奖励和 teardown | NOP=0、oracle=1、阶段隔离和回收PASS；非强对抗隔离证明 |
-| M0-G4 | 选定执行环境从零准备 ≤20min | 已选平台与镜像、依赖锁、计时、账单及停止确认 | 原生云 Sandbox 有官方接口证据；Lab 部署未开始 |
+| M0-G4 | 选定执行环境从零准备 ≤20min | 已选平台与镜像、依赖锁、计时、账单及停止确认 | 首次冷prepare网络超时FAIL，已退出；未完成部署 |
 
 G1 必须区分 4k 输出上限与实际生成满 4k，避免短回答误过速度门槛。G2 先从低并发测资源再到 16；不得影响正在运行的 harness-lab。G3 必须证明 agent 看不到私有判分材料，文档格式存在不能替代隔离测试。
 
@@ -41,7 +41,7 @@ G1 必须区分 4k 输出上限与实际生成满 4k，避免短回答误过速�
 
 上述 M1–M4 项只登记风险，不在 M0-A 改算法或验收数值。
 
-## hlab 接入需求（待实现，不是已注册 recipe）
+## hlab 接入（已注册，首次 prepare 失败）
 
 ### 固定入口实施批次（用户已批准继续完整M0）
 
@@ -51,7 +51,7 @@ G1 必须区分 4k 输出上限与实际生成满 4k，避免短回答误过速�
 - [x] tests/test_home5090.py先验证固定路径/参数、满4096 token与90秒边界、工具调用内容和不满足时失败；再实现lab_runtime/home5090.py共享契约及两个scripts固定入口。
 - [x] prepare入口使用/usr/bin/python3、/home/samwang/.local/bin/uv，所有环境/模型/cache/artifacts固定在/home/samwang/data/sandbox-rl-MOPD-lab；source_repo只读。环境按锁SHA键控，frozen/no-build sync，固定模型revision，幂等目录、互斥锁、原子状态文件、最长1200秒。
 - [x] GPU入口固定Qwen3-4B BF16、16384上下文、4096实际输出、loopback18741；显存规划0.70，1秒采样本次进程组>24GiB停止，不宣称硬限额；只读资源不足即拒绝不杀人。只终止本次Popen精确进程组。最长600秒，耗时/输出/失败保存独立证据及固定latest状态索引。上述为代码已实现，尚未目标实跑。
-- [ ] 本地离线测试、独立评审、提交推送，将精确SHA/argv/输出契约交控制器负责人注册。GPU计划实际提交前再展示精确plan与资源并取得用户approval note；不把准备授权当GPU已获准运行。
+- [x] 本地离线测试、独立评审、提交推送，将精确SHA/argv/输出契约交控制器负责人注册。首次prepare逐plan批准后已执行失败，见EXPERIMENTS；GPU计划仍未生成，不把准备授权当GPU已获准运行。
 
 机器可读结果固定为data根下artifacts/m0/home5090/prepare-latest.json和probe-latest.json；每次原始日志/请求/结果保存在同目录下唯一run目录。G4从零计时与缓存复用明确区分。禁止自由shell字符串、用户可变模型/预算参数或调用父项目代码。注册时控制器先不可覆盖创建data根供disk_path准入；recipe超时1260/660秒分别覆盖工作预算和清理余量。
 
@@ -61,4 +61,4 @@ G1 必须区分 4k 输出上限与实际生成满 4k，避免短回答误过速�
 
 接入需要在控制器开发副本中注册新的 Lab project ID，完成测试、独立评审和同 SHA 部署；禁止改当前安装副本。Lab 已独立 Git 管理，用户已授权提交推送；hlab 接入需提供该仓库的完整 commit SHA。控制器管理的 mirror/worktree/run 元数据属于工具目录例外，业务资产仍归 Lab。
 
-当前两端控制器已现场核对为52b327d398b461d0e36b617c19ebf5c1c5c12b1c，支持runs；负责人确认通用资源拒绝、bindings及degraded警告语义已部署。不得清除OASIS失败状态。剩余依赖是本Lab固定入口和静态recipe注册，不再是泛化设施升级。source_repo、working_directory、完整commit、解释器和输出路径将交负责人精确登记；GPU运行仍必须展示plan并取得用户approval note。
+注册批次控制器负责人回报两端为fc3b7282cb05c04ed32127242ac54839fb7c6b2c，主任务已用doctor/projects/recipes核对两个固定入口。首次真实运行暴露runs索引不接受finished_at=null，已交负责人处理；精确status/logs可用，不影响按run-id恢复。不得清除OASIS或本Lab失败状态。GPU运行仍必须在prepare成功后展示精确plan并取得用户approval note。

@@ -18,6 +18,8 @@ Modal累计2个CPU Sandbox，均确认停止；Daytona包含原单沙箱1个、G
 
 ## G1/G4 固定入口准备预算
 
+首个已批准prepare失败：650.242秒，GPU会话0、云资源新增0；保留服务器Lab cache约3.12GiB和空venv骨架，精确分配字节见EXPERIMENTS。尚未下载模型，无删除。下一次若复用缓存须标缓存恢复，不能冒充从零准备。
+
 代码准备不分配GPU，不在Mac安装Linux/GPU依赖。目标5090持久根为/home/samwang/data/sandbox-rl-MOPD-lab，下设按锁SHA键控的envs/m0-serving-<lock-id>、固定revision的models/Qwen3-4B、cache和artifacts；不写source_repo。prepare最多1200秒（退出清理另预留），磁盘空闲不足80GiB拒绝；下载公开约4B BF16模型和锁定wheel，不安装Docker/驱动，不编译源码包。预计需要数十GiB存储，实际大小与从零/缓存状态由prepare记录，不宣称已占用。
 
 probe正式提交前展示精确hlab plan并取得用户approval note：GPU0、BF16、16384上下文、单请求4096输出、最长600秒，规划显存比例0.70且采样本次进程组峰值>24GiB停止自身。GPU空闲不足26GiB或主存available不足18GiB拒绝，不停止其他进程。主存16GiB是本Lab目标预算，目前脚本资源读数并非OS硬限额；最终运行需在计划中明确此局限。Mac仅代码/短时CPU检查，云资源本批不新增。模型推理与G4实测尚未运行。
