@@ -29,6 +29,13 @@ def iter_source_rows(asset_path, source, parquet_factory=None):
             close()
 
 
+def _quoted_paths(value):
+    try:
+        return shlex.split(value)
+    except ValueError:
+        raise ValueError('invalid_diff_header') from None
+
+
 def _changed_files(patch):
     paths = set()
     in_hunk = False
@@ -39,7 +46,7 @@ def _changed_files(patch):
             # Git does not quote ordinary spaces. Split at its b/ prefix,
             # not whitespace; quoted headers still follow Git's two tokens.
             if header.startswith('"'):
-                values = shlex.split(header)
+                values = _quoted_paths(header)
             else:
                 candidates = [(header[:m.start()], header[m.start() + 1:])
                               for m in re.finditer(r' b/', header)]
@@ -59,7 +66,7 @@ def _changed_files(patch):
             continue
         elif line.startswith(('--- ', '+++ ')):
             value = line[4:].split('\t', 1)[0]
-            values = shlex.split(value) if value.startswith('"') else [value]
+            values = _quoted_paths(value) if value.startswith('"') else [value]
         elif line.startswith(('rename from ', 'rename to ', 'copy from ', 'copy to ')):
             # Git extended headers omit the a/ or b/ prefix.
             value = line.split(' ', 2)[2]
@@ -86,8 +93,9 @@ def _index(row, spec, line_number):
     if not isinstance(row, dict):
         raise ValueError('invalid_record')
     fields = ('instance_id', 'repo', 'problem_statement', 'patch')
-    if any(not isinstance(row.get(k), str) or not row[k].strip() for k in fields):
-        raise ValueError('invalid_record')
+    for key in fields:
+        if not isinstance(row.get(key), str) or not row[key].strip():
+            raise ValueError('invalid_' + key)
     source = spec['path'].split('/')[0]
     base_commit = row.get('base_commit')
     if source != 'swe-smith' or base_commit is not None:
@@ -100,9 +108,12 @@ def _index(row, spec, line_number):
     for key in ('FAIL_TO_PASS', 'PASS_TO_PASS'):
         tests = row.get(key)
         if isinstance(tests, str):
-            tests = json.loads(tests)
+            try:
+                tests = json.loads(tests)
+            except ValueError:
+                raise ValueError('invalid_' + key.lower()) from None
         if not isinstance(tests, list) or any(not isinstance(t, str) for t in tests):
-            raise ValueError('invalid_test_list')
+            raise ValueError('invalid_' + key.lower())
         counts[key.lower() + '_count'] = len(tests)
     return dict({k: row[k] for k in fields[:-1]}, **counts,
                 base_commit=base_commit, image_name=row.get('image_name'),
@@ -149,6 +160,7 @@ def catalog_sources(source_root, manifest, output_root):
         staging = Path(tempfile.mkdtemp(prefix='.catalog-', dir=output_root.parent))
         total = 0
         rows = 0
+        accepted = rejected = 0
         seen = {}
         lines = {}
 
@@ -160,30 +172,56 @@ def catalog_sources(source_root, manifest, output_root):
                 raise ValueError('output_size_limit')
             stream.write(data)
 
-        with (staging / 'index.jsonl').open('xb') as index:
+        with (staging / 'index.jsonl').open('xb') as index, (staging / 'rejected.jsonl').open('xb') as quarantine:
             for spec in assets:
                 source = spec['path'].split('/')[0]
                 seen.setdefault(source, set())
                 lines.setdefault(source, 0)
                 with (staging / (source + '.jsonl')).open('ab') as raw:
-                    for row in iter_source_rows(relative_path(source_root, spec['path']), source):
-                        record = _index(row, spec, lines[source] + 1)
-                        if record['instance_id'] in seen[source]:
-                            raise ValueError('duplicate_instance_id')
-                        seen[source].add(record['instance_id'])
+                    for asset_row, row in enumerate(iter_source_rows(relative_path(source_root, spec['path']), source), 1):
+                        instance_id = row.get('instance_id') if isinstance(row, dict) else None
+                        if isinstance(instance_id, str) and instance_id.strip():
+                            if instance_id in seen[source]:
+                                raise ValueError('duplicate_instance_id')
+                            seen[source].add(instance_id)
                         write(raw, row)
-                        write(index, record)
                         lines[source] += 1
                         rows += 1
+                        try:
+                            record = _index(row, spec, lines[source])
+                        except ValueError as exc:
+                            # Never copy arbitrary exception text (or source content)
+                            # into a rejection reason, including JSON/parser errors.
+                            reason = str(exc)
+                            allowed = {'invalid_record', 'invalid_instance_id', 'invalid_repo',
+                                       'invalid_problem_statement', 'invalid_patch', 'invalid_base_commit',
+                                       'missing_image_identity', 'invalid_fail_to_pass', 'invalid_pass_to_pass',
+                                       'invalid_diff_header', 'ambiguous_diff_header', 'unsafe_patch_path',
+                                       'missing_patch_file_headers'}
+                            if reason not in allowed:
+                                raise
+                            write(quarantine, dict(source=source, source_revision=spec['revision'],
+                                                   source_asset=spec['path'], source_asset_sha256=spec['sha256'],
+                                                   source_line=lines[source], asset_row=asset_row,
+                                                   instance_id=instance_id if isinstance(instance_id, str) else None,
+                                                   reason=reason))
+                            rejected += 1
+                        else:
+                            record['asset_row'] = asset_row
+                            write(index, record)
+                            accepted += 1
                     raw.flush()
                     os.fsync(raw.fileno())
             index.flush()
             os.fsync(index.fileno())
+            quarantine.flush()
+            os.fsync(quarantine.fileno())
         if output_root.exists():
             raise ValueError('output_exists')
         staging.rename(output_root)
         staging = None
-        return {'rows': rows, 'bytes': total, 'sources': lines}
+        return {'rows': rows, 'accepted': accepted, 'rejected': rejected,
+                'bytes': total, 'sources': lines}
     finally:
         if staging is not None:
             shutil.rmtree(staging)

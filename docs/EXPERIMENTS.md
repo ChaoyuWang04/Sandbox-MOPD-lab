@@ -2,7 +2,7 @@
 
 ## M1 当前状态 · 实施中，未验收
 
-2026-09-08用户批准持续完成200题准备；能力/来源/切分与验收见[总计划M1](sandbox-rl-lab-plan.md)，当前队列见[扩池计划](plans/2026-09-08-m1-200-case-plan.md)。现有自建48已生成并通过离线规格/质量审阅；外部来源19个登记资产已在独立Modal Volume下载并由导入器校验（448384495字节），TB已展开859文件，Harbor子集解包和catalog尚未完成。200题尚未建成或逐题实跑；无有效模型基线，未启动M2。旧32题campaign不直接复跑。
+2026-09-08用户批准持续完成200题准备；能力/来源/切分与验收见[总计划M1](sandbox-rl-lab-plan.md)，当前队列见[扩池计划](plans/2026-09-08-m1-200-case-plan.md)。现有自建48已生成并通过离线规格/质量审阅；外部来源19个登记资产已在独立Modal Volume下载并由导入器校验（448384495字节），TB已展开859文件，Harbor子集解包与临时PyArrow安装已通过，catalog尚未完成。200题尚未建成或逐题实跑；无有效模型基线，未启动M2。旧32题campaign不直接复跑。
 
 ### v2自建与下载准备
 
@@ -13,6 +13,8 @@
 真实App `ap-KnwJizktwLDI0yRHNJhUMd`（源码`b9cb0e7`）已完成下载但在Harbor解包阶段以`unsafe_archive_member`失败，不能视为import整体完成。只读状态及tar成员核对：19资产共448384495字节，TB归档展开859文件；Harbor仅有范围外`CLAUDE.md`与`docs/CLAUDE.md`指向`AGENTS.md`的两个链接，拟跳过未选范围特殊成员，选内链接/路径越界/展开size检查不变。数据在Volume `sandbox-mopd-lab-m1-data-v2`（`vo-Hs5MyCjulIuJUOOsenUK0t`）的`data/m1/v2/sources/`；状态`artifacts/m1/v2/import-latest.json`与`modal-import-latest.json`。完整定义见[BUDGET](BUDGET.md)，前两次平台创建/挂载兼容失败身份保留在同处。
 
 SWE-Gym已从Lite230扩展调查完整2438题概要，真实PR支持A20/B20/组合10候选，仍待冻结数据匹配/运行；TB按完整未选题筛查保留A10/B10/组合10/OOD20候选。分类按任务目标，不自行增加“内部实现路径全部逐项验证”的新门槛；native grader的覆盖缺口保留，不声称组合机制已被全部独立证实。SWE-smith候选仍待完整冻结数据补齐，不能把Viewer超时计成无题。候选研究在`data/m1/v2/research/`，都不是最终200清单。
+
+后续App `ap-EcF3cSGivqD61WaxzrT8mD`（源码`f37929b`）通过下载复验、Harbor选定子集解包及离线wheel安装，终态在catalog失败，App已停止、tasks=0。只读逐行诊断确定首个问题是Smith首分片第3行`oauthlib__oauthlib.1fd52536.combine_file__0fukhdzk`的`problem_statement`为空（patch11399字符、FTP37/PTP636）；不是下载失败或磁盘不足证据。修复方向为原始行完整保留、无效行单独审计并排除候选，不放宽题面完整性要求；校验和、重复身份及输出量边界仍是硬错误。
 
 以下保留旧32题实施与失败证据。
 

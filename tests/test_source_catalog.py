@@ -69,6 +69,19 @@ class CatalogTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             catalog._changed_files('this is not a patch')
 
+    def test_unknown_validation_error_is_fatal(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            manifest = self.fixture(root)
+            with patch.object(catalog, 'iter_source_rows', return_value=iter([row()])), patch.object(catalog, '_index', side_effect=ValueError('programming_error')):
+                with self.assertRaisesRegex(ValueError, 'programming_error'):
+                    catalog.catalog_sources(root, manifest, root / 'catalog')
+            self.assertEqual(sorted(p.name for p in root.iterdir()), ['swe-smith'])
+
+    def test_unclosed_quoted_diff_header_has_fixed_reason(self):
+        with self.assertRaisesRegex(ValueError, '^invalid_diff_header$'):
+            catalog._changed_files('diff --git "a/a b/b')
+
     def test_git_paths_with_spaces_and_extended_headers(self):
         patch_text = ('diff --git a/old name.py b/new name.py\n'
                       'similarity index 100%\nrename from old name.py\nrename to new name.py\n'
@@ -99,8 +112,14 @@ class CatalogTests(unittest.TestCase):
         invalid = [None, {}, dict(row(), FAIL_TO_PASS=None), dict(row(), PASS_TO_PASS='{}'),
                    dict(row(), patch='diff --git a/../secret b/../secret\n'),
                    dict(row(), patch='--- /etc/passwd\n+++ b/a\n')]
-        for rows in ([bad] for bad in invalid):
-            self.assert_failed(rows)
+        for bad in invalid:
+            with tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp).resolve()
+                manifest = self.fixture(root)
+                with patch.object(catalog, 'iter_source_rows', return_value=iter([bad])):
+                    result = catalog.catalog_sources(root, manifest, root / 'catalog')
+                self.assertEqual(result['rejected'], 1)
+                self.assertEqual(result['accepted'], 0)
         self.assert_failed([row(), row()])
         with patch.object(catalog, 'MAX_OUTPUT_BYTES', 10):
             self.assert_failed([row()])
@@ -113,3 +132,23 @@ class CatalogTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     catalog.catalog_sources(root, manifest, root / 'catalog')
             self.assertEqual(sorted(p.name for p in root.iterdir()), ['swe-smith'])
+
+    def test_quarantine_retains_raw_and_tracks_rows_across_shards(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            manifest = self.fixture(root)
+            second = dict(manifest['assets'][0], path='swe-smith/b.parquet')
+            (root / second['path']).write_bytes(b'parquet-fixture')
+            manifest['assets'].append(second)
+            bad = dict(row(), problem_statement='')
+            good = dict(row(), instance_id='two')
+            with patch.object(catalog, 'iter_source_rows', side_effect=[iter([bad]), iter([good])]):
+                result = catalog.catalog_sources(root, manifest, root / 'catalog')
+            self.assertEqual((result['rows'], result['accepted'], result['rejected']), (2, 1, 1))
+            self.assertEqual([json.loads(x) for x in (root / 'catalog/swe-smith.jsonl').read_text().splitlines()], [bad, good])
+            rejection = json.loads((root / 'catalog/rejected.jsonl').read_text())
+            self.assertEqual(rejection['reason'], 'invalid_problem_statement')
+            self.assertEqual((rejection['source_line'], rejection['asset_row']), (1, 1))
+            accepted = json.loads((root / 'catalog/index.jsonl').read_text())
+            self.assertEqual((accepted['source_line'], accepted['asset_row']), (2, 1))
+        self.assert_failed([dict(row(), problem_statement=''), row()])
