@@ -4,12 +4,12 @@
 
 本目录独立 Git 跟踪，父仓库通过 `/sandbox-rl-MOPD-lab/` 忽略整个目录；不是 submodule。GitHub 仓库为 https://github.com/ChaoyuWang04/Sandbox-MOPD-lab ，origin 使用 HTTPS（本次 SSH 公钥认证失败，HTTPS refs 查询成功）。用户已授权每批完成并验证后提交、推送本仓库，不包含父仓库改动。原始 artifacts 保留本地，远程文档中的相应路径表示本地证据，不保证克隆后存在。
 
-独立的容器 Agentic RL 与多教师在线蒸馏实验。M0已完成：G1实测12288输入/4096输出30.75秒及工具调用通过；G2授权8并发降级和G3正常阶段链路通过，测试进程/沙箱均已回收。2026-09-08用户取消G4首次冷准备速度检查，不将其历史失败改写为通过。M1已批准小池先行，正在实施，尚未验收。
+独立的容器 Agentic RL 与多教师在线蒸馏实验。M0已完成：G1实测12288输入/4096输出30.75秒及工具调用通过；G2授权8并发降级和G3正常阶段链路通过，测试进程/沙箱均已回收。2026-09-08用户取消G4首次冷准备速度检查，不将其历史失败改写为通过。M1已批准200题设计（80训练/20开发/100最终测试）；已有自建32题，扩池与外部接入尚未完成，无有效模型基线，尚未验收。
 
 ## 入口与状态
 
 - 总体目标与 M0–M5 门槛：[总计划](docs/sandbox-rl-lab-plan.md)。
-- 当前范围与下一步：[M1 小池实施计划](docs/plans/2026-09-08-m1-small-pool-plan.md)；[M0收尾](docs/plans/2026-09-07-m0-environment-plan.md)。
+- 当前范围与下一步：[M1 200题扩池计划](docs/plans/2026-09-08-m1-200-case-plan.md)；[M0收尾](docs/plans/2026-09-07-m0-environment-plan.md)。
 - 实测记录：[EXPERIMENTS](docs/EXPERIMENTS.md)；费用：[BUDGET](docs/BUDGET.md)。
 - Harbor 格式、依赖来源和平台限制：[HARBOR_NOTES](docs/HARBOR_NOTES.md)。
 

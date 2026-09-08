@@ -2,7 +2,7 @@
 
 ## M1 当前状态 · 实施中，未验收
 
-2026-09-08用户批准小池方案并执行至M1完成。范围及唯一验收标准见[M1计划](plans/2026-09-08-m1-small-pool-plan.md)。未启动M2。
+2026-09-08用户批准200题扩池设计；能力/来源/切分与验收见[总计划M1](sandbox-rl-lab-plan.md)，当前队列见[扩池计划](plans/2026-09-08-m1-200-case-plan.md)。本次为文档更新：已有32题自建，新增16未生成，三类外部来源未导入，200题尚未建成；无有效模型基线，未启动M2。旧32题campaign不直接复跑，以下仅保留其实施与失败证据。
 
 - T1源码63b8416：4族32实例（每族train/eval各4），独立oracle和严格grader；7项离线测试逐实例验证oracle=1、NOP及排序/数值/缺项/类型/输入修改等反例=0；JSON<5及==5边界、Harbor30/180秒解析和字节确定性通过。两轮独立审阅通过。冻结清单路径及SHA只维护在M1计划；模型尚未读过这些评测实例。
 - T2源码5cf2ad4：10项接口测试通过，覆盖多轮工具观测、token累计/模板漂移、异常finish、预算、私有路径检查、失败工具轨迹、HTTP取消收敛及usage未知标记。规格和质量审阅通过；mock不证明真实模型或沙箱链路。
@@ -21,7 +21,7 @@
 - Harbor清理后独立delete遇DaytonaConflictError，再次清理遇DaytonaNotFoundError，批次因此CleanupUncertain。之后使用独立客户端只读GET精确ID取得DaytonaNotFoundError，按精确Lab/run标签list为空；确认该时点无本批沙箱，未新建或追加删除。旧summary保留原来的不确定状态，不能追改为成功。
 - 脚本60.174秒，显存1秒采样峰值22946MiB，owned_group_gone=true；失败路径post_model_check=not_checked，不能声称模型前后复验完成。hlab活动Lab任务复核0；共享GPU空闲27224MiB是复核时点，不把其他占用归成本实验或停止他人。
 - 最小修复：隔离判据仅允许精确标记后无换行/LF/CRLF，仍拒绝额外内容；清理只捕获409/404竞态并在原截止时间内等待fresh list空，不直接把异常当成功、不重复delete。新增3项测试先RED后GREEN；全套92 tests PASS（12.315秒），独立审阅41项M1测试通过。尚未真实复跑。
-- 下一步需显式campaign恢复设计：保留旧run/summary哈希、1次尝试和既有预算消耗，附独立清理确认，登记修复后的agent身份继承，不能清空账本或抹掉失败。当前ledger的unresolved_cleanup=true和旧agent身份仍保留，禁止直接新建；恢复与新pilot需预注册、审阅并生成新的精确plan再按人类门控执行。
+- 旧campaign继续锁定：保留run/summary哈希、1次尝试和既有预算消耗，附独立清理确认。当前ledger的unresolved_cleanup=true和旧agent身份仍保留；200题使用另行设计的v2身份与预算关联，不清空账本，不用旧plan直接新建。下一步先做来源清点与扩池，而不是恢复旧pilot。
 
 ## M0 收尾 · PASS（2026-09-08，用户修订验收范围）
 
