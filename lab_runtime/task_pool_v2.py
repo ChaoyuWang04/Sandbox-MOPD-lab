@@ -271,6 +271,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path('/app')
 rewards = Path(sys.argv[2]) if len(sys.argv) > 2 else Path('/logs/verifier')
 private = Path(__file__).parent
@@ -291,9 +292,12 @@ try:
     code = root/'work/target.py'
     assert not (root/'work').is_symlink() and not code.is_symlink()
     assert code.is_file() and code.stat().st_size <= 65536
-    checked = subprocess.run([sys.executable, '-I', '-B', str(private/'check.py'), str(root)],
-                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
-    passed = checked.returncode == 0
+    with tempfile.TemporaryDirectory(prefix='self-v2-check-') as temporary:
+        marker = Path(temporary)/'completed'
+        checked = subprocess.run([sys.executable, '-I', '-B', str(private/'check.py'), str(root), str(marker)],
+                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
+        passed = (checked.returncode == 0 and marker.is_file() and not marker.is_symlink()
+                  and marker.read_bytes() == b'checks-complete\\n')
 except (OSError, ValueError, AssertionError, subprocess.TimeoutExpired):
     pass
 rewards.mkdir(parents=True, exist_ok=True)
@@ -314,6 +318,12 @@ module_spec = importlib.util.spec_from_file_location('target', root/'work/target
 target = importlib.util.module_from_spec(module_spec)
 module_spec.loader.exec_module(target)
 '''+textwrap.dedent(CHECKS[family]).lstrip()
+    # A successful interpreter exit alone does not prove the behavioral checks
+    # ran. Catch ordinary early exits and require a fresh per-invocation marker.
+    # Deliberate same-process tampering remains outside normal-phase isolation.
+    check = ('import sys\ntry:\n' + textwrap.indent(check, '    ')
+             + "    Path(sys.argv[2]).write_bytes(b'checks-complete\\n')\n"
+             + 'except BaseException:\n    sys.exit(1)\n')
     oracle = "from pathlib import Path\nimport sys\nroot = Path(sys.argv[1]) if len(sys.argv)>1 else Path('/app')\n"
     oracle += f"(root/'work/target.py').write_text({textwrap.dedent(REPAIRS[family]).lstrip()!r})\n"
     texts = {
