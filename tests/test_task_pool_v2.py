@@ -65,6 +65,11 @@ class SelfPoolV2Test(unittest.TestCase):
                     subprocess.run([sys.executable, str(task/'solution/oracle.py'), str(workspace)], check=True, timeout=5)
                     self.assertEqual(grade(), '1', 'independent repair must pass behavioral checks')
                     fixed = (workspace/'work/target.py').read_text()
+                    if row['family'] == 'config_precedence':
+                        retained_none = fixed.replace('result = {}', 'result = copy.deepcopy(defaults)').replace(
+                            '(defaults, file_values, env, cli)', '(file_values, env, cli)')
+                        (workspace/'work/target.py').write_text(retained_none)
+                        self.assertEqual(grade(), '0', 'defaults None must also mean absent')
                     (workspace/'work/target.py').write_text('raise SystemExit(0)\n')
                     self.assertEqual(grade(), '0', 'early exit zero must not impersonate completed checks')
                     (workspace/'work/target.py').write_text('import os\nos._exit(0)\n')
@@ -91,6 +96,40 @@ class SelfPoolV2Test(unittest.TestCase):
                 self.assertEqual(Task(task_dir=task).config.environment.gpus, 0)
                 self.assertFalse(list((task/'environment').rglob('*oracle*')))
                 self.assertFalse(list((task/'environment').rglob('*check*')))
+
+    def test_default_none_is_absent_in_reference_repair(self):
+        m = self.module()
+        namespace = {}
+        exec(m.REPAIRS['config_precedence'], namespace)
+        self.assertEqual(namespace['resolve']({'absent': None, 'present': 0}, {}, {}, {}), {'present': 0})
+
+    def test_resource_copy_is_not_the_acquired_object(self):
+        m = self.module()
+        mutant = '''from contextlib import contextmanager
+import copy
+@contextmanager
+def session(factory):
+    resource = factory()
+    try:
+        yield copy.copy(resource)
+    finally:
+        resource.close()
+'''
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            manifest = m.materialize_self_pool(root/'pool')
+            for row in manifest['instances'][32:]:
+                if row['family'] != 'resource_lifetime':
+                    continue
+                with self.subTest(instance=row['instance']):
+                    task = root/'pool'/row['path']
+                    workspace = root/row['instance']
+                    shutil.copytree(task/'environment/input', workspace/'input')
+                    shutil.copytree(task/'environment/work', workspace/'work')
+                    (workspace/'work/target.py').write_text(mutant)
+                    rewards = workspace/'rewards'
+                    subprocess.run([sys.executable, str(task/'tests/verify.py'), str(workspace), str(rewards)], check=True, timeout=10)
+                    self.assertEqual((rewards/'reward.txt').read_text().strip(), '0')
 
 
 if __name__ == '__main__':

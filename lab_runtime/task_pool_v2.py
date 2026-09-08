@@ -15,8 +15,8 @@ REPAIRS = {
     'config_precedence': '''
 import copy
 def resolve(defaults, file_values, env, cli):
-    result = copy.deepcopy(defaults)
-    for source in (file_values, env, cli):
+    result = {}
+    for source in (defaults, file_values, env, cli):
         for key, value in source.items():
             if value is not None:
                 result[key] = copy.deepcopy(value)
@@ -141,7 +141,7 @@ CHECKS = {
     'config_precedence': '''
 import copy
 key = spec['key']
-d = {key: 7, 'nested': {'items': [1]}, 'keep': 9}
+d = {key: 7, 'nested': {'items': [1]}, 'keep': 9, 'absent': None}
 f = {key: 8, 'zero': 4}
 e = {key: 0, 'zero': 0, 'flag': False, 'text': ''}
 c = {key: None, 'extra': spec['value']}
@@ -165,10 +165,15 @@ class Resource:
     def close(self):
         events.append(('close', self.name))
 name = spec['key']
-with target.session(lambda: Resource(name)) as outer:
-    assert outer.name == name
-    with target.session(lambda: Resource('inner')) as inner:
-        assert inner.name == 'inner'
+acquired = []
+def factory(resource_name):
+    resource = Resource(resource_name)
+    acquired.append(resource)
+    return resource
+with target.session(lambda: factory(name)) as outer:
+    assert outer is acquired[0]
+    with target.session(lambda: factory('inner')) as inner:
+        assert inner is acquired[1]
 assert events == [('open', name), ('open', 'inner'), ('close', 'inner'), ('close', name)]
 class Stop(BaseException):
     pass
