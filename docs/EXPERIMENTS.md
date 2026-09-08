@@ -10,16 +10,28 @@
 
 | 执行路径 | 现有证据 | 剩余范围 |
 |---|---|---|
-| 自建48/8族 | 全实例短CPU逻辑检查；data_csv真实正负对照 | 新增代码修复型执行路径尚需代表性云接入，不按48实例复跑 |
+| 自建48/8族 | 全实例短CPU逻辑检查；data_csv真实正负对照；四种新增代码修复族各1题真实模型pilot | 其余参数变体不逐题复跑；当前4题不是冻结base基线 |
 | Smith52 | 52共享同一test_command及安装阶段；13仓库/13镜像；sqlparse真实正负对照 | 其他12镜像未运行，不将一个样例外推镜像兼容性 |
 | Gym50 | 10仓库/50镜像；按reinstall命令+eval_commands+parser分12组；moto真实正负对照 | mypy选择器、Conan环境导出等分支仍需定向样例；其余镜像不是默认追加双对照 |
 | TB50 | 原任务资产/摘要/Harbor解析；原生pytest与CTRF | 本池尚无真实参考解样例，M0 hello-world不替代；优先补该接入路径 |
 
 已安装Harbor0.22 CLI只读确认`run`是`job start`别名，支持JobConfig、`--n-concurrent`（默认4）及`--print-config`；无需新建全池调度器。原先全局create事件回调只适用单trial，不能直接并发复用；后续先核对原生Job的逐trial生命周期接口，保留必要的薄层保护，不以增加自写控制层为默认。
 
-阶段仍为准备中：资产与离线回归通过，代表性云覆盖尚有上述缺口，不宣称G2完成或全部200云端验证。后续RL奖励只作为诊断线索，infra/verifier invalid不能混进模型0分；最终验收契约见总计划G2和扩池计划P3。
+阶段仍为准备中：资产与离线回归通过，自建新增执行路径的模型pilot已接通，但TB代表性云覆盖等缺口仍在；不宣称G2完成或全部200云端验证。后续RL奖励只作为诊断线索，infra/verifier invalid不能混进模型0分；最终验收契约见总计划G2和扩池计划P3。
 
-2026-09-08用户批准持续完成200题准备；能力/来源/切分与验收见[总计划M1](sandbox-rl-lab-plan.md)，当前队列见[扩池计划](plans/2026-09-08-m1-200-case-plan.md)。统一200题文件已实际装配并经Harbor加载，train80/dev20/final100；8项组装检查与两级审阅通过，精确清单身份见扩池计划。外部来源19个登记资产已在独立Modal Volume下载并由导入器校验（448384495字节），完整catalog已完成。当前是文件准备完成，尚无200题逐题云对照；无有效模型基线，未启动M2。旧32题campaign不直接复跑。
+2026-09-08用户批准持续完成200题准备；能力/来源/切分与验收见[总计划M1](sandbox-rl-lab-plan.md)，当前队列见[扩池计划](plans/2026-09-08-m1-200-case-plan.md)。统一200题文件已实际装配并经Harbor加载，train80/dev20/final100；8项组装检查与两级审阅通过，精确清单身份见扩池计划。外部来源19个登记资产已在独立Modal Volume下载并由导入器校验（448384495字节），完整catalog已完成。当前是文件准备完成并有四题真实模型pilot，尚无200题逐题云对照或冻结base基线；未启动M2。旧32题campaign不直接复跑。
+
+### 四种新增自建代码修复题真实模型pilot · PASS，非M2训练
+
+用户批准把M2的历史速度/数值阈值改为重点观测，并持续执行到小规模真实模型pilot完成。计划与唯一配置见[模型pilot计划](plans/2026-09-08-m1-model-pilot-plan.md)及`configs/m1-pilot-v2.json`；实现先取得缺入口的RED，再通过focused 13项和全套231项离线测试（2项因外部ignored证据skip），两轮独立代码审查最终无剩余问题。计划提交`5067c79`、实现提交`02a444596f11d0e0699d10024238e9a00d953d0c`均已push。
+
+hlab计划`plan-sandbox-rl-mopd-20260908t145623z-64c1f995`只提交一次；run `run-sandbox-rl-mopd-20260908t145649z-fd9f7a29`、unit `hlab-run-sandbox-rl-mopd-20260908t145649z-fd9f7a29.service`于14:56:49Z开始、15:01:05Z succeeded/exit0。脚本实际250.811秒，源码身份为上述完整commit；启动前读到GPU空闲31964MiB、主存available约25.8GiB，1秒采样的本实验GPU峰值23028MiB。`exclusive_gpu=false`仅是控制器登记，运行器用≥26GiB时点准入；没有停止或归因其他进程。
+
+固定Qwen3-4B revision `1cfa9a7208912126459214e8b04321603b3df60c`串行完成四题：config_precedence reward0（2次模型响应/1次shell）、resource_lifetime reward1（3/2）、async_dependencies reward0（10/10，round_budget）、atomic_replace reward0（3/2）。4/4均`classification=valid_reward`、usage完整、exception=null；总计18次模型响应、15次真实shell执行，reward分布0×3/1×1。reward高低只是观测，不触发补采样；至少一条模型响应→真实shell observation→有效reward成立，因此真实agent链路通过。
+
+四个sandbox存活估算分别55.991、46.217、63.888、44.452秒，按登记费率合计约$0.003914，`billing_verified=false`。每题清理均对精确known ID直接GET并对精确labels list轮询到空；结束后独立只读查询campaign label再次得到`[]`。新ledger四次provider授权全部finished，旧`artifacts/m1/campaign.json` SHA256仍为`9b2d05ec2f7486fd30aadcc5c071659fc17a53bb4092124ceb82edb6aaf50f42`。自有GPU进程组已退出，模型内容复验`verified`。
+
+原始summary位于`/home/samwang/data/sandbox-rl-MOPD-lab/artifacts/m1/home5090/m1-f7641b8e4f7b4a9484a1c0d0587a1ef2/summary.json`，SHA256 `b113819c97bc739ed9b93a39014c93d04e16b8184dbcd84af03c6329e26ae613`；campaign SHA256 `45c6b61e42c07b4c1e1e7294d02943624020871f4f82e7fa68203ad0e9966533`。本批没有optimizer step、权重交接或checkpoint恢复，summary明确`m2_a_passed=false`；不能称M2-A通过，也不是200题base基线。
 
 ### v2自建与下载准备
 
@@ -75,12 +87,12 @@ XPASS兼容修正已生成独立`tasks-r2`任务版本，未覆盖原任务包�
 - 创建1个sandbox（ID `6cd0449c-0a8b-48e4-8278-001a3b89fbc2`，创建返回9.317秒），仅尝试fs_logs-train-00，其余3个未启动。START/END隔离探针均exit0、stdout为`private-absent\n`；代码严格比较无换行文本导致误判，error_phase=isolation_start，turns=[]，模型调用0，reward=null。不是模型能力失败或证实私有答案可见。
 - Harbor清理后独立delete遇DaytonaConflictError，再次清理遇DaytonaNotFoundError，批次因此CleanupUncertain。之后使用独立客户端只读GET精确ID取得DaytonaNotFoundError，按精确Lab/run标签list为空；确认该时点无本批沙箱，未新建或追加删除。旧summary保留原来的不确定状态，不能追改为成功。
 - 脚本60.174秒，显存1秒采样峰值22946MiB，owned_group_gone=true；失败路径post_model_check=not_checked，不能声称模型前后复验完成。hlab活动Lab任务复核0；共享GPU空闲27224MiB是复核时点，不把其他占用归成本实验或停止他人。
-- 最小修复：隔离判据仅允许精确标记后无换行/LF/CRLF，仍拒绝额外内容；清理只捕获409/404竞态并在原截止时间内等待fresh list空，不直接把异常当成功、不重复delete。新增3项测试先RED后GREEN；全套92 tests PASS（12.315秒），独立审阅41项M1测试通过。尚未真实复跑。
+- 最小修复：隔离判据仅允许精确标记后无换行/LF/CRLF，仍拒绝额外内容；清理只捕获409/404竞态并在原截止时间内等待fresh list空，不直接把异常当成功、不重复delete。新增3项测试先RED后GREEN；全套92 tests PASS（12.315秒），独立审阅41项M1测试通过。当时尚未真实复跑；后续由本页“四种新增自建代码修复题真实模型pilot”验证修复后的共享agent/清理路径。
 - 旧campaign继续锁定：保留run/summary哈希、1次尝试和既有预算消耗，附独立清理确认。当前ledger的unresolved_cleanup=true和旧agent身份仍保留；200题使用另行设计的v2身份与预算关联，不清空账本，不用旧plan直接新建。下一步先做来源清点与扩池，而不是恢复旧pilot。
 
 ## M0 收尾 · PASS（2026-09-08，用户修订验收范围）
 
-用户明确取消M0-G4“从零准备≤20分钟”：当前不换机器，不以首次公网下载耗时作为阶段门槛。该项记为移除，不改写历史失败为通过。G1满上下文推理/工具调用、G2授权8并发降级、G3官方正负对照和正常阶段回收均通过，证据见下文，因此M0完成。M1尚未启动，强对抗隔离、训练能力和大规模稳定性不属于本次通过声明。
+用户明确取消M0-G4“从零准备≤20分钟”：当前不换机器，不以首次公网下载耗时作为阶段门槛。该项记为移除，不改写历史失败为通过。G1满上下文推理/工具调用、G2授权8并发降级、G3官方正负对照和正常阶段回收均通过，证据见下文，因此M0完成。本节收尾时M1尚未启动；当前M1进度以页首为准。强对抗隔离、训练能力和大规模稳定性不属于M0通过声明。
 
 收尾实查hlab活动Lab任务为0，G1原run仍succeeded/exit0且状态SHA一致。服务器负责人确认未注册/部署第三个冷recipe；已取消接入请求、暂停并改写heartbeat m0防止旧计划恢复执行。未提交冷运行，未额外下载20–35GiB；删除未使用的冷准备入口及其专用测试，Git保留历史。保留普通prepare/probe、私有头文件修复、模型/环境和原始失败/成功证据。
 

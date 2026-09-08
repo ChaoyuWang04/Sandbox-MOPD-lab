@@ -4,12 +4,12 @@
 
 本目录独立 Git 跟踪，父仓库通过 `/sandbox-rl-MOPD-lab/` 忽略整个目录；不是 submodule。GitHub 仓库为 https://github.com/ChaoyuWang04/Sandbox-MOPD-lab ，origin 使用 HTTPS（本次 SSH 公钥认证失败，HTTPS refs 查询成功）。用户已授权每批完成并验证后提交、推送本仓库，不包含父仓库改动。原始 artifacts 保留本地，远程文档中的相应路径表示本地证据，不保证克隆后存在。
 
-独立的容器 Agentic RL 与多教师在线蒸馏实验。M0已完成：G1实测12288输入/4096输出30.75秒及工具调用通过；G2授权8并发降级和G3正常阶段链路通过，测试进程/沙箱均已回收。2026-09-08用户取消G4首次冷准备速度检查，不将其历史失败改写为通过。M1统一200题文件已装配并经Harbor加载（80训练/20开发/100最终测试），用户已批准分层验证代替全池逐题双对照；资产/离线检查已通过，代表性云接入仍有缺口，无有效模型基线。
+独立的容器 Agentic RL 与多教师在线蒸馏实验。M0已完成：G1实测12288输入/4096输出30.75秒及工具调用通过；G2授权8并发降级和G3正常阶段链路通过，测试进程/沙箱均已回收。2026-09-08用户取消G4首次冷准备速度检查，不将其历史失败改写为通过。M1统一200题文件已装配并经Harbor加载（80训练/20开发/100最终测试），用户已批准分层验证代替全池逐题双对照；四种新增自建代码修复题的真实Qwen3-4B→Daytona pilot已完成，4/4有效reward、真实工具链和回收通过。TB代表性接入、冻结base基线及overfit_16选择仍未完成，因此M1尚未验收，M2-A也尚未开始。
 
 ## 入口与状态
 
 - 总体目标与 M0–M5 门槛：[总计划](docs/sandbox-rl-lab-plan.md)。
-- 当前范围与下一步：[M1 200题扩池计划](docs/plans/2026-09-08-m1-200-case-plan.md)；[M0收尾](docs/plans/2026-09-07-m0-environment-plan.md)。
+- 当前范围与下一步：[M1 200题扩池计划](docs/plans/2026-09-08-m1-200-case-plan.md)；[已完成的四题模型pilot](docs/plans/2026-09-08-m1-model-pilot-plan.md)；[M0收尾](docs/plans/2026-09-07-m0-environment-plan.md)。
 - 实测记录：[EXPERIMENTS](docs/EXPERIMENTS.md)；费用：[BUDGET](docs/BUDGET.md)。
 - Harbor 格式、依赖来源和平台限制：[HARBOR_NOTES](docs/HARBOR_NOTES.md)。
 - 题目索引：[200题清单](configs/m1-pool-v2-r2.json)，每条`task_path`指向本地`data/m1/v2/tasks-r2/`目录，`instruction.md`是题面。原始第三方题目不公开提交；当前清单状态不是运行验收通过。原v2文件保留，用于核对旧运行证据。

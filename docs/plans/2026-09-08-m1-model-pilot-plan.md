@@ -60,3 +60,10 @@
 - 未知创建/清理、GPU准入不足、现有非本Lab GPU负载冲突或模型/环境身份漂移：不启动新的trial，保存状态；不杀别人的进程。
 - 累计预计超过4次provider创建、$0.10 Daytona余量、3660秒5090 plan，或需要RL更新/新模型/新平台：超出本计划。无provider创建的本地/远端前置失败可修复后生成新plan，但每个plan仍不可重复提交。
 - reward走势只记录，不据此修改题、阈值或追加尝试。
+
+## 执行结果（2026-09-08）
+
+- Task 1-4已完成。计划提交`5067c79`、实现提交`02a444596f11d0e0699d10024238e9a00d953d0c`均已push；focused 13项、全套231项离线测试通过（2项外部ignored证据skip），独立复核无剩余问题。
+- hlab plan `plan-sandbox-rl-mopd-20260908t145623z-64c1f995`只提交一次；run `run-sandbox-rl-mopd-20260908t145649z-fd9f7a29` succeeded/exit0。四题均为有效reward且usage完整：reward 0/1/0/0；合计18次模型响应、15次真实shell执行，真实agent链路通过。
+- 四个known sandbox ID逐个GET和精确labels list均收敛为空，结束后的独立只读campaign label list为`[]`；自有GPU进程组退出，模型内容复验不变。Daytona生命周期估算合计$0.003914，账单未核实。
+- summary SHA256 `b113819c97bc739ed9b93a39014c93d04e16b8184dbcd84af03c6329e26ae613`，远端路径见EXPERIMENTS。`pilot_execution_complete=true`、`real_agent_chain_passed=true`、`m2_a_passed=false`；本计划完成不等于M1整体或M2-A完成。
