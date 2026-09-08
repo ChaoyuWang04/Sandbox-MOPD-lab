@@ -4,7 +4,7 @@ sys.dont_write_bytecode = True
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from lab_runtime.m1_run import bootstrap
+from lab_runtime.m1_pilot_v2 import bootstrap
 
 if __name__ == '__main__':
     bootstrap()

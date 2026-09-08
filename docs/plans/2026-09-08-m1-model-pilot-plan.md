@@ -23,6 +23,7 @@
 
 - configs/m1-pilot-v2.json：唯一任务、模型、资源、时限和创建上限登记。
 - lab_runtime/m1_pilot_v2.py：构建self48、核对固定manifest/任务字节、创建新campaign、向trial循环显式注入新ledger的attempt登记、调用现有模型服务与trial循环、生成分层汇总；不得让共享循环回写旧campaign硬编码路径。清理复用或提取controls_v2的“labels+已知ID”实现，清理不确定就停止后续创建。
+- lab_runtime/daytona_pilot.py：只为本次pilot在最终provider创建边界固定5分钟TTL、私有、禁出站和单次创建，并把creating/created/rejected/uncertain事件同步写入新ledger。
 - scripts/m1_run.py：现有hlab recipe的固定薄入口，切换到v2 pilot；旧commit仍可复现旧入口。
 - tests/test_m1_pilot_v2.py：配置漂移、任务选择、持久准入、reward/invalid分类及最终汇总。
 - docs/EXPERIMENTS.md、docs/BUDGET.md、docs/plans/2026-09-08-m1-200-case-plan.md、README.md：真实结果、费用、M1状态与下一步。
