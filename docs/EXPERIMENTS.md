@@ -12,13 +12,15 @@
 
 真实App `ap-KnwJizktwLDI0yRHNJhUMd`（源码`b9cb0e7`）已完成下载但在Harbor解包阶段以`unsafe_archive_member`失败，不能视为import整体完成。只读状态及tar成员核对：19资产共448384495字节，TB归档展开859文件；Harbor仅有范围外`CLAUDE.md`与`docs/CLAUDE.md`指向`AGENTS.md`的两个链接，拟跳过未选范围特殊成员，选内链接/路径越界/展开size检查不变。数据在Volume `sandbox-mopd-lab-m1-data-v2`（`vo-Hs5MyCjulIuJUOOsenUK0t`）的`data/m1/v2/sources/`；状态`artifacts/m1/v2/import-latest.json`与`modal-import-latest.json`。完整定义见[BUDGET](BUDGET.md)，前两次平台创建/挂载兼容失败身份保留在同处。
 
-SWE-Gym已从Lite230扩展调查完整2438题概要，真实PR支持A20/B20/组合10候选，仍待冻结数据匹配/运行；TB按完整未选题筛查保留A10/B10/组合10/OOD20候选。分类按任务目标，不自行增加“内部实现路径全部逐项验证”的新门槛；native grader的覆盖缺口保留，不声称组合机制已被全部独立证实。SWE-smith候选仍待完整冻结数据补齐，不能把Viewer超时计成无题。候选研究在`data/m1/v2/research/`，都不是最终200清单。
+SWE-Gym已从Lite230扩展调查完整2438题，冻结原始记录支持A20/B20/组合10候选；TB保留A10/B10/组合10/OOD20候选。分类按任务目标，不自行增加“内部实现路径全部逐项验证”的新门槛；native grader的覆盖缺口保留，不声称组合机制已被全部独立证实。Smith52也已完成冻结数据内容匹配。候选研究在`data/m1/v2/research/`，都不是最终200清单，真实运行仍待完成。
 
 后续App `ap-EcF3cSGivqD61WaxzrT8mD`（源码`f37929b`）通过下载复验、Harbor选定子集解包及离线wheel安装，终态在catalog失败，App已停止、tasks=0。只读逐行诊断确定首个问题是Smith首分片第3行`oauthlib__oauthlib.1fd52536.combine_file__0fukhdzk`的`problem_statement`为空（patch11399字符、FTP37/PTP636）；不是下载失败或磁盘不足证据。修复方向为原始行完整保留、无效行单独审计并排除候选，不放宽题面完整性要求；校验和、重复身份及输出量边界仍是硬错误。
 
 修复`a567031`经两级审阅、全套146项测试通过（21.380秒）。真实App `ap-yzPJEsSEAIlMUFOQZxwm94`返回`phase=complete`：61804原始行（Smith59136、Gym2438、Lite230），accepted43771/rejected18033，输出5493296691字节。所有原始行保留；此为来源格式有效性，不是逐题可运行验收。Volume路径`data/m1/v2/catalog-77d2debc41878734/`，index SHA256 `7a71a8de06412a565093295b35a273b8ba4d96386ba500b6691fa1c29f5688cb`，rejected SHA256 `85ed9ea9926272bdd491f3307e7e61baadfddc62cabbbd9b53eab7cc81157ec3`；其余原始JSONL哈希在`artifacts/m1/v2/modal-catalog-77d2debc41878734.json`。不能从第3行的原因推断全部18033行都是空题面，原因分布待读取拒绝索引。
 
 冻结数据复核已选Smith52（A26/B26）及Gym50；加self48/TB50构成200内容候选。按原子替换4题划dev、其他新增self题train，来源配额和80/20/100切分核对通过；Smith仓库跨桶不重叠且与Gym仓库不重叠。Gym直接patch路径/作用域审计保留历史移动别名未穷尽的限制，最终清单尚未冻结。SWE63个不同镜像的Docker Hub元数据均返回Linux/amd64与摘要，最大压缩体积8183947224字节，存在性不等于启动通过。官方执行配置在`configs/m1-swe-profiles-v2.json`，6项本地测试与规格/质量审阅通过；沙箱API凭据只读验证成功、列表为空，组织管理接口401不当成key失效。没有创建或删除新的任务沙箱。
+
+SWE许可证审计补齐63/63不同源码版本主许可证全文及Trio两份引用条款，无剩余下载缺口；主任务逐项复验63份正文SHA。审阅产物`data/m1/v2/research/swe-licenses-complete.json` SHA256 `0272886e941444a6bcdb5ca6227935d3d339deb62514f5b3fa468ed4d4754152`，每项保留精确commit/URL/全文和识别依据，尚待随正式任务包归档。Gym harness来源仓库标签已纠正为SWE-Bench-Fork，数据来源及任务身份未变。
 
 以下保留旧32题实施与失败证据。
 
