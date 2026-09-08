@@ -170,15 +170,15 @@ case是独立问题；trajectory是一次完整尝试；真正参与loss的assis
 用户批准以分层验证替代全池双对照。后续模型/RL冒烟的reward用于异常发现，不替代验证：环境错误、测试未执行/收集失败、超时、缺奖励标invalid，不算模型0分；同时报告有效reward分布和无效率。具体覆盖与当前缺口只维护在扩池计划P3，训练授权另行登记。
 
 
-## M2 · 训练管线 bring-up + 过拟合验证（1-2 天，成本 ≈ $30-60）
+## M2 · 训练工程 bring-up 与学习可行性（先画像，再冻结阈值）
 
-**目标**：Mercor Step 1-3 的缩微复刻——TITO 对账、训推 logprob 对齐检查、16 任务过拟合跑。**这是花大钱前的最后一道保险。**
+**目标**：先用最小真实训练证明 rollout、reward、反向更新、权重交接和保存/恢复确实接通，再用固定小池判断是否出现可复现学习信号。M2 开始前不知道合理速度、logprob 偏差或收敛步数，因此这些量先作为重点观测，不预设成阻塞施工的红线；取得基线后再为 M3 登记有证据的阈值。
 
 ### 2.1 仓库结构
 
 ```
 sandbox-rl-MOPD-lab/
-├── configs/                     # 每个实验一份完整 yaml（版本随 git）
+├── configs/                     # 每个实验一份完整 JSON（版本随 git）
 ├── tasks/                       # M1 产出的 Harbor task 目录树 + 集合清单(json)
 ├── recipe/
 │   ├── generator.py             # SkyRL GeneratorInterface 实现: 每 trial 一个 Harbor Trial
@@ -194,30 +194,40 @@ sandbox-rl-MOPD-lab/
 
 Agent 工具面刻意最小：`bash`（在沙箱内执行）、`read_file`、`write_file`、`submit`（宣告完成触发 verify）。工具 schema 严格 Pydantic。
 
-### 2.2 关键正确性检查（顺序执行）
+### 2.2 M2-A：工程链路 bring-up（硬门槛）
 
-1. **TITO 对账**：随机 20 条多轮轨迹，断言"训练侧拼接的 token 序列 == rollout 侧逐轮生成/输入 token 序列"逐位相等；任何 re-tokenize 即 FAIL。
-2. **Loss mask 可视化**：dump 3 条轨迹的 mask，人工确认工具返回段全 0、assistant 段全 1、nudge 注入段为 0。
-3. **训推 logprob 对齐**（Mercor Step 2.4）：跑 3 个训练 step，比较 trainer 重算 logprob 与 vLLM 记录值，`mean |Δlogprob|` 记入 wandb。**< 0.03 健康**；≥0.05 时先查 lm_head 精度与 LoRA 权重同步路径再继续。
-4. **权重同步验证**：更新一步后，vLLM 端采样分布确实变化（同 prompt 同 seed 的输出 logprob 位移 > 0）。
+先选 2-4 个 train 任务，要求最小集合中能观察到 reward 差异；第一轮关闭 context nudge 和动态补样，只跑少量真实更新。以下项目属于 M2-A 硬门槛：
 
-### 2.3 过拟合跑（overfit_16）
+1. **真实更新闭环**：实际 rollout 产生有效 reward，随后出现 loss、backward 和 optimizer step；训练 token 数与参数更新均非零，数值无 NaN/Inf。
+2. **TITO 对账**：训练使用的 generated token IDs 必须来自 rollout 产物；工具观测按固定模板编码。逐 token 对账是正确性检查，不能用重新 tokenize 后“大致相等”替代。
+3. **Loss mask 机器检查**：机器断言 assistant 训练段、工具观测段和系统/nudge 段的 mask 归属与配方一致；可视化样例仅帮助解释，不代替自动检查。
+4. **训推 logprob 画像**：在相同权重、token、位置与精度口径下记录 `mean/P95/max |Δlogprob|` 和 ratio 分布。历史 `0.03/0.05` 只作为异常定位参考，不是本阶段放行线。
+5. **权重交接**：用权重内容或版本身份确认 trainer 更新确实被 inference 消费；仅看到输出变化不算证明。
+6. **保存与恢复**：保存 checkpoint 或 adapter，从新进程重新加载并完成一次推理；恢复后的权重身份与预期版本一致。
+7. **错误分类**：基础设施 invalid 与有效 reward=0 分开；出现未分类错误、清理未知或判据行缺失时，M2-A 不通过。
 
-- 配置：0.4 节配方，batch=16（即每 step 全池一遍），**同步**训练，跑 ≤ 60 步
-- 期望形态：训练 reward 在 **≤30 步内从基线升至 ≥ 0.85**（Mercor：小任务集应在少量步内看到清晰学习信号）
-- 若失败，按 Mercor 的回溯顺序排查：verifier 判分逻辑 → harness 缺陷（读轨迹！按工具统计失败率找模式）→ 奖励方差分布 → 最后才怀疑算法超参
-- overfit_16仅从train抽取A/B各8题。过拟合前用20条train/dev base轨迹检查工具解析、缺包浪费与截断；修复后重测dev基线。harness版本改变时最终测试的可比基线按1.2统一重测，不能反复查看final-test来指导修复。
+### 2.3 M2-B：学习可行性（观测后判定）
+
+- M2-A 通过后，再冻结 `overfit_16`：仅从 train 抽取 A/B 各8题，固定任务版本、最大更新次数和总训练 token 预算；final-test 不参与筛选或调参。
+- 过拟合前采集可复查 base 轨迹，确认有效 reward 有方差；没有方差时先修任务/采样设计，不把它解释成训练算法失败。
+- 重点观测 reward 曲线、有效样本率、KL、entropy、grad norm、更新范数、训推 logprob 差异，以及 rollout / verify / train / weight-sync 分段耗时。`30步`、`reward 0.85` 和 `单step 6分钟` 保留为历史参照读数，不作自动停止或裁题门槛。
+- 学习可行性以固定评测集上的改善能否重复、且不是 invalid 样本或 verifier 泄漏造成来判断；最终阈值须根据首轮基线和噪声登记后冻结。
+- 若失败，按 verifier → harness/轨迹 → reward 方差与采样 → 训练数值 → 算法超参的顺序排查。harness 版本改变后按1.2重测可比基线，不能反复查看 final-test 指导修复。
 
 ### Gate M2
 
-| # | 指标 | 通过标准 |
-|---|---|---|
-| G1 | 框架可用 | SkyRL+Harbor 在 pod 上单卡跑通完整 RL step 循环。**失败分支**：折腾 > 1.5 天仍未通 → 切 verl colocate 方案（agent-loop + 自接 Harbor trial），在 EXPERIMENTS.md 记录切换理由与两框架对比笔记 |
-| G2 | TITO | 20/20 轨迹逐位相等 |
-| G3 | logprob 对齐 | mean |Δlogprob| < 0.03 |
-| G4 | 过拟合成功 | overfit_16 训练 reward ≤30 步达 0.85+，曲线截图入档 |
-| G5 | 吞吐画像 | 实测单 step 墙钟时间与瓶颈归属（rollout / verify / 训练三段计时），推算 M3 单臂成本并更新 BUDGET.md；**若单 step > 6 分钟**，先缩任务(轮数/生成预算)再进 M3 |
-| G6 | harness 体检 | 修复清单 + 修复前后dev基线，版本与最终测试重测策略见1.2 |
+| # | 类型 | 验收对象 | 通过标准或记录方式 |
+|---|---|---|---|
+| G1 | 硬门槛 | 真实训练闭环 | 至少一次有效 rollout→reward→loss/backward→optimizer step；训练 token 和参数更新非零，无 NaN/Inf |
+| G2 | 硬门槛 | token 与 mask | TITO 逐 token 对账通过；mask 由机器检查，且工具观测使用固定模板 |
+| G3 | 硬门槛 | 权重交接与恢复 | trainer 更新后的权重身份被 inference 消费；checkpoint/adapter 可由新进程加载并推理 |
+| G4 | 硬门槛 | 失败语义与回收 | invalid 不混入 reward=0；无未分类错误，运行对象和本实验资源终态明确 |
+| O1 | 重点观测 | logprob 对齐 | 同口径记录 mean/P95/max 差异与 ratio；`0.03/0.05` 只作历史参考，首轮后再冻结合理阈值 |
+| O2 | 重点观测 | 学习信号 | 固定 overfit_16 与评测预算，报告改善、重复性、有效样本率；`30步/0.85` 只作参考 |
+| O3 | 重点观测 | 吞吐与成本 | 记录 rollout/verify/train/weight-sync 分段时间和有效轨迹成本，据实更新 BUDGET；不以6分钟自动裁题 |
+| O4 | 重点观测 | harness 体检 | 修复清单、修复前后dev基线、版本与最终测试重测策略按1.2留档 |
+
+框架不按“折腾超过1.5天”自动切换。只有出现已复现、被当前框架接口或实现实质阻塞且替代路线能满足同一判据的证据时，才另行登记迁移决策、代价和可比验证。
 
 ---
 

@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "mode": "model-pilot-v2",
+  "task_generator": "lab_runtime.task_pool_v2:materialize_self_pool",
+  "task_generator_sha256": "ab5f82a8591d913f59f6fa8d62840bfdb2b8ef2609556db79e8e742e8e61c1f3",
+  "generated_manifest_sha256": "3f13ba82d7d5f657956c578402bc9ebc2aa87435b29ba11690c7af3fe640303a",
+  "trials": [
+    {
+      "task_id": "self-v2-config_precedence-00",
+      "trial_id": "model-pilot-v2-self-v2-config_precedence-00",
+      "seed": 910001,
+      "temperature": 0.6
+    },
+    {
+      "task_id": "self-v2-resource_lifetime-00",
+      "trial_id": "model-pilot-v2-self-v2-resource_lifetime-00",
+      "seed": 910002,
+      "temperature": 0.6
+    },
+    {
+      "task_id": "self-v2-async_dependencies-00",
+      "trial_id": "model-pilot-v2-self-v2-async_dependencies-00",
+      "seed": 910003,
+      "temperature": 0.6
+    },
+    {
+      "task_id": "self-v2-atomic_replace-00",
+      "trial_id": "model-pilot-v2-self-v2-atomic_replace-00",
+      "seed": 910004,
+      "temperature": 0.6
+    }
+  ],
+  "model": {
+    "id": "Qwen/Qwen3-4B",
+    "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+    "max_model_len": 16384,
+    "max_output_tokens": 4096,
+    "max_turns": 10
+  },
+  "trial": {
+    "concurrency": 1,
+    "agent_timeout_seconds": 180,
+    "tool_timeout_seconds": 20,
+    "verifier_timeout_seconds": 30,
+    "build_timeout_seconds": 120,
+    "daytona_ttl_seconds": 300,
+    "max_created_sandboxes": 4,
+    "network": false,
+    "cpus": 1,
+    "memory_mb": 1024,
+    "storage_mb": 3072,
+    "gpus": 0
+  },
+  "batch": {
+    "work_seconds": 3600,
+    "hlab_timeout_seconds": 3660,
+    "daytona_reserve_usd": 0.1
+  }
+}
