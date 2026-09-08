@@ -10,11 +10,13 @@
 
 ## M1 当前状态 · 实施中，未验收
 
-### M1-close 运行准备（尚未提交云/GPU批次）
+### M1-close 运行与首次熔断修复
 
 已冻结 `configs/m1-close-v2.json` 和三个无自由参数入口：TB代表控制、train 20题×4组采样、dev20 Base各1次。选择器只接受train、逐题文件哈希、固定seed/temperature/top-p、完整无重复attempt集合；invalid不作reward0，只有同一题组内至少两个有效样本且同时出现0/1才可候选A8+B8。final100没有模型调用；`regex-log`仅作NOP=0/oracle=1的判分、隔离与回收控制。
 
-Mac的 `data/m1/v2/tasks-r2/` 51MiB/2311文件已同步至 `/home/samwang/data/sandbox-rl-MOPD-lab/data/m1/v2/tasks-r2/`；两端按相对路径排序后的逐文件SHA清单聚合摘要均为 `e6ac452bedf801a153008ed627d76ade735b2cb58967c0e57805702cba7a6cc5`，零符号链接。该同步只准备任务字节，不表示任何题已在新批次运行。当前没有新Daytona创建、模型请求或GPU进程。
+Mac的 `data/m1/v2/tasks-r2/` 51MiB/2311文件已同步至 `/home/samwang/data/sandbox-rl-MOPD-lab/data/m1/v2/tasks-r2/`；两端按相对路径排序后的逐文件SHA清单聚合摘要均为 `e6ac452bedf801a153008ed627d76ade735b2cb58967c0e57805702cba7a6cc5`，零符号链接。该同步只准备任务字节；实际运行证据另计如下。
+
+运行身份 `11a9827da9f9b780c6a8850cef496567d3bfa530` 已通过 hlab 同步。TB plan `plan-sandbox-rl-mopd-20260908t190539z-4e02277f`、run `run-sandbox-rl-mopd-20260908t190603z-7c68e0b3` 成功：NOP=0、oracle=1，2/2协议、隔离和回收完整，`phase_accepted=true`，Daytona估算$0.001878，未启GPU。首个train-screen plan `plan-sandbox-rl-mopd-20260908t190910z-47f6c853`、run `run-sandbox-rl-mopd-20260908t191944z-64f7756f` 在3次后按连续invalid熔断；三次均有完整模型usage、私有隔离、reward0和沙箱回收，实际self grader写出既有严格两字段 `passed/detail`，但新runner误只接受单字段，故误标 `verifier_protocol_incomplete`。该批 `phase_accepted=false`，余下77次未创建，Daytona估算$0.003405；失败ledger保留只读。修复恢复严格两字段及detail枚举校验，并将ledger按config/source身份分址，不能覆盖或以相同身份重试。
 
 ### 当前验证策略与复核（用户批准分层方案）
 

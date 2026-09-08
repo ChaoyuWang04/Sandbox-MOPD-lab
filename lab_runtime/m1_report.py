@@ -80,6 +80,7 @@ def select_overfit16_v2(manifest, screen_records, config):
                 or record.get('seed') != expected_seed
                 or record.get('temperature') != config['temperature']
                 or record.get('top_p') != config['top_p']
+                or record.get('generation_method') != index[task_id].get('generation_method')
                 or record.get('task_files_sha256') != index[task_id].get('task_files_sha256')):
             raise ValueError('screen attempt identity mismatch')
         outcome = classify_verifier(record)

@@ -33,6 +33,12 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def ledger_path_for(artifact_root, phase, identity):
+    """Give each immutable code/config identity its own non-overwriting ledger."""
+    return (Path(artifact_root) / "v2/close" / phase /
+            f"{identity['config_sha256'][:16]}-{identity['source_git_sha'][:12]}.json")
+
+
 def verify_task_tree(item, task_root=TASK_ROOT):
     task = Path(task_root) / Path(item["task_path"]).name
     if not task.is_dir() or task.is_symlink():
@@ -119,7 +125,8 @@ def _estimate_cost(record, profile):
             "billing_verified": False}
 
 
-def _verifier_complete(source, record, grading):
+def _verifier_complete(item, record, grading):
+    source = item.get("source")
     base = (record.get("exception_type") is None
             and type(record.get("reward")) in (int, float) and record["reward"] in (0, 1))
     if source in ("swe-smith", "swe-gym"):
@@ -129,9 +136,18 @@ def _verifier_complete(source, record, grading):
                 and not grading.get("runtime_errors")
                 and grading.get("owned_process_group_stopped") is True)
     if source == "self":
-        return (base and isinstance(grading, dict) and set(grading) == {"passed"}
-                and type(grading["passed"]) is bool
-                and grading["passed"] == bool(record["reward"]))
+        method = item.get("generation_method")
+        common = (base and isinstance(grading, dict)
+                  and type(grading.get("passed")) is bool
+                  and grading["passed"] == bool(record["reward"]))
+        if method == "legacy-deterministic-template":
+            details = {True: {"pass"}, False: {
+                "answer_or_input_mismatch", "missing_or_invalid_answer_or_input"}}
+            return (common and set(grading) == {"passed", "detail"}
+                    and grading.get("detail") in details[grading["passed"]])
+        if method == "deterministic-runtime-repair-template":
+            return common and set(grading) == {"passed"}
+        return False
     return base
 
 
@@ -223,8 +239,7 @@ async def execute_phase(run, phase, config, manifest, plans, ledger_path, identi
                 elif item["source"] == "self" and (verifier_dir / "result.json").is_file():
                     grading = json.loads((verifier_dir / "result.json").read_text())
                     record["grading"] = grading
-                record["verifier_complete"] = _verifier_complete(
-                    item["source"], record, grading)
+                record["verifier_complete"] = _verifier_complete(item, record, grading)
                 if item["agent"] == "m1":
                     record.update(_trace_fields(run, item["attempt_id"].replace("/", "--")))
                 _classify_and_normalize(record)
@@ -297,7 +312,7 @@ def main(phase):
         plans = validate_and_plan(config, manifest, digest(MANIFEST_PATH))[phase]
         source_git_sha = runtime.source_identity(deadline, log)
         identity = {"source_git_sha": source_git_sha, "config_sha256": digest(CONFIG_PATH)}
-        ledger_path = ROOT / "artifacts/m1/v2/close" / phase / "campaign.json"
+        ledger_path = ledger_path_for(ROOT / "artifacts/m1", phase, identity)
         ledger_path.parent.mkdir(parents=True, exist_ok=True)
         create_ledger(ledger_path, phase, identity, plans)
         credentials = read_credentials(ROOT / "secrets/daytona.env")

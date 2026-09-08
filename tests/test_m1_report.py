@@ -119,6 +119,7 @@ class M1CloseV2Test(unittest.TestCase):
             for index in range(10):
                 task_id = f'{skill.lower()}-{index:02d}'
                 records.append({'id': task_id, 'split': 'train', 'source': 'self',
+                    'generation_method': 'legacy-deterministic-template',
                     'primary_skill': skill, 'task_files_sha256': {'instruction.md': f'{index:064x}'}})
         records.extend([
             {'id': 'dev-a', 'split': 'dev', 'source': 'self', 'primary_skill': 'A',
@@ -143,6 +144,7 @@ class M1CloseV2Test(unittest.TestCase):
                     'repetition_id': repetition_id,
                     'seed': 930000 + candidate_index * 4 + repetition_id,
                     'temperature': 1.0, 'top_p': 1.0, 'reward': value,
+                    'generation_method': manifest[task_id]['generation_method'],
                     'invalid_reason': None,
                     'task_files_sha256': manifest[task_id]['task_files_sha256']})
         return records

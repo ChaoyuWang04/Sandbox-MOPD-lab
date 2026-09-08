@@ -16,7 +16,7 @@ Mac新增资源仍限短时测试/控制，目标RSS不超过0.5GiB，不启模�
 
 `configs/m1-close-v2.json`登记三个串行批次：Terminal-Bench代表题NOP/oracle 2次、20个自建train候选各4次共80次、dev20各1次，共102个Daytona创建授权；不重试、并发1、连续3次infra-invalid即停止新建、总控制器墙钟上限6小时。自建trial为1 vCPU/1GiB/3GiB、5分钟TTL、禁网；SWE为4 vCPU/8GiB/10GiB、60分钟TTL；TB代表为1 vCPU/2GiB/10GiB、60分钟TTL且单trial外层最多30分钟。总Daytona预留$15，按实际生命周期核算，不是账户硬账单。
 
-TB批次不启GPU；train-screen和dev-baseline各使用一次home-5090独占GPU recipe及已有Qwen3-4B/M1环境，不能与他人GPU任务并发，不处理未知进程。Mac仅同步了51MiB冻结任务包到Lab独立数据根并做2311文件聚合SHA复核，不运行模型、容器或常驻服务。当前只是代码/资产准备，创建数、费用和GPU运行仍为0。
+TB批次不启GPU；train-screen和dev-baseline各使用一次home-5090独占GPU recipe及已有Qwen3-4B/M1环境，不能与他人GPU任务并发，不处理未知进程。Mac仅同步了51MiB冻结任务包到Lab独立数据根并做2311文件聚合SHA复核，不运行模型、容器或常驻服务。已运行TB 2次和首个screen 3次：前者估算$0.001878并通过；后者因runner协议误收紧三连invalid后安全停止，估算$0.003405，余下77次未创建。两项均非账单读数，失败证据不删除、不覆盖。
 
 用户批准以全量轻量检查、自建批量逻辑测试、共享适配器回归和代表性Daytona验证替代逐题双对照。原394次新增、402累计上限、$180追加预留及固定2并发计划均撤销，未启动该全池campaign；不再将$190作为当前预留。已发生的八次v2创建/六个有效对照、失败记录与原$10预留（下载$2+首批$8）保留，不重置消费。
 

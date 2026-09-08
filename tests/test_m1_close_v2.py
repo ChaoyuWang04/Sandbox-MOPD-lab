@@ -36,6 +36,7 @@ class M1CloseV2Tests(unittest.TestCase):
         for phase in plans.values():
             self.assertEqual(len({row["attempt_id"] for row in phase}), len(phase))
             self.assertTrue(all(row["task_files_sha256"] for row in phase))
+            self.assertTrue(all(row["generation_method"] for row in phase))
 
     def test_config_manifest_sampling_and_budget_drift_fail_closed(self):
         m = self.module()
@@ -109,6 +110,16 @@ class M1CloseV2Tests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 m.admit_attempt(path, identity, plan[1])
 
+    def test_ledger_path_is_immutable_per_source_and_config_identity(self):
+        from lab_runtime.m1_close_run import ledger_path_for
+        root = Path("/tmp/m1-artifacts")
+        left = {"source_git_sha": "a" * 40, "config_sha256": "b" * 64}
+        right = {**left, "source_git_sha": "c" * 40}
+        self.assertEqual(ledger_path_for(root, "train-screen", left),
+            root / "v2/close/train-screen/bbbbbbbbbbbbbbbb-aaaaaaaaaaaa.json")
+        self.assertNotEqual(ledger_path_for(root, "train-screen", left),
+                            ledger_path_for(root, "train-screen", right))
+
     def test_task_tree_verification_is_exact_and_rejects_links(self):
         from lab_runtime.m1_close_run import verify_task_tree
         with tempfile.TemporaryDirectory() as directory:
@@ -174,13 +185,25 @@ class M1CloseV2Tests(unittest.TestCase):
         record = {"reward": 1, "exception_type": None}
         swe = {"protocol_complete": True, "reward": 1, "runtime_errors": [],
                "owned_process_group_stopped": True}
-        self.assertTrue(_verifier_complete("swe-gym", record, swe))
+        self.assertTrue(_verifier_complete({"source": "swe-gym"}, record, swe))
         swe["owned_process_group_stopped"] = False
-        self.assertFalse(_verifier_complete("swe-gym", record, swe))
-        self.assertTrue(_verifier_complete("self", record, {"passed": True}))
-        self.assertFalse(_verifier_complete("self", record, {"passed": 1}))
-        self.assertFalse(_verifier_complete("self", record,
-                                            {"passed": True, "extra": "ignored"}))
+        self.assertFalse(_verifier_complete({"source": "swe-gym"}, record, swe))
+        legacy = {"source": "self", "generation_method": "legacy-deterministic-template"}
+        self.assertTrue(_verifier_complete(legacy, record,
+                                           {"passed": True, "detail": "pass"}))
+        record["reward"] = 0
+        self.assertTrue(_verifier_complete(legacy, record,
+            {"passed": False, "detail": "missing_or_invalid_answer_or_input"}))
+        self.assertFalse(_verifier_complete(legacy, record,
+                                            {"passed": 0, "detail": "pass"}))
+        self.assertFalse(_verifier_complete(legacy, record,
+            {"passed": False, "detail": "unknown"}))
+        self.assertFalse(_verifier_complete(legacy, record,
+            {"passed": False, "detail": "answer_or_input_mismatch", "extra": "ignored"}))
+        v2 = {"source": "self", "generation_method": "deterministic-runtime-repair-template"}
+        self.assertTrue(_verifier_complete(v2, record, {"passed": False}))
+        self.assertFalse(_verifier_complete(v2, record,
+                                            {"passed": False, "detail": "ignored"}))
 
     def test_self_model_never_gets_solution_visibility(self):
         import asyncio

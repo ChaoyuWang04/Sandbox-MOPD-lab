@@ -43,7 +43,8 @@ def _base_plan(row, phase, agent, attempt_id, profile):
     return {"phase": phase, "attempt_id": attempt_id, "task_id": row["id"],
             "task_path": row["task_path"], "task_files_sha256": row["task_files_sha256"],
             "source": row["source"], "split": row["split"],
-            "primary_skill": row["primary_skill"], "agent": agent,
+            "primary_skill": row["primary_skill"],
+            "generation_method": row["generation_method"], "agent": agent,
             "resource_profile": profile}
 
 
