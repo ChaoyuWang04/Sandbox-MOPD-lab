@@ -12,7 +12,7 @@
 - 当前范围与下一步：[M1 200题扩池计划](docs/plans/2026-09-08-m1-200-case-plan.md)；[M0收尾](docs/plans/2026-09-07-m0-environment-plan.md)。
 - 实测记录：[EXPERIMENTS](docs/EXPERIMENTS.md)；费用：[BUDGET](docs/BUDGET.md)。
 - Harbor 格式、依赖来源和平台限制：[HARBOR_NOTES](docs/HARBOR_NOTES.md)。
-- 题目索引：[200题清单](configs/m1-pool-v2.json)，每条`task_path`指向本地`data/m1/v2/tasks/`目录，`instruction.md`是题面。原始第三方题目不公开提交；当前清单状态不是运行验收通过。
+- 题目索引：[200题清单](configs/m1-pool-v2-r2.json)，每条`task_path`指向本地`data/m1/v2/tasks-r2/`目录，`instruction.md`是题面。原始第三方题目不公开提交；当前清单状态不是运行验收通过。原v2文件保留，用于核对旧运行证据。
 
 ## 独立边界
 

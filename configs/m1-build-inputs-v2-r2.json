@@ -1,0 +1,31 @@
+{
+  "input_sha256": {
+    "configs/m1-pool-manifest.json": "66a844924f96d3de135e8e3040792a4abf084b37e3c21234f7834132c7b830fc",
+    "configs/m1-swe-profiles-v2.json": "28b01cf19cbcb30f50d3fb54159cdb528c34eca2536a3b888d70bd01d4bd0c83",
+    "data/m1/v2/research/candidate200-annotations.json": "f84e813ff2c7b20664b85dfb0fe4eb1877a91dc4ef99f87aa57c8bba889f0a75",
+    "data/m1/v2/research/gym-combo-full-addendum.json": "014db09faafab65b1ed1baf475ab849f0f10022138a8fe8b0bda50d4ed1dfc97",
+    "data/m1/v2/research/gym-selection-provisional.json": "1709efb20da2ae596c4797960ad7174757b0af95e973305a603ee51a47fcc820",
+    "data/m1/v2/research/gym50-frozen.json": "3ec58c1dcfb910469ac72026024d6442b45c78178748ba36c99370c76c332dbf",
+    "data/m1/v2/research/gym50-group-audit.json": "e3b9ac492948c194563e66d090d28069d452e11abce84c4d6376aad00144d414",
+    "data/m1/v2/research/smith-a-selection.json": "3d58d10ed406551b2a4fec72682b31a01e62023fd51c9f4220b6c571ea0cc7f0",
+    "data/m1/v2/research/smith-b-selection.json": "00407d5848779ae7701390f2679b793425823f5fa872ba822568bbae58f31d12",
+    "data/m1/v2/research/smith52-full-envelope.json": "f18765b0a265c0ad89ecbd95f99f53e3ebcccb3073a177e2d6f15f1751e03d53",
+    "data/m1/v2/research/swe-licenses-complete.json": "0272886e941444a6bcdb5ca6227935d3d339deb62514f5b3fa468ed4d4754152",
+    "data/m1/v2/research/tb-candidates.json": "6c908e2a25cf6273c503c0d0ae0a185389577218ce9718cedc49a9b9656415cc",
+    "data/m1/v2/research/tb-combo-addendum.json": "bb555d038292835d1d269369b02f2745594f2b660a43a0de8ea45766ced618d3",
+    "data/m1/v2/self48/manifest.json": "3f13ba82d7d5f657956c578402bc9ebc2aa87435b29ba11690c7af3fe640303a",
+    "data/m1/v2/tb50-source/source-manifest.json": "be6d3fe6b1f8be1981ba813c5c0dc7692ff9fdcd6447fae29609ddd5a8d8da70",
+    "lab_runtime/pool_build_v2.py": "2c526ff8f929819b122be9bb1cc48840e832f246bc7d7b61fac8329be2a22b45",
+    "lab_runtime/pool_manifest_v2.py": "306563aed165553c1d671e28c817becb86ab3bd7ca05b4b157752ecceecabba6",
+    "lab_runtime/swe_grading.py": "2d34bd39382d91d365a9c2516aceb7cbbfed26a66e58cbfb12c3f33659ec2852",
+    "lab_runtime/swe_hooks.py": "6b27a3ffab4e02205d29b4002905bff949ea4f2f707f9a457c53ef084a1d1c3f",
+    "lab_runtime/swe_pytest_plugin.py": "6c1e03ec609a522a3b3f2a625de6c473beacbb6c4856b208b0d845382d4e4180",
+    "lab_runtime/swe_tasks.py": "89cd6cae48e09ad7df5ae42b27f36f339e914938a158e14d328e637ad18f9f9c",
+    "lab_runtime/swe_test_runner.py": "8a7cb3386f4bc840795269401afbd970a62d21e59f18b23f91412907974d1708",
+    "lab_runtime/swe_verify.py": "5443e83276860107ed2300130abfedf79a494cccd9a02516196bf278c5146ed4",
+    "lab_runtime/swe_workspace.py": "1491aded6192faf07da2c6224445f795e6595d947df550347d400b03837cca16",
+    "scripts/m1_build_pool.py": "355c88aec37545b9e8e8f426be07397c942b73f0bfc21f8d12d8e80965b74c83"
+  },
+  "schema_version": 1,
+  "scope": "offline r2 files only; approved XPASS compatibility fix; no task execution or runtime readiness"
+}

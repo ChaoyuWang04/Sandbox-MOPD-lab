@@ -6,6 +6,38 @@ from lab_runtime.pool_build_v2 import pin_tb_image, read_tree, publish_json, bui
 
 
 class PoolBuildTests(unittest.TestCase):
+    def test_revision_routes_are_fixed_and_safe(self):
+        from lab_runtime.pool_build_v2 import output_paths
+        self.assertEqual(output_paths(self.root, 'configs/m1-build-inputs-v2-r2.json'),
+                         ('data/m1/v2/tasks-r2', 'configs/m1-pool-v2-r2.json'))
+        for value in ('../escape', '/tmp/output', 'configs/unknown.json'):
+            with self.assertRaises(ValueError):
+                output_paths(self.root, value)
+        (self.root / 'data/m1/v2').mkdir(parents=True)
+        (self.root / 'data/m1/v2/tasks-r2').symlink_to(self.root)
+        with self.assertRaisesRegex(ValueError, 'symlink destination'):
+            output_paths(self.root, 'configs/m1-build-inputs-v2-r2.json')
+
+    def test_revision_real_files_if_present(self):
+        import json
+        root = Path(__file__).resolve().parents[1]
+        target = root / 'configs/m1-pool-v2-r2.json'
+        if not target.exists() or not (root / 'data/m1/v2/tasks-r2').exists():
+            self.skipTest('revision artifacts absent')
+        old = json.loads((root / 'configs/m1-pool-v2.json').read_text())
+        new = json.loads(target.read_text())
+        self.assertEqual(new['counts'], old['counts'])
+        self.assertEqual(new['input_registration'], 'configs/m1-build-inputs-v2-r2.json')
+        self.assertEqual(len(new['records']), 200)
+        for a, b in zip(old['records'], new['records'], strict=True):
+            for field in ('id', 'source_id', 'source', 'split', 'primary_skill', 'license'):
+                self.assertEqual(a[field], b[field])
+            read_tree(root / a['task_path'], a['task_files_sha256'])
+            read_tree(root / b['task_path'], b['task_files_sha256'])
+            changed = {p for p in a['task_files_sha256'] if a['task_files_sha256'][p] != b['task_files_sha256'][p]}
+            self.assertEqual(changed, {'tests/lab_runtime/swe_grading.py', 'tests/lab_runtime/swe_pytest_plugin.py'}
+                             if a['source'] in ('swe-smith', 'swe-gym') else set())
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

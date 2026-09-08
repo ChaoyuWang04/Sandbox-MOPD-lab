@@ -66,8 +66,24 @@ def publish_json(path, obj):
     finally:
         temp.unlink()
 
+def output_paths(root, registration):
+    """Only registered historical revisions may select output locations."""
+    revisions = {
+        'configs/m1-build-inputs-v2.json': ('data/m1/v2/tasks', 'configs/m1-pool-v2.json'),
+        'configs/m1-build-inputs-v2-r2.json': ('data/m1/v2/tasks-r2', 'configs/m1-pool-v2-r2.json'),
+    }
+    if registration not in revisions:
+        raise ValueError('unknown pool registration')
+    paths = revisions[registration]
+    for name in (registration, *paths, 'data/m1/v2/provenance/swe-licenses-complete.json'):
+        path = Path(root) / name
+        if any(p.is_symlink() for p in (path, *path.parents)):
+            raise ValueError('symlink destination')
+    return paths
+
 def build_pool(root, registration='configs/m1-build-inputs-v2.json'):
     root = Path(root)
+    task_root, manifest_path = output_paths(root, registration)
     def read(name):
         return json.loads((root / name).read_bytes())
     inputs = read(registration)
@@ -132,7 +148,7 @@ def build_pool(root, registration='configs/m1-build-inputs-v2.json'):
             r['source_asset_sha256'] = 'afcd2b9813fc08e8d2b955db8165cc057acf0e37f74e55d26fc2506da196cebe'
             name = ident
         r['source_sha256'] = r['source_asset_sha256']
-        r['task_path'] = base + 'tasks/' + name
+        r['task_path'] = task_root + '/' + name
         r['task_files_sha256'] = {k: sha(v) for k, v in sorted(files.items())}
         r['missing_fields'] = [x for x in r.get('missing_fields', []) if x not in ('source_revision', 'source_asset_sha256')]
         records.append(r)
@@ -157,5 +173,5 @@ def build_pool(root, registration='configs/m1-build-inputs-v2.json'):
                   harbor_tasks_loaded=200, limitations=[x for x in annotations['limitations']
                       if x != 'task_files_sha256 deliberately absent until assembler hashes actual files'],
                   license_artifact=str(provenance.relative_to(root)))
-    publish_json(root / 'configs/m1-pool-v2.json', result)
+    publish_json(root / manifest_path, result)
     return result
