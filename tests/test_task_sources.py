@@ -9,6 +9,33 @@ from lab_runtime import task_sources as sources
 
 
 class SourcesTests(unittest.TestCase):
+    def test_extract_reads_members_in_bounded_chunks_and_resumes(self):
+        from unittest.mock import patch
+        original = tarfile.TarFile.extractfile
+        class Bounded:
+            def __init__(self, stream):
+                self.stream = stream
+            def read(self, size=-1):
+                if size < 0 or size > 1024 * 1024:
+                    raise AssertionError('unbounded member read')
+                return self.stream.read(size)
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                self.stream.close()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            with tarfile.open(root / 'a', 'w:gz') as tar:
+                data = b'x' * (1024 * 1024 + 10)
+                member = tarfile.TarInfo('repo/data')
+                member.size = len(data)
+                tar.addfile(member, io.BytesIO(data))
+            with patch.object(tarfile.TarFile, 'extractfile', lambda tar, member: Bounded(original(tar, member))):
+                sources.extract(root / 'a', root / 'out', ['*'], 10, clock=lambda: 0)
+                records = sources.extract(root / 'a', root / 'out', ['*'], 10, clock=lambda: 0)
+                self.assertTrue(records[0]['reused'])
+            self.assertEqual((root / 'out/data').read_bytes(), data)
+
     def test_resume_rejects_changed_source_identity(self):
         for key, value in [('revision', 'new'), ('url', 'https://example.test/changed')]:
             with self.subTest(key=key), tempfile.TemporaryDirectory() as tmp:

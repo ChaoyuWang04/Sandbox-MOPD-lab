@@ -71,10 +71,10 @@ def public_open(url, timeout):
     return urllib.request.build_opener(urllib.request.ProxyHandler({})).open(url, timeout=timeout)
 
 
-def download(spec, target, deadline, *, opener=public_open, clock=time.monotonic):
+def download(spec, target, deadline, *, opener=public_open, clock=time.monotonic, compare_existing_stream=False):
     remaining(deadline, clock)
     target = safe_path(target)
-    if target.exists():
+    if target.exists() and not compare_existing_stream:
         got = digest(target, deadline, clock)
         if not spec.get('sha256') or got['sha256'] != spec['sha256'] or ('size' in spec and got['size'] != spec['size']):
             raise ImportFailure('existing_conflict')
@@ -102,6 +102,10 @@ def download(spec, target, deadline, *, opener=public_open, clock=time.monotonic
         if ('size' in spec and size != spec['size']) or ('sha256' in spec and got['sha256'] != spec['sha256']):
             raise ImportFailure('checksum_or_size')
         remaining(deadline, clock)
+        if compare_existing_stream and target.exists():
+            if digest(target, deadline, clock) != got:
+                raise ImportFailure('existing_conflict')
+            return dict(got, reused=True)
         os.link(temporary, target)  # fails rather than replacing a concurrent target
         return dict(got, reused=False)
     finally:
@@ -131,14 +135,12 @@ def extract(archive, destination, prefixes, deadline, *, max_bytes=MAX_EXTRACT, 
             if '*' not in prefixes and not any(relative == p or relative.startswith(p + '/') for p in prefixes):
                 continue
             target = safe_path(destination / relative)
-            with tar.extractfile(member) as source:
-                # Member digest establishes immutable content identity before writing.
-                data = source.read(member.size + 1)
-            if len(data) != member.size:
-                raise ImportFailure('archive_size')
-            import io
-            spec = {'url': 'archive-member', 'size': len(data), 'sha256': hashlib.sha256(data).hexdigest()}
-            result = download(spec, target, deadline, opener=lambda *a, **k: io.BytesIO(data), clock=clock)
+            # Stream the member into an owned temporary file while hashing. Existing
+            # output is reused only after comparison to these actual archive bytes.
+            spec = {'url': 'archive-member', 'size': member.size}
+            result = download(spec, target, deadline,
+                              opener=lambda *a, **k: tar.extractfile(member),
+                              clock=clock, compare_existing_stream=True)
             if not result['reused']:
                 target.chmod(0o755 if member.mode & 0o111 else 0o644)
             records.append(dict(result, path=relative))
