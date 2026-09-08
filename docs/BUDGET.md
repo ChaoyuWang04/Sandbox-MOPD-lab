@@ -10,6 +10,8 @@ M0已于2026-09-08按用户修订的G1/G2/G3范围收尾。G4首次冷准备时�
 
 第一批固定CPU import：`scripts/m1_import.py`，工作7200秒/控制器7260秒，独占Lab下载锁；仅公开parquet、wheel、归档，不执行上游代码或安装依赖，不启动GPU/沙箱。固定parquet总278698399字节、PyArrow wheel42829529字节；两归档各压缩≤512MiB、展开≤2GiB，另README各≤1MiB，总磁盘预留6GiB，准入空闲≥80GiB。下载逐块处理、SHA/size验证，失败保留已验证资产，不清缓存；home5090只读实测可用733742919680字节。HF官方直连20秒超时，hf-mirror固定Gym分片与codeload固定TB归档实测200；不改服务器网络。Mac仅生成约2.5MiB自建题和短时CPU检查。本批不新增云费用，设备电费未计；后续镜像与对照不含在该下载预算内。
 
+候选复核后增加完整SWE-Gym parquet 43644473字节及README≤1MiB，以寻找真正组合能力题；parquet合计322342872字节，仍在6GiB下载预留内。后续catalog原始JSONL和索引另预留8GiB；16行Arrow批次不是硬内存上限，首次远端解码需观察实际主存。尚未远端执行或安装PyArrow。
+
 Mac仍无常驻负载，大资产留home5090独立Lab根；共享GPU需每次准入，禁止停止他人负载。Daytona优先CPU，Modal仅另行登记的候选；不使用RunPod。新campaign与旧消费关联，历史费用计入总账。M2/M4训练、joint对照及20/40/80规模曲线须另行预算，不因文档列出就视为已授权。
 
 以下为M0及旧微任务预算历史，不作为扩池批次授权。

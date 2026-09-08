@@ -95,6 +95,19 @@
       "sha256": "f3a7cd934e8cc523b6053298d0abb2c82fd7db2b83f9f2ccba5944545aaa4eb1"
     },
     {
+      "path": "swe-gym/data/train-00000-of-00001.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-Gym/SWE-Gym/resolve/bb94ed9e39bbeb96a7fcbfb533b80f25a7fd59cb/data/train-00000-of-00001.parquet",
+      "revision": "bb94ed9e39bbeb96a7fcbfb533b80f25a7fd59cb",
+      "size": 43644473,
+      "sha256": "60569cea74bb281f7a5579467436a2bc1932c6e0c5f2f7fa0d084392abd9ad97"
+    },
+    {
+      "path": "swe-gym/README.md",
+      "url": "https://hf-mirror.com/datasets/SWE-Gym/SWE-Gym/resolve/bb94ed9e39bbeb96a7fcbfb533b80f25a7fd59cb/README.md",
+      "revision": "bb94ed9e39bbeb96a7fcbfb533b80f25a7fd59cb",
+      "max_bytes": 1048576
+    },
+    {
       "path": "swe-smith/README.md",
       "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/README.md",
       "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
