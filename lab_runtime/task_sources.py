@@ -36,6 +36,22 @@ def safe_path(path):
     return path
 
 
+def relative_path(base, name):
+    if not isinstance(name, str) or not name or '\\' in name:
+        raise ImportFailure('unsafe_asset_path')
+    relative = PurePosixPath(name)
+    if relative.is_absolute() or '..' in relative.parts or name == '.':
+        raise ImportFailure('unsafe_asset_path')
+    target = safe_path(base / relative)
+    if not target.resolve().is_relative_to(base.resolve()):
+        raise ImportFailure('unsafe_asset_path')
+    return target
+
+
+def identity(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
 def digest(path, deadline, clock):
     h = hashlib.sha256()
     size = 0
@@ -150,7 +166,7 @@ def run_import(manifest, root=ROOT, *, opener=public_open, clock=time.monotonic)
     base = safe_path(root / 'data/m1/v2/sources')
     status_path = safe_path(root / 'artifacts/m1/v2/import-latest.json')
     base.mkdir(parents=True, exist_ok=True)
-    status = {'schema_version': 2, 'state': 'running', 'assets': {}}
+    status = {'schema_version': 2, 'state': 'running', 'assets': {}, 'manifest_identity': identity(manifest)}
     lock_path = safe_path(base / '.import.lock')
     with lock_path.open('a') as lock:
         try:
@@ -163,17 +179,20 @@ def run_import(manifest, root=ROOT, *, opener=public_open, clock=time.monotonic)
         try:
             for asset in manifest['assets']:
                 name = asset['path']
-                if PurePosixPath(name).is_absolute() or '..' in PurePosixPath(name).parts:
-                    raise ImportFailure('unsafe_asset_path')
+                target = relative_path(base, name)
+                destination = relative_path(base, asset['destination']) if asset.get('extract') else None
                 spec = dict(asset)
                 prior = previous.get('assets', {}).get(name, {})
+                asset_identity = identity(asset)
+                if prior and (prior.get('revision') != asset['revision'] or prior.get('source_url') != asset['url'] or prior.get('manifest_identity') != asset_identity):
+                    raise ImportFailure('source_identity_conflict')
                 if 'sha256' not in spec and prior.get('sha256'):
                     spec.update(sha256=prior['sha256'], size=prior['size'])
-                result = download(spec, base / name, deadline, opener=opener, clock=clock)
-                status['assets'][name] = dict(result, revision=asset['revision'])
+                result = download(spec, target, deadline, opener=opener, clock=clock)
+                status['assets'][name] = dict(result, revision=asset['revision'], source_url=asset['url'], manifest_identity=asset_identity)
                 atomic_json(status_path, status)
                 if asset.get('extract'):
-                    result['files'] = extract(base / name, base / asset['destination'], asset['extract'], deadline, clock=clock)
+                    result['files'] = extract(target, destination, asset['extract'], deadline, clock=clock)
                     status['assets'][name].update(result)
                     atomic_json(status_path, status)
             status['state'] = 'complete'

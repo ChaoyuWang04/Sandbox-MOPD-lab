@@ -9,6 +9,34 @@ from lab_runtime import task_sources as sources
 
 
 class SourcesTests(unittest.TestCase):
+    def test_resume_rejects_changed_source_identity(self):
+        for key, value in [('revision', 'new'), ('url', 'https://example.test/changed')]:
+            with self.subTest(key=key), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp).resolve()
+                manifest = {'assets': [{'path': 'readme', 'revision': 'fixed', 'url': 'https://example.test/x'}]}
+                sources.run_import(manifest, root, opener=lambda *a, **k: io.BytesIO(b'abc'))
+                manifest['assets'][0][key] = value
+                with self.assertRaises(sources.ImportFailure):
+                    sources.run_import(manifest, root, opener=lambda *a, **k: self.fail('network'))
+
+    def test_extract_destination_rejects_escape(self):
+        for destination in ['/outside', '../outside', 'bad\\outside']:
+            with self.subTest(destination=destination), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp).resolve()
+                self.archive(root / 'a', 'repo/task/file')
+                payload = (root / 'a').read_bytes()
+                manifest = {'assets': [{'path': 'archive', 'revision': 'fixed', 'url': 'https://example.test/x', 'extract': ['*'], 'destination': destination}]}
+                with self.assertRaises(sources.ImportFailure):
+                    sources.run_import(manifest, root, opener=lambda *a, **k: io.BytesIO(payload))
+
+    def test_cli_disables_bytecode_before_runtime_import(self):
+        import ast
+        script = Path(sources.__file__).parents[1] / 'scripts/m1_import.py'
+        tree = ast.parse(script.read_text())
+        runtime_index = next(i for i, n in enumerate(tree.body) if isinstance(n, ast.ImportFrom) and n.module == 'lab_runtime.task_sources')
+        assignments = [n for n in tree.body[:runtime_index] if isinstance(n, ast.Assign)]
+        self.assertTrue(any(isinstance(n.targets[0], ast.Attribute) and n.targets[0].attr == 'dont_write_bytecode' and isinstance(n.value, ast.Constant) and n.value.value is True for n in assignments))
+
     def test_download_and_verified_resume(self):
         with tempfile.TemporaryDirectory() as tmp:
             target = Path(tmp).resolve() / 'x'
