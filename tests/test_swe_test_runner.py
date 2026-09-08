@@ -71,10 +71,24 @@ class RunnerTests(unittest.TestCase):
                 result = self.run_fixture("import pytest\n@pytest.mark." + marker + "\ndef test_bug(): " + body + "\n")
                 self.assertEqual(result["reward"], reward, result)
 
-    def test_xpass_is_invalid(self):
+    def test_required_xpass_is_known_nonpassing(self):
         for marker in ["xfail", "xfail(strict=True)"]:
             with self.subTest(marker=marker):
-                self.assert_invalid(self.run_fixture("import pytest\n@pytest.mark." + marker + "\ndef test_bug(): pass\n"))
+                result = self.run_fixture("import pytest\n@pytest.mark." + marker + "\ndef test_bug(): pass\n")
+                self.assertEqual(result["reward"], 0, result)
+                self.assertEqual(result["nonpassing"]["test_small.py::test_bug"]["test_small.py::test_bug"], ["XPASS"])
+
+    def test_unrequired_xpass_does_not_invalidate_run(self):
+        for marker in ["xfail", "xfail(strict=True)"]:
+            with self.subTest(marker=marker):
+                result = self.run_fixture("import pytest\ndef test_bug(): pass\n@pytest.mark." + marker + "\ndef test_extra(): pass\n")
+                self.assertEqual(result["reward"], 1, result)
+
+    def test_teardown_error_overrides_xpass(self):
+        for marker in ["xfail(raises=ValueError)", "xfail(raises=ValueError, strict=True)"]:
+            with self.subTest(marker=marker):
+                result = self.run_fixture("import pytest\n@pytest.fixture\ndef resource():\n yield\n raise RuntimeError('teardown')\n@pytest.mark." + marker + "\ndef test_bug(resource): pass\n")
+                self.assertEqual(result["nonpassing"]["test_small.py::test_bug"]["test_small.py::test_bug"], ["ERROR"])
 
     def test_missing_ptp_and_deselected_required_invalid(self):
         self.config["pass_to_pass"] = ["test_small.py::test_keep"]

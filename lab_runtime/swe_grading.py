@@ -24,7 +24,9 @@ PASSING_STATUSES = {
     "smith": frozenset({"PASSED", "XFAIL"}),
     "gym": frozenset({"PASSED", "XFAIL"}),
 }
-KNOWN_STATUSES = frozenset({"PASSED", "FAILED", "ERROR", "SKIPPED", "XFAIL"})
+# Structured pytest observations include XPASS even where native parser enums
+# omit it. It is a known terminal result, but neither source accepts it as pass.
+KNOWN_STATUSES = frozenset({"PASSED", "FAILED", "ERROR", "SKIPPED", "XFAIL", "XPASS"})
 
 
 def _node_id(value):

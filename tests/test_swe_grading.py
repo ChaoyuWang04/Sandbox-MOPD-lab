@@ -1,5 +1,7 @@
 """Pure grading contracts: no sandbox or execution certification."""
 import unittest
+import json
+from pathlib import Path
 
 from lab_runtime.swe_grading import grade_swe_tests
 
@@ -49,10 +51,39 @@ class SWEGradingTests(unittest.TestCase):
         self.assertEqual(self.grade({"fix": "XFAIL", "keep": "PASSED"})["reward"], 1)
 
     def test_gym_pinned_policy_and_status_enum_are_not_generic_pytest(self):
-        for status, outcome in [("XFAIL", "passed"), ("SKIPPED", "failed"), ("XPASS", "invalid")]:
+        for status, outcome in [("XFAIL", "passed"), ("SKIPPED", "failed"), ("XPASS", "failed")]:
             with self.subTest(status=status):
                 self.assertEqual(self.grade({"fix": status, "keep": "PASSED"},
                                             source="gym", parser_identity=GYM)["outcome"], outcome)
+
+    def test_unrequired_xpass_is_known_terminal_for_both_sources(self):
+        for source, parser in [("smith", SMITH), ("gym", GYM)]:
+            report = self.grade({"fix": "PASSED", "keep": "PASSED", "extra": "XPASS"},
+                                source=source, parser_identity=parser)
+            self.assertEqual(report["reward"], 1)
+            self.assertEqual(report["passing_statuses"], ["PASSED", "XFAIL"])
+            self.assertEqual(report["unknown_statuses"], {})
+
+    def test_cloud_nop_record_replay_with_unrequired_xpass(self):
+        directory = Path(__file__).resolve().parents[1] / "artifacts/m1/v2/controls/m1-v2-first-six-r2/attempt-02/trials/control/verifier"
+        run_path = directory / "run.json"
+        if not run_path.exists():
+            self.skipTest("ignored cloud replay artifact unavailable")
+        old = json.loads(run_path.read_text())
+        artifact = directory / Path(old["artifact"]).name
+        if not artifact.exists():
+            self.skipTest("ignored pytest observation artifact unavailable")
+        execution = json.loads(artifact.read_text())
+        self.assertEqual(old["runtime_errors"], [])
+        self.assertTrue(old["protocol_complete"])
+        self.assertIn(["tests/test_regressions.py::test_issue484_comments_and_newlines", "XPASS"], execution["observations"])
+        report = grade_swe_tests(source=old["source"], parser_identity=old["parser_identity"],
+            fail_to_pass=old["required"]["FAIL_TO_PASS"], pass_to_pass=old["required"]["PASS_TO_PASS"],
+            observations=execution["observations"], collected_node_ids=execution["collected_node_ids"],
+            protocol_complete=old["protocol_complete"])
+        self.assertEqual((report["outcome"], report["reward"]), ("failed", 0))
+        self.assertEqual(report["unknown_statuses"], {})
+        self.assertEqual(report["nonpassing"], old["nonpassing"])
 
     def test_known_failure_with_complete_protocol_is_zero(self):
         report = self.grade({"fix": "FAILED", "keep": "PASSED"})

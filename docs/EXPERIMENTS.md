@@ -30,6 +30,10 @@ SWE许可证审计补齐63/63不同源码版本主许可证全文及Trio两份�
 
 后续独立客户端精确GET返回`DaytonaNotFoundError`，相同run/attempt标签list为空，证明已回收；不覆盖原账本终态。原账本`artifacts/m1/v2/controls/campaign.json` SHA256 `d3dbdca04b0ccdcf3db10e6f2cebf56677793dc2052bf1ad012f77d0a632e53a`，`attempt-00/independent-cleanup-check.json` SHA256 `95a815524f4d89fdc80053890c893dcc476d87f7b3723795fbb94dd5c0f0f3e6`。根因是新入口缺少旧入口已有的删除后有界列表等待，不是沙箱已确认泄漏或模型失败。下一批登记固定r2身份，修正120秒截止内的list/GET等待，未知创建仍不得放行；总7次上限见BUDGET。
 
+r2（源码`614c296`）实际运行3次：self NOP=0、oracle=1，分别33.659/34.433秒，均正常判分/隔离/回收通过；Mac峰值130/132MiB。Smith NOP的指定镜像与commit、私有测试恢复、单根历史隔离均已执行，464个测试完整收集且有终态，runtime_errors为空；但不参与本题计分的`test_issue484_comments_and_newlines`得到XPASS，适配器把该常见pytest终态误列为未知，导致reward=null。沙箱全部确认删除，无模型请求。
+
+r2账本`artifacts/m1/v2/controls/m1-v2-first-six-r2/campaign.json` SHA256 `7ae7d7680e88c98a737b921bb6e3b7199fbc053e3a7e34d3d5dfacef65e54bbb`；Smith的`attempt-02/trials/control/verifier/run.json` SHA256 `0bfcdc728998d1f9e4f1e20698de1cdd4fbdd74977a1f66ad82883c5635a3262`。只读重放证明确认XPASS为已知非通过状态后，同一记录得到有效NOP=0，10个失败的计分键不变。按[pytest官方状态说明](https://docs.pytest.org/en/stable/how-to/skipping.html)修正适配：PASSED/XFAIL通过集合不变，计分项XPASS仍不得分，非计分项XPASS不再冒充协议损坏。源题面/patch/测试集合不改，旧云记录不追改；须生成新任务版本并真实复跑SWE后才能验收。
+
 ### 旧32题实施与失败证据
 
 - T1源码63b8416：4族32实例（每族train/eval各4），独立oracle和严格grader；7项离线测试逐实例验证oracle=1、NOP及排序/数值/缺项/类型/输入修改等反例=0；JSON<5及==5边界、Harbor30/180秒解析和字节确定性通过。两轮独立审阅通过。冻结清单路径及SHA只维护在M1计划；模型尚未读过这些评测实例。

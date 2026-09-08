@@ -68,10 +68,10 @@ def pytest_runtest_logfinish(nodeid, location):
             phases["setup"][0] == "passed" and "call" not in phases):
         _state["errors"].append("missing_phase:" + nodeid)
         return
-    if any(value[2] for value in phases.values()):
-        status = "XPASS"  # Deliberately unknown to grader: invalid, not reward zero.
-    elif any(phases[phase][0] == "failed" for phase in ("setup", "teardown")):
+    if any(phases[phase][0] == "failed" for phase in ("setup", "teardown")):
         status = "ERROR"
+    elif any(value[2] for value in phases.values()):
+        status = "XPASS"  # Known terminal outcome; never part of passing policy.
     elif phases.get("call", (None,))[0] == "failed":
         status = "FAILED"
     elif any(value[0] == "skipped" and value[1] for value in phases.values()):
