@@ -1,0 +1,2480 @@
+{
+  "schema_version": 1,
+  "status": "metadata_frozen_runtime_unvalidated",
+  "unresolved": [],
+  "sources": [
+    {
+      "path": "data/m1/v2/research/upstream-smith-python.py",
+      "sha256": "e2003dd7bab8d80dd6312120bae1d2f0d26c2d794a891f954f8540b805ecb31e",
+      "commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository": "SWE-bench/SWE-smith"
+    },
+    {
+      "path": "data/m1/v2/research/upstream-smith-base.py",
+      "sha256": "768be175296020aa8e6e80ded34a9ca088a5e22b21780df887dbcb427361b427",
+      "commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository": "SWE-bench/SWE-smith"
+    },
+    {
+      "path": "data/m1/v2/research/upstream-smith-grading.py",
+      "sha256": "0bba8dd0c32db064aa128cb37bd063075084c1278aea229b41c9dc353e211788",
+      "commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository": "SWE-bench/SWE-smith"
+    },
+    {
+      "path": "data/m1/v2/research/upstream-gym-constants.py",
+      "sha256": "5bd655172c9a9dfcb494d9c52bcbcc0d79a59cd20c39b8bbdc41ab8b0a9baf14",
+      "commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "repository": "SWE-Gym/SWE-Gym"
+    },
+    {
+      "path": "data/m1/v2/research/upstream-gym-test_spec.py",
+      "sha256": "94207893a3dc148fc8d010d642bca3e94a6881be4f271265dd0c36fb562da749",
+      "commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "repository": "SWE-Gym/SWE-Gym"
+    },
+    {
+      "path": "data/m1/v2/research/upstream-gym-log_parsers.py",
+      "sha256": "44ce810ca5bc14fb07f5f765cf6955ad9fac9218f1e1f7112914edbd52fc825f",
+      "commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "repository": "SWE-Gym/SWE-Gym"
+    },
+    {
+      "path": "data/m1/v2/research/upstream-gym-utils.py",
+      "sha256": "f7b9d10eab20099977b953cdb5333687455db53002390748a7933209d260293b",
+      "commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "repository": "SWE-Gym/SWE-Gym"
+    }
+  ],
+  "smith": {
+    "andialbrecht__sqlparse.e57923b3.func_basic__0mum3b07": {
+      "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
+      "image_name": "jyangballin/swesmith.x86_64.andialbrecht_1776_sqlparse.e57923b3",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.SqlparseE57923b3",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "e57923b3aa823c524c807953cecc48cf6eec2cb2",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:f891cf0bd09856bc81c7397b0031b4c3aa55709242769771f87db61e804a68fc",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "andialbrecht__sqlparse.e57923b3.func_basic__0q0uf0jj": {
+      "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
+      "image_name": "jyangballin/swesmith.x86_64.andialbrecht_1776_sqlparse.e57923b3",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.SqlparseE57923b3",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "e57923b3aa823c524c807953cecc48cf6eec2cb2",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:f891cf0bd09856bc81c7397b0031b4c3aa55709242769771f87db61e804a68fc",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "andialbrecht__sqlparse.e57923b3.func_basic__0zb7o5ky": {
+      "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
+      "image_name": "jyangballin/swesmith.x86_64.andialbrecht_1776_sqlparse.e57923b3",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.SqlparseE57923b3",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "e57923b3aa823c524c807953cecc48cf6eec2cb2",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:f891cf0bd09856bc81c7397b0031b4c3aa55709242769771f87db61e804a68fc",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "andialbrecht__sqlparse.e57923b3.func_basic__18agwlyx": {
+      "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
+      "image_name": "jyangballin/swesmith.x86_64.andialbrecht_1776_sqlparse.e57923b3",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.SqlparseE57923b3",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "e57923b3aa823c524c807953cecc48cf6eec2cb2",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:f891cf0bd09856bc81c7397b0031b4c3aa55709242769771f87db61e804a68fc",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "andialbrecht__sqlparse.e57923b3.func_basic__18nuk53l": {
+      "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
+      "image_name": "jyangballin/swesmith.x86_64.andialbrecht_1776_sqlparse.e57923b3",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.SqlparseE57923b3",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "e57923b3aa823c524c807953cecc48cf6eec2cb2",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:f891cf0bd09856bc81c7397b0031b4c3aa55709242769771f87db61e804a68fc",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "andialbrecht__sqlparse.e57923b3.func_basic__1upjaqs7": {
+      "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
+      "image_name": "jyangballin/swesmith.x86_64.andialbrecht_1776_sqlparse.e57923b3",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.SqlparseE57923b3",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "e57923b3aa823c524c807953cecc48cf6eec2cb2",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:f891cf0bd09856bc81c7397b0031b4c3aa55709242769771f87db61e804a68fc",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "mahmoud__glom.fb3c4e76.func_basic__0n4ho2l0": {
+      "repo": "swesmith/mahmoud__glom.fb3c4e76",
+      "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_glom.fb3c4e76",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.GlomFb3c4e76",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "fb3c4e76f28816aebfd2538980e617742e98a7c2",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:5fe91c5d1431b88f49568c4381b37b9dd701b8339248690598f498db360f3683",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "mahmoud__glom.fb3c4e76.func_basic__0n76829i": {
+      "repo": "swesmith/mahmoud__glom.fb3c4e76",
+      "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_glom.fb3c4e76",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.GlomFb3c4e76",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "fb3c4e76f28816aebfd2538980e617742e98a7c2",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:5fe91c5d1431b88f49568c4381b37b9dd701b8339248690598f498db360f3683",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "mahmoud__glom.fb3c4e76.func_basic__0p95nibl": {
+      "repo": "swesmith/mahmoud__glom.fb3c4e76",
+      "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_glom.fb3c4e76",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.GlomFb3c4e76",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "fb3c4e76f28816aebfd2538980e617742e98a7c2",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:5fe91c5d1431b88f49568c4381b37b9dd701b8339248690598f498db360f3683",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "mahmoud__glom.fb3c4e76.func_basic__0xzrqz4z": {
+      "repo": "swesmith/mahmoud__glom.fb3c4e76",
+      "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_glom.fb3c4e76",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.GlomFb3c4e76",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "fb3c4e76f28816aebfd2538980e617742e98a7c2",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:5fe91c5d1431b88f49568c4381b37b9dd701b8339248690598f498db360f3683",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "mahmoud__glom.fb3c4e76.func_basic__2dx4odj4": {
+      "repo": "swesmith/mahmoud__glom.fb3c4e76",
+      "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_glom.fb3c4e76",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.GlomFb3c4e76",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "fb3c4e76f28816aebfd2538980e617742e98a7c2",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:5fe91c5d1431b88f49568c4381b37b9dd701b8339248690598f498db360f3683",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "mahmoud__glom.fb3c4e76.func_basic__4fln4x3t": {
+      "repo": "swesmith/mahmoud__glom.fb3c4e76",
+      "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_glom.fb3c4e76",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.GlomFb3c4e76",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "fb3c4e76f28816aebfd2538980e617742e98a7c2",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:5fe91c5d1431b88f49568c4381b37b9dd701b8339248690598f498db360f3683",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "mahmoud__boltons.3bfcfdd0.func_basic__2bbqxvei": {
+      "repo": "swesmith/mahmoud__boltons.3bfcfdd0",
+      "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_boltons.3bfcfdd0",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Boltons3bfcfdd0",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "3bfcfdd04395b6cc74a5c0cdc72c8f64cc4ac01f",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:a68ab43647615a839c6380ec3cde579cd59686c26cf269e73f63d1a782fafae1",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "mahmoud__boltons.3bfcfdd0.func_basic__5vq1fa1x": {
+      "repo": "swesmith/mahmoud__boltons.3bfcfdd0",
+      "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_boltons.3bfcfdd0",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Boltons3bfcfdd0",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "3bfcfdd04395b6cc74a5c0cdc72c8f64cc4ac01f",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:a68ab43647615a839c6380ec3cde579cd59686c26cf269e73f63d1a782fafae1",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "mahmoud__boltons.3bfcfdd0.func_basic__obaisyei": {
+      "repo": "swesmith/mahmoud__boltons.3bfcfdd0",
+      "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_boltons.3bfcfdd0",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Boltons3bfcfdd0",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "3bfcfdd04395b6cc74a5c0cdc72c8f64cc4ac01f",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:a68ab43647615a839c6380ec3cde579cd59686c26cf269e73f63d1a782fafae1",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "hukkin__tomli.443a0c1b.func_basic__0grznk3s": {
+      "repo": "swesmith/hukkin__tomli.443a0c1b",
+      "image_name": "jyangballin/swesmith.x86_64.hukkin_1776_tomli.443a0c1b",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Tomli443a0c1b",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "443a0c1bc5da39b7ed84306912ee1900e6b72e2f",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:a804c30560d7f27c7f9b20b76cf87deb425d1cf131267a5b6f52700969a066d3",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "hukkin__tomli.443a0c1b.func_basic__0z3cfhsu": {
+      "repo": "swesmith/hukkin__tomli.443a0c1b",
+      "image_name": "jyangballin/swesmith.x86_64.hukkin_1776_tomli.443a0c1b",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Tomli443a0c1b",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "443a0c1bc5da39b7ed84306912ee1900e6b72e2f",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:a804c30560d7f27c7f9b20b76cf87deb425d1cf131267a5b6f52700969a066d3",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "hukkin__tomli.443a0c1b.func_basic__1z83hnoa": {
+      "repo": "swesmith/hukkin__tomli.443a0c1b",
+      "image_name": "jyangballin/swesmith.x86_64.hukkin_1776_tomli.443a0c1b",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Tomli443a0c1b",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "443a0c1bc5da39b7ed84306912ee1900e6b72e2f",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:a804c30560d7f27c7f9b20b76cf87deb425d1cf131267a5b6f52700969a066d3",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "marshmallow-code__marshmallow.9716fc62.func_basic__0jrkbh70": {
+      "repo": "swesmith/marshmallow-code__marshmallow.9716fc62",
+      "image_name": "jyangballin/swesmith.x86_64.marshmallow-code_1776_marshmallow.9716fc62",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Marshmallow9716fc62",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "9716fc629976c9d3ce30cd15d270d9ac235eb725",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:f782501251f6dd9600ee2d3a9585107ba8271aaa03d75111db1b06321008b38f",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "marshmallow-code__marshmallow.9716fc62.func_basic__0o3fqphc": {
+      "repo": "swesmith/marshmallow-code__marshmallow.9716fc62",
+      "image_name": "jyangballin/swesmith.x86_64.marshmallow-code_1776_marshmallow.9716fc62",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Marshmallow9716fc62",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "9716fc629976c9d3ce30cd15d270d9ac235eb725",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:f782501251f6dd9600ee2d3a9585107ba8271aaa03d75111db1b06321008b38f",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "marshmallow-code__marshmallow.9716fc62.func_basic__18raipa0": {
+      "repo": "swesmith/marshmallow-code__marshmallow.9716fc62",
+      "image_name": "jyangballin/swesmith.x86_64.marshmallow-code_1776_marshmallow.9716fc62",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Marshmallow9716fc62",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "9716fc629976c9d3ce30cd15d270d9ac235eb725",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:f782501251f6dd9600ee2d3a9585107ba8271aaa03d75111db1b06321008b38f",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "marshmallow-code__marshmallow.9716fc62.func_basic__1qr1rr2e": {
+      "repo": "swesmith/marshmallow-code__marshmallow.9716fc62",
+      "image_name": "jyangballin/swesmith.x86_64.marshmallow-code_1776_marshmallow.9716fc62",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Marshmallow9716fc62",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "9716fc629976c9d3ce30cd15d270d9ac235eb725",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:f782501251f6dd9600ee2d3a9585107ba8271aaa03d75111db1b06321008b38f",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "gweis__isodate.17cb25eb.func_basic__3o9c1n49": {
+      "repo": "swesmith/gweis__isodate.17cb25eb",
+      "image_name": "jyangballin/swesmith.x86_64.gweis_1776_isodate.17cb25eb",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Isodate17cb25eb",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "17cb25eb7bc3556a68f3f7b241313e9bb8b23760",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:8f9bb0bac789e8e9ab64fe0bc20d6bc9169d7b1020c66fdcba6d8bfb91febe35",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "gweis__isodate.17cb25eb.func_basic__3ty8lwck": {
+      "repo": "swesmith/gweis__isodate.17cb25eb",
+      "image_name": "jyangballin/swesmith.x86_64.gweis_1776_isodate.17cb25eb",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Isodate17cb25eb",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "17cb25eb7bc3556a68f3f7b241313e9bb8b23760",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:8f9bb0bac789e8e9ab64fe0bc20d6bc9169d7b1020c66fdcba6d8bfb91febe35",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "martinblech__xmltodict.0952f382.func_basic__254qp8xw": {
+      "repo": "swesmith/martinblech__xmltodict.0952f382",
+      "image_name": "jyangballin/swesmith.x86_64.martinblech_1776_xmltodict.0952f382",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Xmltodict0952f382",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "0952f382c2340bc8b86a5503ba765a35a49cf7c4",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:90171f20311a90af1e6b59fbec394d434c4c5be871d1c853b4d4aa890e1a73bf",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "martinblech__xmltodict.0952f382.func_pm_remove_cond__qc5atj8q": {
+      "repo": "swesmith/martinblech__xmltodict.0952f382",
+      "image_name": "jyangballin/swesmith.x86_64.martinblech_1776_xmltodict.0952f382",
+      "generation_method": "func_pm_remove_cond",
+      "profile_class": "swesmith.profiles.python.Xmltodict0952f382",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "0952f382c2340bc8b86a5503ba765a35a49cf7c4",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:90171f20311a90af1e6b59fbec394d434c4c5be871d1c853b4d4aa890e1a73bf",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python-trio__trio.cfbbe2c1.func_basic__0l5ww3x0": {
+      "repo": "swesmith/python-trio__trio.cfbbe2c1",
+      "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.TrioCfbbe2c1",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "cfbbe2c1f96e93b19bc2577d2cab3f4fe2e81153",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:315b96ad716b7eaaafc542fc45602493014732b344f89c052c249f1cfdc24d6b",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python-trio__trio.cfbbe2c1.func_basic__158aks7r": {
+      "repo": "swesmith/python-trio__trio.cfbbe2c1",
+      "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.TrioCfbbe2c1",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "cfbbe2c1f96e93b19bc2577d2cab3f4fe2e81153",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:315b96ad716b7eaaafc542fc45602493014732b344f89c052c249f1cfdc24d6b",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python-trio__trio.cfbbe2c1.func_basic__16n8sik8": {
+      "repo": "swesmith/python-trio__trio.cfbbe2c1",
+      "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.TrioCfbbe2c1",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "cfbbe2c1f96e93b19bc2577d2cab3f4fe2e81153",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:315b96ad716b7eaaafc542fc45602493014732b344f89c052c249f1cfdc24d6b",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python-trio__trio.cfbbe2c1.func_basic__17ms1ssp": {
+      "repo": "swesmith/python-trio__trio.cfbbe2c1",
+      "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.TrioCfbbe2c1",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "cfbbe2c1f96e93b19bc2577d2cab3f4fe2e81153",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:315b96ad716b7eaaafc542fc45602493014732b344f89c052c249f1cfdc24d6b",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python-trio__trio.cfbbe2c1.func_basic__1itp7mv7": {
+      "repo": "swesmith/python-trio__trio.cfbbe2c1",
+      "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.TrioCfbbe2c1",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "cfbbe2c1f96e93b19bc2577d2cab3f4fe2e81153",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:315b96ad716b7eaaafc542fc45602493014732b344f89c052c249f1cfdc24d6b",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python-trio__trio.cfbbe2c1.func_basic__1ju1r46i": {
+      "repo": "swesmith/python-trio__trio.cfbbe2c1",
+      "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.TrioCfbbe2c1",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "cfbbe2c1f96e93b19bc2577d2cab3f4fe2e81153",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:315b96ad716b7eaaafc542fc45602493014732b344f89c052c249f1cfdc24d6b",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python-trio__trio.cfbbe2c1.func_basic__24kxv4so": {
+      "repo": "swesmith/python-trio__trio.cfbbe2c1",
+      "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.TrioCfbbe2c1",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "cfbbe2c1f96e93b19bc2577d2cab3f4fe2e81153",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:315b96ad716b7eaaafc542fc45602493014732b344f89c052c249f1cfdc24d6b",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "benoitc__gunicorn.bacbf8aa.func_basic__01cfz6ly": {
+      "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
+      "image_name": "jyangballin/swesmith.x86_64.benoitc_1776_gunicorn.bacbf8aa",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.GunicornBacbf8aa",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "bacbf8aa5152b94e44aa5d2a94aeaf0318a85248",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:48493f3047dd7e1beca9e7ef2b62e8800ebf2bd00a962d1bead117814f61da67",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "benoitc__gunicorn.bacbf8aa.func_basic__0dozchuh": {
+      "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
+      "image_name": "jyangballin/swesmith.x86_64.benoitc_1776_gunicorn.bacbf8aa",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.GunicornBacbf8aa",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "bacbf8aa5152b94e44aa5d2a94aeaf0318a85248",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:48493f3047dd7e1beca9e7ef2b62e8800ebf2bd00a962d1bead117814f61da67",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "benoitc__gunicorn.bacbf8aa.func_basic__0sxs9f9o": {
+      "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
+      "image_name": "jyangballin/swesmith.x86_64.benoitc_1776_gunicorn.bacbf8aa",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.GunicornBacbf8aa",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "bacbf8aa5152b94e44aa5d2a94aeaf0318a85248",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:48493f3047dd7e1beca9e7ef2b62e8800ebf2bd00a962d1bead117814f61da67",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "benoitc__gunicorn.bacbf8aa.func_basic__1ngbkdol": {
+      "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
+      "image_name": "jyangballin/swesmith.x86_64.benoitc_1776_gunicorn.bacbf8aa",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.GunicornBacbf8aa",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "bacbf8aa5152b94e44aa5d2a94aeaf0318a85248",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:48493f3047dd7e1beca9e7ef2b62e8800ebf2bd00a962d1bead117814f61da67",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "benoitc__gunicorn.bacbf8aa.func_basic__2akacgtq": {
+      "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
+      "image_name": "jyangballin/swesmith.x86_64.benoitc_1776_gunicorn.bacbf8aa",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.GunicornBacbf8aa",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "bacbf8aa5152b94e44aa5d2a94aeaf0318a85248",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:48493f3047dd7e1beca9e7ef2b62e8800ebf2bd00a962d1bead117814f61da67",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "benoitc__gunicorn.bacbf8aa.func_basic__2md1k5bn": {
+      "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
+      "image_name": "jyangballin/swesmith.x86_64.benoitc_1776_gunicorn.bacbf8aa",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.GunicornBacbf8aa",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "bacbf8aa5152b94e44aa5d2a94aeaf0318a85248",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:48493f3047dd7e1beca9e7ef2b62e8800ebf2bd00a962d1bead117814f61da67",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "jd__tenacity.0d40e76f.func_basic__101pcgqa": {
+      "repo": "swesmith/jd__tenacity.0d40e76f",
+      "image_name": "jyangballin/swesmith.x86_64.jd_1776_tenacity.0d40e76f",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Tenacity0d40e76f",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "0d40e76f7d06d631fb127e1ec58c8bd776e70d49",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:7ec64b27cf6489d4f12f21ccdaad72f93f0949ec7862509824d3083177cc1b98",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "jd__tenacity.0d40e76f.func_basic__1l3yf5xv": {
+      "repo": "swesmith/jd__tenacity.0d40e76f",
+      "image_name": "jyangballin/swesmith.x86_64.jd_1776_tenacity.0d40e76f",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Tenacity0d40e76f",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "0d40e76f7d06d631fb127e1ec58c8bd776e70d49",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:7ec64b27cf6489d4f12f21ccdaad72f93f0949ec7862509824d3083177cc1b98",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "jd__tenacity.0d40e76f.func_basic__3k3115n5": {
+      "repo": "swesmith/jd__tenacity.0d40e76f",
+      "image_name": "jyangballin/swesmith.x86_64.jd_1776_tenacity.0d40e76f",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Tenacity0d40e76f",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "0d40e76f7d06d631fb127e1ec58c8bd776e70d49",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:7ec64b27cf6489d4f12f21ccdaad72f93f0949ec7862509824d3083177cc1b98",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "dbader__schedule.82a43db1.func_basic__3uvexel4": {
+      "repo": "swesmith/dbader__schedule.82a43db1",
+      "image_name": "jyangballin/swesmith.x86_64.dbader_1776_schedule.82a43db1",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Schedule82a43db1",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "82a43db1b938d8fdf60103bd41f329e06c8d3651",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:636d2fa7f06a01db1945abf94854933561910399976ef9310c2f0d1e76729a32",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "dbader__schedule.82a43db1.func_basic__4to1fjde": {
+      "repo": "swesmith/dbader__schedule.82a43db1",
+      "image_name": "jyangballin/swesmith.x86_64.dbader_1776_schedule.82a43db1",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Schedule82a43db1",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "82a43db1b938d8fdf60103bd41f329e06c8d3651",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:636d2fa7f06a01db1945abf94854933561910399976ef9310c2f0d1e76729a32",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "dbader__schedule.82a43db1.func_basic__91tae94o": {
+      "repo": "swesmith/dbader__schedule.82a43db1",
+      "image_name": "jyangballin/swesmith.x86_64.dbader_1776_schedule.82a43db1",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Schedule82a43db1",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "82a43db1b938d8fdf60103bd41f329e06c8d3651",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:636d2fa7f06a01db1945abf94854933561910399976ef9310c2f0d1e76729a32",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "dbader__schedule.82a43db1.func_basic__avciypb3": {
+      "repo": "swesmith/dbader__schedule.82a43db1",
+      "image_name": "jyangballin/swesmith.x86_64.dbader_1776_schedule.82a43db1",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.Schedule82a43db1",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "82a43db1b938d8fdf60103bd41f329e06c8d3651",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:636d2fa7f06a01db1945abf94854933561910399976ef9310c2f0d1e76729a32",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "theskumar__python-dotenv.2b8635b7.func_basic__1q1u3iv4": {
+      "repo": "swesmith/theskumar__python-dotenv.2b8635b7",
+      "image_name": "jyangballin/swesmith.x86_64.theskumar_1776_python-dotenv.2b8635b7",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.PythonDotenv2b8635b7",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "2b8635b79f1aa15cade0950117d4e7d12c298766",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:88ab2e25fa213ba774e8662c0416c6e878af2dc07d904b71dfe903a413e811a5",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "theskumar__python-dotenv.2b8635b7.func_basic__3att6j7k": {
+      "repo": "swesmith/theskumar__python-dotenv.2b8635b7",
+      "image_name": "jyangballin/swesmith.x86_64.theskumar_1776_python-dotenv.2b8635b7",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.PythonDotenv2b8635b7",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "2b8635b79f1aa15cade0950117d4e7d12c298766",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:88ab2e25fa213ba774e8662c0416c6e878af2dc07d904b71dfe903a413e811a5",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python-hyper__h11.bed0dd4a.func_basic__29zrns57": {
+      "repo": "swesmith/python-hyper__h11.bed0dd4a",
+      "image_name": "jyangballin/swesmith.x86_64.python-hyper_1776_h11.bed0dd4a",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.H11Bed0dd4ae",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "bed0dd4ae9774b962b19833941bb9ec4dc403da9",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:12c9cc5f0d7439a57b3c773102e0d87e05ef466cc4eeba467d43c159af02ecbb",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python-hyper__h11.bed0dd4a.func_basic__2r14k6u7": {
+      "repo": "swesmith/python-hyper__h11.bed0dd4a",
+      "image_name": "jyangballin/swesmith.x86_64.python-hyper_1776_h11.bed0dd4a",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.H11Bed0dd4ae",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "bed0dd4ae9774b962b19833941bb9ec4dc403da9",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:12c9cc5f0d7439a57b3c773102e0d87e05ef466cc4eeba467d43c159af02ecbb",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python-hyper__h11.bed0dd4a.func_basic__3v18db0m": {
+      "repo": "swesmith/python-hyper__h11.bed0dd4a",
+      "image_name": "jyangballin/swesmith.x86_64.python-hyper_1776_h11.bed0dd4a",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.H11Bed0dd4ae",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "bed0dd4ae9774b962b19833941bb9ec4dc403da9",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:12c9cc5f0d7439a57b3c773102e0d87e05ef466cc4eeba467d43c159af02ecbb",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python-hyper__h11.bed0dd4a.func_basic__58396e6q": {
+      "repo": "swesmith/python-hyper__h11.bed0dd4a",
+      "image_name": "jyangballin/swesmith.x86_64.python-hyper_1776_h11.bed0dd4a",
+      "generation_method": "func_basic",
+      "profile_class": "swesmith.profiles.python.H11Bed0dd4ae",
+      "profile_source_commit": "057f0478b6918bfcd89a51ceeec7229c60bb1028",
+      "repository_commit": "bed0dd4ae9774b962b19833941bb9ec4dc403da9",
+      "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+      "min_testing": false,
+      "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+      "parser_pattern": "^(\\S+)(\\s+){status.value}",
+      "passing_statuses": [
+        "PASSED",
+        "XFAIL"
+      ],
+      "install_stage": "PythonProfile.build_image installs into public image; no verify-time reinstall specified by inherited test command",
+      "image_digest": "sha256:12c9cc5f0d7439a57b3c773102e0d87e05ef466cc4eeba467d43c159af02ecbb",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    }
+  },
+  "gym": {
+    "getmoto__moto-5752": {
+      "repo": "getmoto/moto",
+      "version": "4.0",
+      "base_commit": "b2300f1eae1323e3e8bc45f97e530ce129dff12e",
+      "official_lookup_repo": "getmoto/moto",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.12",
+        "install": "make init",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA tests/test_ssm/test_ssm_boto3.py",
+      "test_directives": [
+        "tests/test_ssm/test_ssm_boto3.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_moto",
+      "eval_commands": [],
+      "verify_reinstall_command": "make init",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.getmoto__moto-5752:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.getmoto_s_moto-5752",
+      "image_digest": "sha256:2665296135d73d6ed10e225ac3942fcc9086811fdfa0ede89a8465a63716c134",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "getmoto__moto-5545": {
+      "repo": "getmoto/moto",
+      "version": "4.0",
+      "base_commit": "1a8f93dce33f1c1c7983a8052ef54de30ff64407",
+      "official_lookup_repo": "getmoto/moto",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.12",
+        "install": "make init",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA tests/test_s3/test_s3_multipart.py",
+      "test_directives": [
+        "tests/test_s3/test_s3_multipart.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_moto",
+      "eval_commands": [],
+      "verify_reinstall_command": "make init",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.getmoto__moto-5545:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.getmoto_s_moto-5545",
+      "image_digest": "sha256:3d09d38451209ce504b3f987ec62a02b9907ff06939892d4dd1ffdb76d601899",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "getmoto__moto-7105": {
+      "repo": "getmoto/moto",
+      "version": "4.2",
+      "base_commit": "85156f59396a85e83e83200c9df41b66d6f82b68",
+      "official_lookup_repo": "getmoto/moto",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.12",
+        "install": "make init",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA tests/test_batch/test_batch_jobs.py",
+      "test_directives": [
+        "tests/test_batch/test_batch_jobs.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_moto",
+      "eval_commands": [],
+      "verify_reinstall_command": "make init",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.getmoto__moto-7105:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.getmoto_s_moto-7105",
+      "image_digest": "sha256:a3be89618b24fafbddb755930158eb8e7888713a08e2212bdb60aa397492a4f4",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "getmoto__moto-6185": {
+      "repo": "getmoto/moto",
+      "version": "4.1",
+      "base_commit": "dc460a325839bc6797084a54afc297a2c9d87e63",
+      "official_lookup_repo": "getmoto/moto",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.12",
+        "install": "make init",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA tests/test_dynamodb/exceptions/test_dynamodb_exceptions.py",
+      "test_directives": [
+        "tests/test_dynamodb/exceptions/test_dynamodb_exceptions.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_moto",
+      "eval_commands": [],
+      "verify_reinstall_command": "make init",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.getmoto__moto-6185:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.getmoto_s_moto-6185",
+      "image_digest": "sha256:ade7d85a8ef82a6d87940dd9c8d486e50b27dcc33e968e55f50421adf6864eda",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "getmoto__moto-6308": {
+      "repo": "getmoto/moto",
+      "version": "4.1",
+      "base_commit": "52846c9555a3077b11a391fbfcd619d0d6e776f6",
+      "official_lookup_repo": "getmoto/moto",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.12",
+        "install": "make init",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA tests/test_s3/test_s3_copyobject.py",
+      "test_directives": [
+        "tests/test_s3/test_s3_copyobject.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_moto",
+      "eval_commands": [],
+      "verify_reinstall_command": "make init",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.getmoto__moto-6308:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.getmoto_s_moto-6308",
+      "image_digest": "sha256:36815d5b865107ca13cc4034d6bdb9ae49ff2850e3ec5551b5581832eae85483",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "getmoto__moto-5794": {
+      "repo": "getmoto/moto",
+      "version": "4.0",
+      "base_commit": "027572177da3e95b8f5b4a3e611fe6a7f969e1b1",
+      "official_lookup_repo": "getmoto/moto",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.12",
+        "install": "make init",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA tests/test_cognitoidp/test_cognitoidp.py",
+      "test_directives": [
+        "tests/test_cognitoidp/test_cognitoidp.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_moto",
+      "eval_commands": [],
+      "verify_reinstall_command": "make init",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.getmoto__moto-5794:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.getmoto_s_moto-5794",
+      "image_digest": "sha256:c1cf874daa2d209f8bed3e6ac2bf789ed18d67dceeb01edf7d6ed6fb323d54df",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "getmoto__moto-5134": {
+      "repo": "getmoto/moto",
+      "version": "3.1",
+      "base_commit": "0e3ac260682f3354912fe552c61d9b3e590903b8",
+      "official_lookup_repo": "getmoto/moto",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.12",
+        "install": "make init",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA tests/test_events/test_event_pattern.py tests/test_events/test_events_integration.py",
+      "test_directives": [
+        "tests/test_events/test_event_pattern.py",
+        "tests/test_events/test_events_integration.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_moto",
+      "eval_commands": [],
+      "verify_reinstall_command": "make init",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.getmoto__moto-5134:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.getmoto_s_moto-5134",
+      "image_digest": "sha256:79117a6d6ffeaa6b146eb86c7959b7421ad4387c80b18fb4c835e4074ec10847",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "getmoto__moto-7484": {
+      "repo": "getmoto/moto",
+      "version": "5.0",
+      "base_commit": "ca5d514c61d74b7278ad9c3a035d179f54ed0b92",
+      "official_lookup_repo": "getmoto/moto",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.12",
+        "install": "make init",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA tests/test_dynamodb/__init__.py tests/test_dynamodb/test_dynamodb.py tests/test_dynamodb/test_dynamodb_table_without_range_key.py",
+      "test_directives": [
+        "tests/test_dynamodb/__init__.py",
+        "tests/test_dynamodb/test_dynamodb.py",
+        "tests/test_dynamodb/test_dynamodb_table_without_range_key.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_moto",
+      "eval_commands": [],
+      "verify_reinstall_command": "make init",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.getmoto__moto-7484:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.getmoto_s_moto-7484",
+      "image_digest": "sha256:6256abe4da666a0345db6bbd098d3e77194ca4797b61c6815b4169c51b527c1f",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "getmoto__moto-5960": {
+      "repo": "getmoto/moto",
+      "version": "4.1",
+      "base_commit": "d1e3f50756fdaaea498e8e47d5dcd56686e6ecdf",
+      "official_lookup_repo": "getmoto/moto",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.12",
+        "install": "make init",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA tests/test_dynamodb/test_dynamodb.py",
+      "test_directives": [
+        "tests/test_dynamodb/test_dynamodb.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_moto",
+      "eval_commands": [],
+      "verify_reinstall_command": "make init",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.getmoto__moto-5960:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.getmoto_s_moto-5960",
+      "image_digest": "sha256:4b71766331736b51bd74bb86cdb5e4e21040a7816e01fbb5d914526d33ef8944",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python__mypy-10392": {
+      "repo": "python/mypy",
+      "version": "0.820",
+      "base_commit": "322ef60ba7231bbd4f735b273e88e67afb57ad17",
+      "official_lookup_repo": "python/mypy",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "pre_install": [
+          "git submodule update --init mypy/typeshed || true",
+          "sed -i '1i types-typing-extensions==3.7.3' test-requirements.txt"
+        ],
+        "python": "3.9",
+        "install": "python -m pip install -r test-requirements.txt; python -m pip install -e .; pip install pytest pytest-xdist; hash -r;",
+        "test_cmd": "pytest -n0 -rA -k"
+      },
+      "test_command": "pytest -n0 -rA -k \"testMypyPathAndPython2Dir_python2 or testMypyPathAndPython2Dir\"",
+      "test_directives": [],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_mypy",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install -r test-requirements.txt; python -m pip install -e .; pip install pytest pytest-xdist; hash -r;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.python__mypy-10392:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.python_s_mypy-10392",
+      "image_digest": "sha256:ad2e4c7a0152283d21934e4ab012e364416fbecdfc9231c1c917e92e90a1d7da",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python__mypy-10308": {
+      "repo": "python/mypy",
+      "version": "0.820",
+      "base_commit": "1567e36165b00d532f232cb3d33d1faf04aaf63d",
+      "official_lookup_repo": "python/mypy",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "pre_install": [
+          "git submodule update --init mypy/typeshed || true",
+          "sed -i '1i types-typing-extensions==3.7.3' test-requirements.txt"
+        ],
+        "python": "3.9",
+        "install": "python -m pip install -r test-requirements.txt; python -m pip install -e .; pip install pytest pytest-xdist; hash -r;",
+        "test_cmd": "pytest -n0 -rA -k"
+      },
+      "test_command": "pytest -n0 -rA -k \"testTwoUncomfortablyIncompatibleProtocolsWithoutRunningInIssue9771 or testHashable or testWeirdRecursiveInferenceForProtocols-skip\"",
+      "test_directives": [],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_mypy",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install -r test-requirements.txt; python -m pip install -e .; pip install pytest pytest-xdist; hash -r;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.python__mypy-10308:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.python_s_mypy-10308",
+      "image_digest": "sha256:8204090027b336ea9218901ad8a83c34436f128a41041673243c25ff5fcc69c3",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python__mypy-10430": {
+      "repo": "python/mypy",
+      "version": "0.820",
+      "base_commit": "204c7dada412b0ca4ce22315d2acae640adb128f",
+      "official_lookup_repo": "python/mypy",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "pre_install": [
+          "git submodule update --init mypy/typeshed || true",
+          "sed -i '1i types-typing-extensions==3.7.3' test-requirements.txt"
+        ],
+        "python": "3.9",
+        "install": "python -m pip install -r test-requirements.txt; python -m pip install -e .; pip install pytest pytest-xdist; hash -r;",
+        "test_cmd": "pytest -n0 -rA -k"
+      },
+      "test_command": "pytest -n0 -rA -k \"testModuleGetattrIncrementalSerializeVarFlag or testAddedMissingStubs\"",
+      "test_directives": [],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_mypy",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install -r test-requirements.txt; python -m pip install -e .; pip install pytest pytest-xdist; hash -r;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.python__mypy-10430:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.python_s_mypy-10430",
+      "image_digest": "sha256:57d0d5b725ef6851f48c140311a54e761bbeb7bf8bf9551a62cf29547017582e",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "python__mypy-16905": {
+      "repo": "python/mypy",
+      "version": "1.10",
+      "base_commit": "837f7e0ed4f87869f314ec102c0d6e47ec3272ec",
+      "official_lookup_repo": "python/mypy",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "pre_install": [
+          "git submodule update --init mypy/typeshed || true"
+        ],
+        "python": "3.12",
+        "install": "python -m pip install -r test-requirements.txt; python -m pip install -e .; hash -r",
+        "test_cmd": "pytest -rA -k"
+      },
+      "test_command": "pytest -rA -k \"testMatchSequencePatternNarrowSubjectItems or testMatchSequencePatternNarrowSubjectItemsRecursive or testMatchSequencePatternSequencesLengthMismatchNoNarrowing or testMatchSequencePatternSequencesLengthMismatchNoNarrowingRecursive or testMatchMappingPatternCaptures\"",
+      "test_directives": [],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_mypy",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install -r test-requirements.txt; python -m pip install -e .; hash -r",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.python__mypy-16905:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.python_s_mypy-16905",
+      "image_digest": "sha256:d6444b16450be2c71a346e0ed7bd59281b09b456d471e926b04aeeb91fb17fd7",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "conan-io__conan-13788": {
+      "repo": "conan-io/conan",
+      "version": "1.60",
+      "base_commit": "c1b3978914dd09e4c07fc8d1e688d5636fda6e79",
+      "official_lookup_repo": "conan-io/conan",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.10",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y build-essential cmake"
+        ],
+        "install": "python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+        "eval_commands": [
+          "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+        ],
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA conans/test/integration/graph_lock/graph_lock_build_requires_test.py",
+      "test_directives": [
+        "conans/test/integration/graph_lock/graph_lock_build_requires_test.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_conan",
+      "eval_commands": [
+        "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+      ],
+      "verify_reinstall_command": "python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.conan-io__conan-13788:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.conan-io_s_conan-13788",
+      "image_digest": "sha256:c61a9b9f87dcee19aff867f583028bd115f6fcf3487c2c603471787a9eb7472d",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "conan-io__conan-11560": {
+      "repo": "conan-io/conan",
+      "version": "1.51",
+      "base_commit": "345be91a038e1bda707e07a19889953412d358dc",
+      "official_lookup_repo": "conan-io/conan",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.10",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y build-essential cmake"
+        ],
+        "install": "echo 'cython<3' > /tmp/constraint.txt; export PIP_CONSTRAINT=/tmp/constraint.txt; python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+        "eval_commands": [
+          "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+        ],
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA conans/test/unittests/tools/google/test_bazeldeps.py",
+      "test_directives": [
+        "conans/test/unittests/tools/google/test_bazeldeps.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_conan",
+      "eval_commands": [
+        "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+      ],
+      "verify_reinstall_command": "echo 'cython<3' > /tmp/constraint.txt; export PIP_CONSTRAINT=/tmp/constraint.txt; python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.conan-io__conan-11560:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.conan-io_s_conan-11560",
+      "image_digest": "sha256:2ab97e51d7c77d280b6e818043472af58b388043171bfb6a725deda81583b44e",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "conan-io__conan-12397": {
+      "repo": "conan-io/conan",
+      "version": "1.54",
+      "base_commit": "883eff8961d6e0d96652f78e3d7d3884479e769e",
+      "official_lookup_repo": "conan-io/conan",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.10",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y build-essential cmake"
+        ],
+        "install": "echo 'cython<3' > /tmp/constraint.txt; export PIP_CONSTRAINT=/tmp/constraint.txt; python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+        "eval_commands": [
+          "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+        ],
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA conans/test/integration/toolchains/meson/test_mesontoolchain.py",
+      "test_directives": [
+        "conans/test/integration/toolchains/meson/test_mesontoolchain.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_conan",
+      "eval_commands": [
+        "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+      ],
+      "verify_reinstall_command": "echo 'cython<3' > /tmp/constraint.txt; export PIP_CONSTRAINT=/tmp/constraint.txt; python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.conan-io__conan-12397:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.conan-io_s_conan-12397",
+      "image_digest": "sha256:b3192aee6c3565730fece66f36212dc2fd77f13271bb632cbb1be2ba0bb6bd55",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "conan-io__conan-13326": {
+      "repo": "conan-io/conan",
+      "version": "2.0",
+      "base_commit": "00700331f59e1e01b53315fec786e7f78d7bced2",
+      "official_lookup_repo": "conan-io/conan",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.10",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y build-essential cmake"
+        ],
+        "install": "echo 'cython<3' > /tmp/constraint.txt; export PIP_CONSTRAINT=/tmp/constraint.txt; python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+        "eval_commands": [
+          "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+        ],
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA conans/test/unittests/tools/build/test_cppstd.py",
+      "test_directives": [
+        "conans/test/unittests/tools/build/test_cppstd.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_conan",
+      "eval_commands": [
+        "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+      ],
+      "verify_reinstall_command": "echo 'cython<3' > /tmp/constraint.txt; export PIP_CONSTRAINT=/tmp/constraint.txt; python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.conan-io__conan-13326:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.conan-io_s_conan-13326",
+      "image_digest": "sha256:6c9d167febf165b6ade39abb57e551d422df18690568b38d740757872512fc25",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "conan-io__conan-13230": {
+      "repo": "conan-io/conan",
+      "version": "2.0",
+      "base_commit": "c2001bad8aa873eaf2c392ab6e3ff8b8bdfec971",
+      "official_lookup_repo": "conan-io/conan",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.10",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y build-essential cmake"
+        ],
+        "install": "echo 'cython<3' > /tmp/constraint.txt; export PIP_CONSTRAINT=/tmp/constraint.txt; python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+        "eval_commands": [
+          "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+        ],
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA conans/test/unittests/client/toolchain/autotools/autotools_toolchain_test.py",
+      "test_directives": [
+        "conans/test/unittests/client/toolchain/autotools/autotools_toolchain_test.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_conan",
+      "eval_commands": [
+        "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+      ],
+      "verify_reinstall_command": "echo 'cython<3' > /tmp/constraint.txt; export PIP_CONSTRAINT=/tmp/constraint.txt; python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.conan-io__conan-13230:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.conan-io_s_conan-13230",
+      "image_digest": "sha256:3f7ba164d697c75bf27b917cd2ea794c8ebefbbb3c6954113e1dc1f2d5e62376",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "conan-io__conan-11594": {
+      "repo": "conan-io/conan",
+      "version": "1.51",
+      "base_commit": "4ed1bee0fb81b2826208e8c1c824c99fb6d69be8",
+      "official_lookup_repo": "conan-io/conan",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.10",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y build-essential cmake"
+        ],
+        "install": "echo 'cython<3' > /tmp/constraint.txt; export PIP_CONSTRAINT=/tmp/constraint.txt; python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+        "eval_commands": [
+          "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+        ],
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA conans/test/unittests/tools/cmake/test_cmake_test.py",
+      "test_directives": [
+        "conans/test/unittests/tools/cmake/test_cmake_test.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_conan",
+      "eval_commands": [
+        "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+      ],
+      "verify_reinstall_command": "echo 'cython<3' > /tmp/constraint.txt; export PIP_CONSTRAINT=/tmp/constraint.txt; python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.conan-io__conan-11594:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.conan-io_s_conan-11594",
+      "image_digest": "sha256:86bf8eced9c4c0491e98e101b892ce2adb6b7ec6187262e4d518338fe136c399",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "conan-io__conan-15422": {
+      "repo": "conan-io/conan",
+      "version": "2.1",
+      "base_commit": "f08b9924712cf0c2f27b93cbb5206d56d0d824d8",
+      "official_lookup_repo": "conan-io/conan",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.10",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y build-essential cmake"
+        ],
+        "install": "python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+        "eval_commands": [
+          "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+        ],
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA conans/test/integration/toolchains/cmake/test_cmaketoolchain.py",
+      "test_directives": [
+        "conans/test/integration/toolchains/cmake/test_cmaketoolchain.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_conan",
+      "eval_commands": [
+        "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+      ],
+      "verify_reinstall_command": "python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.conan-io__conan-15422:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.conan-io_s_conan-15422",
+      "image_digest": "sha256:afd7d4928ba361196d446926204dbd8e0c37ea2018dda392096972a8767c353a",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "iterative__dvc-4785": {
+      "repo": "iterative/dvc",
+      "version": "1.9",
+      "base_commit": "7da3de451f1580d0c48d7f0a82b1f96ea0e91157",
+      "official_lookup_repo": "iterative/dvc",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.9",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y cmake",
+          "[ -f setup.py ] && sed -E -i 's/moto==([0-9]+\\.[0-9]+\\.[0-9]+)\\.dev[0-9]+/moto==\\1/' setup.py",
+          "[ -f setup.py ] && sed -i 's/pyarrow==0.15.1/pyarrow==0.16/' setup.py[ -f setup.py ] && sed -i 's/boto3==1.9.115/boto3==1.9.201/' setup.py"
+        ],
+        "install": "python -m pip install --upgrade pip wheel GitPython; python -m pip install \"cython<3.0.0\" && python -m pip install --no-build-isolation pyyaml==5.4.1; python -m pip install git+https://github.com/iterative/mock-ssh-server.git || true; python -m pip install -r tests/requirements.txt || true; python -m pip install -r test-requirements.txt || true; python -m pip install -e \".[tests,dev,all_remotes,all,testing]\"; python -m pip install \"numpy<=1.20\"; python -m pip install \"pytest<8\";",
+        "test_cmd": "pytest -rA"
+      },
+      "test_command": "pytest -rA tests/unit/remote/test_http.py",
+      "test_directives": [
+        "tests/unit/remote/test_http.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_dvc",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install --upgrade pip wheel GitPython; python -m pip install \"cython<3.0.0\" && python -m pip install --no-build-isolation pyyaml==5.4.1; python -m pip install git+https://github.com/iterative/mock-ssh-server.git || true; python -m pip install -r tests/requirements.txt || true; python -m pip install -r test-requirements.txt || true; python -m pip install -e \".[tests,dev,all_remotes,all,testing]\"; python -m pip install \"numpy<=1.20\"; python -m pip install \"pytest<8\";",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.iterative__dvc-4785:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.iterative_s_dvc-4785",
+      "image_digest": "sha256:5709713b2fe48c8ccb75d72cedccb4853e332e928fe5223fab06959c3be7509c",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "iterative__dvc-1712": {
+      "repo": "iterative/dvc",
+      "version": "0.31",
+      "base_commit": "5c39c6b8bd01f543a27abe1d3091640d4e844bf8",
+      "official_lookup_repo": "iterative/dvc",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y cmake",
+          "[ -f setup.py ] && sed -E -i 's/moto==([0-9]+\\.[0-9]+\\.[0-9]+)\\.dev[0-9]+/moto==\\1/' setup.py",
+          "[ -f setup.py ] && sed -i 's/pyarrow==0.15.1/pyarrow==0.16/' setup.py[ -f setup.py ] && sed -i 's/boto3==1.9.115/boto3==1.9.201/' setup.py"
+        ],
+        "install": "python -m pip install --upgrade pip wheel GitPython; python -m pip install \"cython<3.0.0\" && python -m pip install --no-build-isolation pyyaml==5.4.1; python -m pip install git+https://github.com/iterative/mock-ssh-server.git || true; python -m pip install -r tests/requirements.txt || true; python -m pip install -r test-requirements.txt || true; python -m pip install -e \".[tests,dev,all_remotes,all,testing]\"; python -m pip install \"numpy<=1.20\"; python -m pip install \"pytest<8\";",
+        "test_cmd": "pytest -rA"
+      },
+      "test_command": "pytest -rA tests/test_state.py",
+      "test_directives": [
+        "tests/test_state.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_dvc",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install --upgrade pip wheel GitPython; python -m pip install \"cython<3.0.0\" && python -m pip install --no-build-isolation pyyaml==5.4.1; python -m pip install git+https://github.com/iterative/mock-ssh-server.git || true; python -m pip install -r tests/requirements.txt || true; python -m pip install -r test-requirements.txt || true; python -m pip install -e \".[tests,dev,all_remotes,all,testing]\"; python -m pip install \"numpy<=1.20\"; python -m pip install \"pytest<8\";",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.iterative__dvc-1712:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.iterative_s_dvc-1712",
+      "image_digest": "sha256:2010411ca2ae6d8fe4abab5de2c0cd1378d64812ce63ca56647fabdc450f7b3c",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "iterative__dvc-3527": {
+      "repo": "iterative/dvc",
+      "version": "0.91",
+      "base_commit": "42e3b8aa2577b7633407cdd17763d72ed7dfc18c",
+      "official_lookup_repo": "iterative/dvc",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y cmake",
+          "[ -f setup.py ] && sed -E -i 's/moto==([0-9]+\\.[0-9]+\\.[0-9]+)\\.dev[0-9]+/moto==\\1/' setup.py",
+          "[ -f setup.py ] && sed -i 's/pyarrow==0.15.1/pyarrow==0.16/' setup.py[ -f setup.py ] && sed -i 's/boto3==1.9.115/boto3==1.9.201/' setup.py"
+        ],
+        "install": "python -m pip install --upgrade pip wheel GitPython; python -m pip install \"cython<3.0.0\" && python -m pip install --no-build-isolation pyyaml==5.4.1; python -m pip install git+https://github.com/iterative/mock-ssh-server.git || true; python -m pip install -r tests/requirements.txt || true; python -m pip install -r test-requirements.txt || true; python -m pip install -e \".[tests,dev,all_remotes,all,testing]\"; python -m pip install \"numpy<=1.20\"; python -m pip install \"pytest<8\";",
+        "test_cmd": "pytest -rA"
+      },
+      "test_command": "pytest -rA tests/unit/remote/test_local.py",
+      "test_directives": [
+        "tests/unit/remote/test_local.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_dvc",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install --upgrade pip wheel GitPython; python -m pip install \"cython<3.0.0\" && python -m pip install --no-build-isolation pyyaml==5.4.1; python -m pip install git+https://github.com/iterative/mock-ssh-server.git || true; python -m pip install -r tests/requirements.txt || true; python -m pip install -r test-requirements.txt || true; python -m pip install -e \".[tests,dev,all_remotes,all,testing]\"; python -m pip install \"numpy<=1.20\"; python -m pip install \"pytest<8\";",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.iterative__dvc-3527:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.iterative_s_dvc-3527",
+      "image_digest": "sha256:f04559826032c7e05bd17cc6e427f201487f09839d9069a02fcc095e8f427a2d",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "iterative__dvc-3620": {
+      "repo": "iterative/dvc",
+      "version": "0.92",
+      "base_commit": "e05157f8e05e856d2e9966c30a3150c26b32b86f",
+      "official_lookup_repo": "iterative/dvc",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y cmake",
+          "[ -f setup.py ] && sed -E -i 's/moto==([0-9]+\\.[0-9]+\\.[0-9]+)\\.dev[0-9]+/moto==\\1/' setup.py",
+          "[ -f setup.py ] && sed -i 's/pyarrow==0.15.1/pyarrow==0.16/' setup.py[ -f setup.py ] && sed -i 's/boto3==1.9.115/boto3==1.9.201/' setup.py"
+        ],
+        "install": "python -m pip install --upgrade pip wheel GitPython; python -m pip install \"cython<3.0.0\" && python -m pip install --no-build-isolation pyyaml==5.4.1; python -m pip install git+https://github.com/iterative/mock-ssh-server.git || true; python -m pip install -r tests/requirements.txt || true; python -m pip install -r test-requirements.txt || true; python -m pip install -e \".[tests,dev,all_remotes,all,testing]\"; python -m pip install \"numpy<=1.20\"; python -m pip install \"pytest<8\";",
+        "test_cmd": "pytest -rA"
+      },
+      "test_command": "pytest -rA tests/func/test_unprotect.py tests/unit/remote/test_local.py",
+      "test_directives": [
+        "tests/func/test_unprotect.py",
+        "tests/unit/remote/test_local.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_dvc",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install --upgrade pip wheel GitPython; python -m pip install \"cython<3.0.0\" && python -m pip install --no-build-isolation pyyaml==5.4.1; python -m pip install git+https://github.com/iterative/mock-ssh-server.git || true; python -m pip install -r tests/requirements.txt || true; python -m pip install -r test-requirements.txt || true; python -m pip install -e \".[tests,dev,all_remotes,all,testing]\"; python -m pip install \"numpy<=1.20\"; python -m pip install \"pytest<8\";",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.iterative__dvc-3620:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.iterative_s_dvc-3620",
+      "image_digest": "sha256:efb04551ca1c3c1c27a73627f585bba79ebcec841bce034f035034261660c9f0",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "dask__dask-6626": {
+      "repo": "dask/dask",
+      "version": "2.25",
+      "base_commit": "56cd4597630feb1b01501c16d52aa862dd257a83",
+      "official_lookup_repo": "dask/dask",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "env_patches": [
+          "sed -i '/- pip:/,/^ *-/d' environment.yml"
+        ],
+        "packages": "environment.yml",
+        "install": "python -m pip install --no-deps -e .",
+        "test_cmd": "pytest -n0 -rA  --color=no"
+      },
+      "test_command": "pytest -n0 -rA  --color=no dask/dataframe/tests/test_utils_dataframe.py",
+      "test_directives": [
+        "dask/dataframe/tests/test_utils_dataframe.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_dask",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install --no-deps -e .",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.dask__dask-6626:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.dask_s_dask-6626",
+      "image_digest": "sha256:a182a6a7383561f7b7a078585259c6314e60504235b4d86cf00f4fd15ef69503",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "dask__dask-6818": {
+      "repo": "dask/dask",
+      "version": "2.30",
+      "base_commit": "554ca8877d36d30732712698f3135e13edd6654a",
+      "official_lookup_repo": "dask/dask",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "env_patches": [
+          "sed -i '/- pip:/,/^ *-/d' environment.yml"
+        ],
+        "packages": "environment.yml",
+        "install": "python -m pip install --no-deps -e .",
+        "test_cmd": "pytest -n0 -rA  --color=no"
+      },
+      "test_command": "pytest -n0 -rA  --color=no dask/dataframe/io/tests/test_csv.py",
+      "test_directives": [
+        "dask/dataframe/io/tests/test_csv.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_dask",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install --no-deps -e .",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.dask__dask-6818:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.dask_s_dask-6818",
+      "image_digest": "sha256:21be37a56aeb20e827895bb6d056b6958bced8db0071bd9d628ef45a41b55cef",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "dask__dask-7894": {
+      "repo": "dask/dask",
+      "version": "2021.07",
+      "base_commit": "bf4bc7dd8dc96021b171e0941abde7a5f60ce89f",
+      "official_lookup_repo": "dask/dask",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "env_patches": [
+          "sed -i '/- pip:/,/^ *-/d' environment.yml"
+        ],
+        "packages": "environment.yml",
+        "install": "python -m pip install --no-deps -e .",
+        "test_cmd": "pytest -n0 -rA  --color=no"
+      },
+      "test_command": "pytest -n0 -rA  --color=no dask/array/tests/test_overlap.py",
+      "test_directives": [
+        "dask/array/tests/test_overlap.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_dask",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install --no-deps -e .",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.dask__dask-7894:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.dask_s_dask-7894",
+      "image_digest": "sha256:e66d08cf5c0343503a41646a0a3b027a13562246d0cb7eb28c553e6cbb8c236a",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "dask__dask-7305": {
+      "repo": "dask/dask",
+      "version": "2021.02",
+      "base_commit": "8663c6b7813fbdcaaa85d4fdde04ff42b1bb6ed0",
+      "official_lookup_repo": "dask/dask",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "env_patches": [
+          "sed -i '/- pip:/,/^ *-/d' environment.yml"
+        ],
+        "packages": "environment.yml",
+        "install": "python -m pip install --no-deps -e .",
+        "test_cmd": "pytest -n0 -rA  --color=no"
+      },
+      "test_command": "pytest -n0 -rA  --color=no dask/dataframe/tests/test_shuffle.py",
+      "test_directives": [
+        "dask/dataframe/tests/test_shuffle.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_dask",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install --no-deps -e .",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.dask__dask-7305:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.dask_s_dask-7305",
+      "image_digest": "sha256:21fd7dd8a9a1511a02fa5c99403449c75547e2e110afee679b6c9c1569290b73",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "dask__dask-6801": {
+      "repo": "dask/dask",
+      "version": "2.30",
+      "base_commit": "5589bfddb5982777d29e424fa438f1667a74a60a",
+      "official_lookup_repo": "dask/dask",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "env_patches": [
+          "sed -i '/- pip:/,/^ *-/d' environment.yml"
+        ],
+        "packages": "environment.yml",
+        "install": "python -m pip install --no-deps -e .",
+        "test_cmd": "pytest -n0 -rA  --color=no"
+      },
+      "test_command": "pytest -n0 -rA  --color=no dask/dataframe/io/tests/test_parquet.py",
+      "test_directives": [
+        "dask/dataframe/io/tests/test_parquet.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_dask",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install --no-deps -e .",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.dask__dask-6801:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.dask_s_dask-6801",
+      "image_digest": "sha256:b9dbc69abe704126d82a4b3b05b9da7237b430971e63b76e0688b5b52f1fbb9e",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "dask__dask-9378": {
+      "repo": "dask/dask",
+      "version": "2022.8",
+      "base_commit": "8b95f983c232c1bd628e9cba0695d3ef229d290b",
+      "official_lookup_repo": "dask/dask",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "env_patches": [
+          "sed -i '/- pip:/,/^ *-/d' environment.yml"
+        ],
+        "packages": "environment.yml",
+        "install": "python -m pip install --no-deps -e .",
+        "test_cmd": "pytest -n0 -rA  --color=no"
+      },
+      "test_command": "pytest -n0 -rA  --color=no dask/array/tests/test_masked.py",
+      "test_directives": [
+        "dask/array/tests/test_masked.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_dask",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install --no-deps -e .",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.dask__dask-9378:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.dask_s_dask-9378",
+      "image_digest": "sha256:d59dc8d2aa23abc26c301754af4623f7bbad5d798713a6c5caa2d2113b6691b1",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "pydantic__pydantic-8500": {
+      "repo": "pydantic/pydantic",
+      "version": "2.6",
+      "base_commit": "069d0205424f98912f8b670b1bc5cfc7df37b2f3",
+      "official_lookup_repo": "pydantic/pydantic",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "pre_install": [
+          "apt-get update && apt-get install -y locales",
+          "apt-get install -y pipx",
+          "pipx ensurepath",
+          "pipx install pdm",
+          "export PATH=\"$HOME/.local/bin:$PATH\"",
+          "which python",
+          "python --version"
+        ],
+        "install": "export PATH=\"$HOME/.local/bin:$PATH\"; pdm add pre-commit; make install;",
+        "test_cmd": "pytest -rA --tb=short -vv -o console_output_style=classic --no-header"
+      },
+      "test_command": "pytest -rA --tb=short -vv -o console_output_style=classic --no-header tests/test_construction.py",
+      "test_directives": [
+        "tests/test_construction.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_pydantic",
+      "eval_commands": [],
+      "verify_reinstall_command": "export PATH=\"$HOME/.local/bin:$PATH\"; pdm add pre-commit; make install;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.pydantic__pydantic-8500:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.pydantic_s_pydantic-8500",
+      "image_digest": "sha256:c4023786455f3f2cc28225e00d307b71e3c21d62dac513e1470c16bbb245a637",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "pydantic__pydantic-9066": {
+      "repo": "pydantic/pydantic",
+      "version": "2.7",
+      "base_commit": "a3b7214a1d6ac8e32c29e9d4436ea6a9e253ead7",
+      "official_lookup_repo": "pydantic/pydantic",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "pre_install": [
+          "apt-get update && apt-get install -y locales",
+          "apt-get install -y pipx",
+          "pipx ensurepath",
+          "pipx install pdm",
+          "export PATH=\"$HOME/.local/bin:$PATH\"",
+          "which python",
+          "python --version"
+        ],
+        "install": "export PATH=\"$HOME/.local/bin:$PATH\"; pdm add pre-commit; make install;",
+        "test_cmd": "pytest -rA --tb=short -vv -o console_output_style=classic --no-header"
+      },
+      "test_command": "pytest -rA --tb=short -vv -o console_output_style=classic --no-header tests/test_json_schema.py",
+      "test_directives": [
+        "tests/test_json_schema.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_pydantic",
+      "eval_commands": [],
+      "verify_reinstall_command": "export PATH=\"$HOME/.local/bin:$PATH\"; pdm add pre-commit; make install;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.pydantic__pydantic-9066:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.pydantic_s_pydantic-9066",
+      "image_digest": "sha256:36a2143540442ceb905593fb572866b891c7acede914eda0db2ee86781fddc31",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "pydantic__pydantic-8567": {
+      "repo": "pydantic/pydantic",
+      "version": "2.6",
+      "base_commit": "8060fa1cff965850e5e08a67ca73d5272dcdcf9f",
+      "official_lookup_repo": "pydantic/pydantic",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "pre_install": [
+          "apt-get update && apt-get install -y locales",
+          "apt-get install -y pipx",
+          "pipx ensurepath",
+          "pipx install pdm",
+          "export PATH=\"$HOME/.local/bin:$PATH\"",
+          "which python",
+          "python --version"
+        ],
+        "install": "export PATH=\"$HOME/.local/bin:$PATH\"; pdm add pre-commit; make install;",
+        "test_cmd": "pytest -rA --tb=short -vv -o console_output_style=classic --no-header"
+      },
+      "test_command": "pytest -rA --tb=short -vv -o console_output_style=classic --no-header tests/test_validators.py",
+      "test_directives": [
+        "tests/test_validators.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_pydantic",
+      "eval_commands": [],
+      "verify_reinstall_command": "export PATH=\"$HOME/.local/bin:$PATH\"; pdm add pre-commit; make install;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.pydantic__pydantic-8567:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.pydantic_s_pydantic-8567",
+      "image_digest": "sha256:f77982405ab435adb1ba497552500d5933b9c68947640edd065ee59b84f87015",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "pydantic__pydantic-8793": {
+      "repo": "pydantic/pydantic",
+      "version": "2.7",
+      "base_commit": "832225b90672c68e2d4067bd0ffecf834d62b48b",
+      "official_lookup_repo": "pydantic/pydantic",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "pre_install": [
+          "apt-get update && apt-get install -y locales",
+          "apt-get install -y pipx",
+          "pipx ensurepath",
+          "pipx install pdm",
+          "export PATH=\"$HOME/.local/bin:$PATH\"",
+          "which python",
+          "python --version"
+        ],
+        "install": "export PATH=\"$HOME/.local/bin:$PATH\"; pdm add pre-commit; make install;",
+        "test_cmd": "pytest -rA --tb=short -vv -o console_output_style=classic --no-header"
+      },
+      "test_command": "pytest -rA --tb=short -vv -o console_output_style=classic --no-header tests/test_json_schema.py",
+      "test_directives": [
+        "tests/test_json_schema.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_pydantic",
+      "eval_commands": [],
+      "verify_reinstall_command": "export PATH=\"$HOME/.local/bin:$PATH\"; pdm add pre-commit; make install;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.pydantic__pydantic-8793:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.pydantic_s_pydantic-8793",
+      "image_digest": "sha256:bdd9a2ddbca3a265f115d7f704eff78d39282f38d5be34bb8e338b717cc41b5c",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "pandas-dev__pandas-48106": {
+      "repo": "pandas-dev/pandas",
+      "version": "1.5",
+      "base_commit": "8b72297c8799725e98cb2c6aee664325b752194f",
+      "official_lookup_repo": "pandas-dev/pandas",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "packages": "environment.yml",
+        "pre_install": [
+          "git remote add upstream https://github.com/pandas-dev/pandas.git",
+          "git fetch upstream --tags"
+        ],
+        "install": "python -m pip install 'numpy<2'; python -m pip install -ve . --no-build-isolation -Ceditable-verbose=true; pip uninstall pytest-qt -y;",
+        "test_cmd": "pytest -rA --tb=long"
+      },
+      "test_command": "pytest -rA --tb=long pandas/tests/indexing/test_loc.py",
+      "test_directives": [
+        "pandas/tests/indexing/test_loc.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_pandas",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install 'numpy<2'; python -m pip install -ve . --no-build-isolation -Ceditable-verbose=true; pip uninstall pytest-qt -y;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.pandas-dev__pandas-48106:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.pandas-dev_s_pandas-48106",
+      "image_digest": "sha256:5300b53bb30e5b29f5425967f370e3a72c42b9bbffeb4c2fd1d3ba831716bdd5",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "pandas-dev__pandas-50319": {
+      "repo": "pandas-dev/pandas",
+      "version": "2.0",
+      "base_commit": "1613f26ff0ec75e30828996fd9ec3f9dd5119ca6",
+      "official_lookup_repo": "pandas-dev/pandas",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "packages": "environment.yml",
+        "pre_install": [
+          "git remote add upstream https://github.com/pandas-dev/pandas.git",
+          "git fetch upstream --tags"
+        ],
+        "install": "python -m pip install 'numpy<2'; python -m pip install -ve . --no-build-isolation -Ceditable-verbose=true; pip uninstall pytest-qt -y;",
+        "test_cmd": "pytest -rA --tb=long"
+      },
+      "test_command": "pytest -rA --tb=long pandas/tests/tslibs/test_parsing.py",
+      "test_directives": [
+        "pandas/tests/tslibs/test_parsing.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_pandas",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install 'numpy<2'; python -m pip install -ve . --no-build-isolation -Ceditable-verbose=true; pip uninstall pytest-qt -y;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.pandas-dev__pandas-50319:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.pandas-dev_s_pandas-50319",
+      "image_digest": "sha256:e645e4346df9200174e8b879ad8fb7a09f64f91c7375311e2569596d054ba21e",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "pandas-dev__pandas-51605": {
+      "repo": "pandas-dev/pandas",
+      "version": "2.1",
+      "base_commit": "b070d87f118709f7493dfd065a17ed506c93b59a",
+      "official_lookup_repo": "pandas-dev/pandas",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "packages": "environment.yml",
+        "pre_install": [
+          "git remote add upstream https://github.com/pandas-dev/pandas.git",
+          "git fetch upstream --tags"
+        ],
+        "install": "python -m pip install 'numpy<2'; python -m pip install -ve . --no-build-isolation -Ceditable-verbose=true; pip uninstall pytest-qt -y;",
+        "test_cmd": "pytest -rA --tb=long"
+      },
+      "test_command": "pytest -rA --tb=long pandas/tests/indexes/multi/test_isin.py",
+      "test_directives": [
+        "pandas/tests/indexes/multi/test_isin.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_pandas",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install 'numpy<2'; python -m pip install -ve . --no-build-isolation -Ceditable-verbose=true; pip uninstall pytest-qt -y;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.pandas-dev__pandas-51605:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.pandas-dev_s_pandas-51605",
+      "image_digest": "sha256:030bdab9144f93f67be2152375db00d2d8de10afbcfec2ddf509a8ff9cb5eccd",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "facebookresearch__hydra-2189": {
+      "repo": "facebookresearch/hydra",
+      "version": "1.2",
+      "base_commit": "277ff54b71e31531923a51459b328391d76bb5b3",
+      "official_lookup_repo": "facebookresearch/hydra",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y openjdk-17-jdk openjdk-17-jre"
+        ],
+        "install": "sed -i 's|isort@git+git://github.com/timothycrosley/isort|isort@git+https://github.com/timothycrosley/isort|g' requirements/dev.txt; { tail -n1 requirements/requirements.txt | grep -q \".\" && echo \"\"; } >> requirements/requirements.txt; echo \"pip==24.0\" >> requirements/requirements.txt;pip install \"pip==24.0\"; pip install -r requirements/dev.txt; pip install -e .;",
+        "test_cmd": "pytest -rA --tb=long"
+      },
+      "test_command": "pytest -rA --tb=long tests/instantiate/test_instantiate.py",
+      "test_directives": [
+        "tests/instantiate/test_instantiate.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_hydra",
+      "eval_commands": [],
+      "verify_reinstall_command": "sed -i 's|isort@git+git://github.com/timothycrosley/isort|isort@git+https://github.com/timothycrosley/isort|g' requirements/dev.txt; { tail -n1 requirements/requirements.txt | grep -q \".\" && echo \"\"; } >> requirements/requirements.txt; echo \"pip==24.0\" >> requirements/requirements.txt;pip install \"pip==24.0\"; pip install -r requirements/dev.txt; pip install -e .;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.facebookresearch__hydra-2189:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.facebookresearch_s_hydra-2189",
+      "image_digest": "sha256:ba7ddf974450dc51a9f225fc889f28d8941780ac184fd60d32b090e4760a8f9c",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "facebookresearch__hydra-1915": {
+      "repo": "facebookresearch/hydra",
+      "version": "1.2",
+      "base_commit": "d674cd2803e561ca25cbd7ced127d69d9f4f633b",
+      "official_lookup_repo": "facebookresearch/hydra",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y openjdk-17-jdk openjdk-17-jre"
+        ],
+        "install": "sed -i 's|isort@git+git://github.com/timothycrosley/isort|isort@git+https://github.com/timothycrosley/isort|g' requirements/dev.txt; { tail -n1 requirements/requirements.txt | grep -q \".\" && echo \"\"; } >> requirements/requirements.txt; echo \"pip==24.0\" >> requirements/requirements.txt;pip install \"pip==24.0\"; pip install -r requirements/dev.txt; pip install -e .;",
+        "test_cmd": "pytest -rA --tb=long"
+      },
+      "test_command": "pytest -rA --tb=long tests/instantiate/__init__.py tests/instantiate/test_instantiate.py",
+      "test_directives": [
+        "tests/instantiate/__init__.py",
+        "tests/instantiate/test_instantiate.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_hydra",
+      "eval_commands": [],
+      "verify_reinstall_command": "sed -i 's|isort@git+git://github.com/timothycrosley/isort|isort@git+https://github.com/timothycrosley/isort|g' requirements/dev.txt; { tail -n1 requirements/requirements.txt | grep -q \".\" && echo \"\"; } >> requirements/requirements.txt; echo \"pip==24.0\" >> requirements/requirements.txt;pip install \"pip==24.0\"; pip install -r requirements/dev.txt; pip install -e .;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.facebookresearch__hydra-1915:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.facebookresearch_s_hydra-1915",
+      "image_digest": "sha256:87f273ff091ca78040591c76bd8e902ea069a81834e9f61c2eaf15753a33b84c",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "facebookresearch__hydra-1741": {
+      "repo": "facebookresearch/hydra",
+      "version": "1.1",
+      "base_commit": "896be9086ca9b0fc2ad71ce97ab19b71b7c4f264",
+      "official_lookup_repo": "facebookresearch/hydra",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y openjdk-17-jdk openjdk-17-jre"
+        ],
+        "install": "sed -i 's|isort@git+git://github.com/timothycrosley/isort|isort@git+https://github.com/timothycrosley/isort|g' requirements/dev.txt; { tail -n1 requirements/requirements.txt | grep -q \".\" && echo \"\"; } >> requirements/requirements.txt; echo \"pip==24.0\" >> requirements/requirements.txt;pip install \"pip==24.0\"; pip install -r requirements/dev.txt; pip install -e .;",
+        "test_cmd": "pytest -rA --tb=long"
+      },
+      "test_command": "pytest -rA --tb=long tests/test_utils.py",
+      "test_directives": [
+        "tests/test_utils.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_hydra",
+      "eval_commands": [],
+      "verify_reinstall_command": "sed -i 's|isort@git+git://github.com/timothycrosley/isort|isort@git+https://github.com/timothycrosley/isort|g' requirements/dev.txt; { tail -n1 requirements/requirements.txt | grep -q \".\" && echo \"\"; } >> requirements/requirements.txt; echo \"pip==24.0\" >> requirements/requirements.txt;pip install \"pip==24.0\"; pip install -r requirements/dev.txt; pip install -e .;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.facebookresearch__hydra-1741:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.facebookresearch_s_hydra-1741",
+      "image_digest": "sha256:27dc330a40939c64cf0ee75e8fd206e620f669fffbc7769803585877a3390b9d",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "Project-MONAI__MONAI-2454": {
+      "repo": "Project-MONAI/MONAI",
+      "version": "0.5",
+      "base_commit": "eb29e99299ee2fffd2a204dfd5a1dbabfcc830fe",
+      "official_lookup_repo": "project-monai/monai",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "install": "sed -i '/^git+https:\\/\\/github.com\\/Project-MONAI\\//d' requirements-dev.txt; python -m pip install types-pkg-resources==0.1.3 pytest; pip install -r requirements-dev.txt;python setup.py develop;",
+        "test_cmd": "pytest -rA "
+      },
+      "test_command": "pytest -rA  tests/test_to_tensor.py",
+      "test_directives": [
+        "tests/test_to_tensor.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_monai",
+      "eval_commands": [],
+      "verify_reinstall_command": "sed -i '/^git+https:\\/\\/github.com\\/Project-MONAI\\//d' requirements-dev.txt; python -m pip install types-pkg-resources==0.1.3 pytest; pip install -r requirements-dev.txt;python setup.py develop;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.Project-MONAI__MONAI-2454:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.project-monai_s_monai-2454",
+      "image_digest": "sha256:ee6792773e2641efc844e3f547c2892caa2b20ab10f8725ddfc3622f52352589",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "Project-MONAI__MONAI-4633": {
+      "repo": "Project-MONAI/MONAI",
+      "version": "0.9",
+      "base_commit": "398466c28adda2af25ed931786f22af1ea74483f",
+      "official_lookup_repo": "project-monai/monai",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "install": "sed -i '/^git+https:\\/\\/github.com\\/Project-MONAI\\//d' requirements-dev.txt; python -m pip install types-pkg-resources==0.1.3 pytest; pip install -r requirements-dev.txt;python setup.py develop;",
+        "test_cmd": "pytest -rA "
+      },
+      "test_command": "pytest -rA  tests/test_persistentdataset.py",
+      "test_directives": [
+        "tests/test_persistentdataset.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_monai",
+      "eval_commands": [],
+      "verify_reinstall_command": "sed -i '/^git+https:\\/\\/github.com\\/Project-MONAI\\//d' requirements-dev.txt; python -m pip install types-pkg-resources==0.1.3 pytest; pip install -r requirements-dev.txt;python setup.py develop;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.Project-MONAI__MONAI-4633:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.project-monai_s_monai-4633",
+      "image_digest": "sha256:4f10d2ff422e5d810a19215356ac78024cb968bcca9d8c7d1519797e09215939",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "Project-MONAI__MONAI-6975": {
+      "repo": "Project-MONAI/MONAI",
+      "version": "1.2",
+      "base_commit": "392c5c1b860c0f0cfd0aa14e9d4b342c8b5ef5e7",
+      "official_lookup_repo": "project-monai/monai",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "install": "sed -i '/^git+https:\\/\\/github.com\\/Project-MONAI\\//d' requirements-dev.txt; python -m pip install types-pkg-resources==0.1.3 pytest; pip install -r requirements-dev.txt;python setup.py develop;",
+        "test_cmd": "pytest -rA "
+      },
+      "test_command": "pytest -rA  tests/test_compose.py tests/test_dataset.py",
+      "test_directives": [
+        "tests/test_compose.py",
+        "tests/test_dataset.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_monai",
+      "eval_commands": [],
+      "verify_reinstall_command": "sed -i '/^git+https:\\/\\/github.com\\/Project-MONAI\\//d' requirements-dev.txt; python -m pip install types-pkg-resources==0.1.3 pytest; pip install -r requirements-dev.txt;python setup.py develop;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.Project-MONAI__MONAI-6975:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.project-monai_s_monai-6975",
+      "image_digest": "sha256:0a529471d25c944c76e598474d7a665b20edc2ee95b1a2f30bf9c36fd8db6055",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "Project-MONAI__MONAI-4583": {
+      "repo": "Project-MONAI/MONAI",
+      "version": "0.9",
+      "base_commit": "9c4710199b80178ad11f7dd74925eee3ae921863",
+      "official_lookup_repo": "project-monai/monai",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.8",
+        "install": "sed -i '/^git+https:\\/\\/github.com\\/Project-MONAI\\//d' requirements-dev.txt; python -m pip install types-pkg-resources==0.1.3 pytest; pip install -r requirements-dev.txt;python setup.py develop;",
+        "test_cmd": "pytest -rA "
+      },
+      "test_command": "pytest -rA  tests/test_box_transform.py",
+      "test_directives": [
+        "tests/test_box_transform.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_monai",
+      "eval_commands": [],
+      "verify_reinstall_command": "sed -i '/^git+https:\\/\\/github.com\\/Project-MONAI\\//d' requirements-dev.txt; python -m pip install types-pkg-resources==0.1.3 pytest; pip install -r requirements-dev.txt;python setup.py develop;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.Project-MONAI__MONAI-4583:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.project-monai_s_monai-4583",
+      "image_digest": "sha256:79bf18ecd969a2e68a113b6d29b3d9e77ed977e37bd02666f17eef51930824d5",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "modin-project__modin-6608": {
+      "repo": "modin-project/modin",
+      "version": "0.24",
+      "base_commit": "22ce95e78b4db2f21d5940cbd8ee656e7e565d15",
+      "official_lookup_repo": "modin-project/modin",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.9",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y libpq-dev"
+        ],
+        "packages": "environment.yml",
+        "install": "python -m pip install -e .;",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA modin/test/storage_formats/pandas/test_internals.py",
+      "test_directives": [
+        "modin/test/storage_formats/pandas/test_internals.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_modin",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install -e .;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.modin-project__modin-6608:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.modin-project_s_modin-6608",
+      "image_digest": "sha256:ed87cfc058358d86faf1c6c0d0828328285bc24f7218a1060bba37d37ed9dd96",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "modin-project__modin-5940": {
+      "repo": "modin-project/modin",
+      "version": "0.23",
+      "base_commit": "e1d42410c3900f93be420303e745de29c1e6bda1",
+      "official_lookup_repo": "modin-project/modin",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.9",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y libpq-dev"
+        ],
+        "packages": "environment.yml",
+        "install": "python -m pip install -e .;",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA modin/pandas/test/test_io.py",
+      "test_directives": [
+        "modin/pandas/test/test_io.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_modin",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install -e .;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.modin-project__modin-5940:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.modin-project_s_modin-5940",
+      "image_digest": "sha256:974a2b79a7f7e4d027e38bd9b561d30bd1eca6ed31ab2e7f7678f35d6de88879",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "modin-project__modin-6854": {
+      "repo": "modin-project/modin",
+      "version": "0.26",
+      "base_commit": "45ad9deced24fa0e5c8e119b15fcec8bb95dbd8d",
+      "official_lookup_repo": "modin-project/modin",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.9",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y libpq-dev"
+        ],
+        "packages": "environment.yml",
+        "install": "python -m pip install -e .;",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA modin/experimental/pandas/test/test_io_exp.py",
+      "test_directives": [
+        "modin/experimental/pandas/test/test_io_exp.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_modin",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install -e .;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.modin-project__modin-6854:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.modin-project_s_modin-6854",
+      "image_digest": "sha256:c68b4e5a540b1a137276eef865088050610597c060c6550826dc12fd4063869c",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "modin-project__modin-6937": {
+      "repo": "modin-project/modin",
+      "version": "0.27",
+      "base_commit": "d54dcfd8e4cceecdbf818a48bbc712854dda906e",
+      "official_lookup_repo": "modin-project/modin",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.9",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y libpq-dev"
+        ],
+        "packages": "environment.yml",
+        "install": "python -m pip install -e .;",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA modin/pandas/test/test_io.py",
+      "test_directives": [
+        "modin/pandas/test/test_io.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_modin",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install -e .;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.modin-project__modin-6937:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.modin-project_s_modin-6937",
+      "image_digest": "sha256:54f4a3908dfc77b9847107d0e89124914e109ce49cae94fc9ebe46a256282597",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "modin-project__modin-6400": {
+      "repo": "modin-project/modin",
+      "version": "0.23",
+      "base_commit": "2a6aafed41f7758d75dab88517c76b5cdb1905fc",
+      "official_lookup_repo": "modin-project/modin",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.9",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y libpq-dev"
+        ],
+        "packages": "environment.yml",
+        "install": "python -m pip install -e .;",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA modin/pandas/test/dataframe/test_map_metadata.py",
+      "test_directives": [
+        "modin/pandas/test/dataframe/test_map_metadata.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_modin",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install -e .;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.modin-project__modin-6400:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.modin-project_s_modin-6400",
+      "image_digest": "sha256:44f649730ee7e500878d6c611ad85a732fe07913101dc6eb6cefbcbd1727a762",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    },
+    "modin-project__modin-6298": {
+      "repo": "modin-project/modin",
+      "version": "0.23",
+      "base_commit": "5cd15a51b00a6338783454c5ddb77da25422f7db",
+      "official_lookup_repo": "modin-project/modin",
+      "profile_source_commit": "242429c188fcfd06aad13fce9a54d450470bf0ac",
+      "official_spec": {
+        "python": "3.9",
+        "pre_install": [
+          "apt-get -y update && apt-get -y upgrade && apt-get install -y libpq-dev"
+        ],
+        "packages": "environment.yml",
+        "install": "python -m pip install -e .;",
+        "test_cmd": "pytest -n0 -rA"
+      },
+      "test_command": "pytest -n0 -rA modin/numpy/test/test_array.py",
+      "test_directives": [
+        "modin/numpy/test/test_array.py"
+      ],
+      "command_identity": "swebench.harness.test_spec.make_test_command",
+      "parser_identity": "swebench.harness.log_parsers.parse_log_modin",
+      "eval_commands": [],
+      "verify_reinstall_command": "python -m pip install -e .;",
+      "install_stage": "official make_repo_script_list installs during image build; make_eval_script_list repeats install during verification",
+      "official_local_image_key": "sweb.eval.x86_64.modin-project__modin-6298:latest",
+      "image_name": "xingyaoww/sweb.eval.x86_64.modin-project_s_modin-6298",
+      "image_digest": "sha256:27714d1a91fc57e0bbaa474b3327beba64e31787823181c646ee1222593441a3",
+      "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
+    }
+  },
+  "gym_directives_source": "def get_test_directives(instance: SWEbenchInstance) -> list:\n    \"\"\"\n    Get test directives from the test_patch of a task instance\n\n    Args:\n        instance (dict): task instance\n    Returns:\n        directives (list): List of test directives\n    \"\"\"\n    # For seq2seq code repos, testing command is fixed\n    if instance[\"repo\"] == \"swe-bench/humaneval\":\n        return [\"test.py\"]\n\n    # Get test directives from test patch and remove non-test files\n    diff_pat = r\"diff --git a/.* b/(.*)\"\n    test_patch = instance[\"test_patch\"]\n    directives = re.findall(diff_pat, test_patch)\n    directives = [\n        d for d in directives if not any(d.endswith(ext) for ext in NON_TEST_EXTS)\n    ]\n\n    # For Django tests, remove extension + \"tests/\" prefix and convert slashes to dots (module referencing)\n    if instance[\"repo\"] == \"django/django\":\n        directives_transformed = []\n        for d in directives:\n            d = d[: -len(\".py\")] if d.endswith(\".py\") else d\n            d = d[len(\"tests/\") :] if d.startswith(\"tests/\") else d\n            d = d.replace(\"/\", \".\")\n            directives_transformed.append(d)\n        directives = directives_transformed\n\n    return directives"
+}

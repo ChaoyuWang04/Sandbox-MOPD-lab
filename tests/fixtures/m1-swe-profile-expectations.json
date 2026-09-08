@@ -1,0 +1,368 @@
+{
+  "description": "Reviewed selected IDs and representative execution metadata only; no task statements, gold patches or raw records. Full source integration is separately gated.",
+  "instance_ids": {
+    "smith": [
+      "andialbrecht__sqlparse.e57923b3.func_basic__0mum3b07",
+      "andialbrecht__sqlparse.e57923b3.func_basic__0q0uf0jj",
+      "andialbrecht__sqlparse.e57923b3.func_basic__0zb7o5ky",
+      "andialbrecht__sqlparse.e57923b3.func_basic__18agwlyx",
+      "andialbrecht__sqlparse.e57923b3.func_basic__18nuk53l",
+      "andialbrecht__sqlparse.e57923b3.func_basic__1upjaqs7",
+      "benoitc__gunicorn.bacbf8aa.func_basic__01cfz6ly",
+      "benoitc__gunicorn.bacbf8aa.func_basic__0dozchuh",
+      "benoitc__gunicorn.bacbf8aa.func_basic__0sxs9f9o",
+      "benoitc__gunicorn.bacbf8aa.func_basic__1ngbkdol",
+      "benoitc__gunicorn.bacbf8aa.func_basic__2akacgtq",
+      "benoitc__gunicorn.bacbf8aa.func_basic__2md1k5bn",
+      "dbader__schedule.82a43db1.func_basic__3uvexel4",
+      "dbader__schedule.82a43db1.func_basic__4to1fjde",
+      "dbader__schedule.82a43db1.func_basic__91tae94o",
+      "dbader__schedule.82a43db1.func_basic__avciypb3",
+      "gweis__isodate.17cb25eb.func_basic__3o9c1n49",
+      "gweis__isodate.17cb25eb.func_basic__3ty8lwck",
+      "hukkin__tomli.443a0c1b.func_basic__0grznk3s",
+      "hukkin__tomli.443a0c1b.func_basic__0z3cfhsu",
+      "hukkin__tomli.443a0c1b.func_basic__1z83hnoa",
+      "jd__tenacity.0d40e76f.func_basic__101pcgqa",
+      "jd__tenacity.0d40e76f.func_basic__1l3yf5xv",
+      "jd__tenacity.0d40e76f.func_basic__3k3115n5",
+      "mahmoud__boltons.3bfcfdd0.func_basic__2bbqxvei",
+      "mahmoud__boltons.3bfcfdd0.func_basic__5vq1fa1x",
+      "mahmoud__boltons.3bfcfdd0.func_basic__obaisyei",
+      "mahmoud__glom.fb3c4e76.func_basic__0n4ho2l0",
+      "mahmoud__glom.fb3c4e76.func_basic__0n76829i",
+      "mahmoud__glom.fb3c4e76.func_basic__0p95nibl",
+      "mahmoud__glom.fb3c4e76.func_basic__0xzrqz4z",
+      "mahmoud__glom.fb3c4e76.func_basic__2dx4odj4",
+      "mahmoud__glom.fb3c4e76.func_basic__4fln4x3t",
+      "marshmallow-code__marshmallow.9716fc62.func_basic__0jrkbh70",
+      "marshmallow-code__marshmallow.9716fc62.func_basic__0o3fqphc",
+      "marshmallow-code__marshmallow.9716fc62.func_basic__18raipa0",
+      "marshmallow-code__marshmallow.9716fc62.func_basic__1qr1rr2e",
+      "martinblech__xmltodict.0952f382.func_basic__254qp8xw",
+      "martinblech__xmltodict.0952f382.func_pm_remove_cond__qc5atj8q",
+      "python-hyper__h11.bed0dd4a.func_basic__29zrns57",
+      "python-hyper__h11.bed0dd4a.func_basic__2r14k6u7",
+      "python-hyper__h11.bed0dd4a.func_basic__3v18db0m",
+      "python-hyper__h11.bed0dd4a.func_basic__58396e6q",
+      "python-trio__trio.cfbbe2c1.func_basic__0l5ww3x0",
+      "python-trio__trio.cfbbe2c1.func_basic__158aks7r",
+      "python-trio__trio.cfbbe2c1.func_basic__16n8sik8",
+      "python-trio__trio.cfbbe2c1.func_basic__17ms1ssp",
+      "python-trio__trio.cfbbe2c1.func_basic__1itp7mv7",
+      "python-trio__trio.cfbbe2c1.func_basic__1ju1r46i",
+      "python-trio__trio.cfbbe2c1.func_basic__24kxv4so",
+      "theskumar__python-dotenv.2b8635b7.func_basic__1q1u3iv4",
+      "theskumar__python-dotenv.2b8635b7.func_basic__3att6j7k"
+    ],
+    "gym": [
+      "Project-MONAI__MONAI-2454",
+      "Project-MONAI__MONAI-4583",
+      "Project-MONAI__MONAI-4633",
+      "Project-MONAI__MONAI-6975",
+      "conan-io__conan-11560",
+      "conan-io__conan-11594",
+      "conan-io__conan-12397",
+      "conan-io__conan-13230",
+      "conan-io__conan-13326",
+      "conan-io__conan-13788",
+      "conan-io__conan-15422",
+      "dask__dask-6626",
+      "dask__dask-6801",
+      "dask__dask-6818",
+      "dask__dask-7305",
+      "dask__dask-7894",
+      "dask__dask-9378",
+      "facebookresearch__hydra-1741",
+      "facebookresearch__hydra-1915",
+      "facebookresearch__hydra-2189",
+      "getmoto__moto-5134",
+      "getmoto__moto-5545",
+      "getmoto__moto-5752",
+      "getmoto__moto-5794",
+      "getmoto__moto-5960",
+      "getmoto__moto-6185",
+      "getmoto__moto-6308",
+      "getmoto__moto-7105",
+      "getmoto__moto-7484",
+      "iterative__dvc-1712",
+      "iterative__dvc-3527",
+      "iterative__dvc-3620",
+      "iterative__dvc-4785",
+      "modin-project__modin-5940",
+      "modin-project__modin-6298",
+      "modin-project__modin-6400",
+      "modin-project__modin-6608",
+      "modin-project__modin-6854",
+      "modin-project__modin-6937",
+      "pandas-dev__pandas-48106",
+      "pandas-dev__pandas-50319",
+      "pandas-dev__pandas-51605",
+      "pydantic__pydantic-8500",
+      "pydantic__pydantic-8567",
+      "pydantic__pydantic-8793",
+      "pydantic__pydantic-9066",
+      "python__mypy-10308",
+      "python__mypy-10392",
+      "python__mypy-10430",
+      "python__mypy-16905"
+    ]
+  },
+  "representatives": {
+    "smith": {
+      "andialbrecht__sqlparse.e57923b3.func_basic__0mum3b07": {
+        "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.SqlparseE57923b3",
+        "repository_commit": "e57923b3aa823c524c807953cecc48cf6eec2cb2",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      },
+      "mahmoud__glom.fb3c4e76.func_basic__0n4ho2l0": {
+        "repo": "swesmith/mahmoud__glom.fb3c4e76",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.GlomFb3c4e76",
+        "repository_commit": "fb3c4e76f28816aebfd2538980e617742e98a7c2",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      },
+      "mahmoud__boltons.3bfcfdd0.func_basic__2bbqxvei": {
+        "repo": "swesmith/mahmoud__boltons.3bfcfdd0",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.Boltons3bfcfdd0",
+        "repository_commit": "3bfcfdd04395b6cc74a5c0cdc72c8f64cc4ac01f",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      },
+      "hukkin__tomli.443a0c1b.func_basic__0grznk3s": {
+        "repo": "swesmith/hukkin__tomli.443a0c1b",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.Tomli443a0c1b",
+        "repository_commit": "443a0c1bc5da39b7ed84306912ee1900e6b72e2f",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      },
+      "marshmallow-code__marshmallow.9716fc62.func_basic__0jrkbh70": {
+        "repo": "swesmith/marshmallow-code__marshmallow.9716fc62",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.Marshmallow9716fc62",
+        "repository_commit": "9716fc629976c9d3ce30cd15d270d9ac235eb725",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      },
+      "gweis__isodate.17cb25eb.func_basic__3o9c1n49": {
+        "repo": "swesmith/gweis__isodate.17cb25eb",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.Isodate17cb25eb",
+        "repository_commit": "17cb25eb7bc3556a68f3f7b241313e9bb8b23760",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      },
+      "martinblech__xmltodict.0952f382.func_basic__254qp8xw": {
+        "repo": "swesmith/martinblech__xmltodict.0952f382",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.Xmltodict0952f382",
+        "repository_commit": "0952f382c2340bc8b86a5503ba765a35a49cf7c4",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      },
+      "python-trio__trio.cfbbe2c1.func_basic__0l5ww3x0": {
+        "repo": "swesmith/python-trio__trio.cfbbe2c1",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.TrioCfbbe2c1",
+        "repository_commit": "cfbbe2c1f96e93b19bc2577d2cab3f4fe2e81153",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      },
+      "benoitc__gunicorn.bacbf8aa.func_basic__01cfz6ly": {
+        "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.GunicornBacbf8aa",
+        "repository_commit": "bacbf8aa5152b94e44aa5d2a94aeaf0318a85248",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      },
+      "jd__tenacity.0d40e76f.func_basic__101pcgqa": {
+        "repo": "swesmith/jd__tenacity.0d40e76f",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.Tenacity0d40e76f",
+        "repository_commit": "0d40e76f7d06d631fb127e1ec58c8bd776e70d49",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      },
+      "dbader__schedule.82a43db1.func_basic__3uvexel4": {
+        "repo": "swesmith/dbader__schedule.82a43db1",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.Schedule82a43db1",
+        "repository_commit": "82a43db1b938d8fdf60103bd41f329e06c8d3651",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      },
+      "theskumar__python-dotenv.2b8635b7.func_basic__1q1u3iv4": {
+        "repo": "swesmith/theskumar__python-dotenv.2b8635b7",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.PythonDotenv2b8635b7",
+        "repository_commit": "2b8635b79f1aa15cade0950117d4e7d12c298766",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      },
+      "python-hyper__h11.bed0dd4a.func_basic__29zrns57": {
+        "repo": "swesmith/python-hyper__h11.bed0dd4a",
+        "test_command": "source /opt/miniconda3/bin/activate; conda activate testbed; pytest --disable-warnings --color=no --tb=no --verbose",
+        "parser_identity": "swesmith.profiles.python.PythonProfile.log_parser",
+        "profile_class": "swesmith.profiles.python.H11Bed0dd4ae",
+        "repository_commit": "bed0dd4ae9774b962b19833941bb9ec4dc403da9",
+        "min_testing": false,
+        "passing_statuses": [
+          "PASSED",
+          "XFAIL"
+        ]
+      }
+    },
+    "gym": {
+      "getmoto__moto-5752": {
+        "repo": "getmoto/moto",
+        "test_command": "pytest -n0 -rA tests/test_ssm/test_ssm_boto3.py",
+        "parser_identity": "swebench.harness.log_parsers.parse_log_moto",
+        "version": "4.0",
+        "verify_reinstall_command": "make init",
+        "eval_commands": []
+      },
+      "python__mypy-10392": {
+        "repo": "python/mypy",
+        "test_command": "pytest -n0 -rA -k \"testMypyPathAndPython2Dir_python2 or testMypyPathAndPython2Dir\"",
+        "parser_identity": "swebench.harness.log_parsers.parse_log_mypy",
+        "version": "0.820",
+        "verify_reinstall_command": "python -m pip install -r test-requirements.txt; python -m pip install -e .; pip install pytest pytest-xdist; hash -r;",
+        "eval_commands": []
+      },
+      "conan-io__conan-13788": {
+        "repo": "conan-io/conan",
+        "test_command": "pytest -n0 -rA conans/test/integration/graph_lock/graph_lock_build_requires_test.py",
+        "parser_identity": "swebench.harness.log_parsers.parse_log_conan",
+        "version": "1.60",
+        "verify_reinstall_command": "python -m pip install -r conans/requirements.txt; python -m pip install -r conans/requirements_server.txt; python -m pip install -r conans/requirements_dev.txt ",
+        "eval_commands": [
+          "export PYTHONPATH=${PYTHONPATH:-}:$(pwd)"
+        ]
+      },
+      "iterative__dvc-4785": {
+        "repo": "iterative/dvc",
+        "test_command": "pytest -rA tests/unit/remote/test_http.py",
+        "parser_identity": "swebench.harness.log_parsers.parse_log_dvc",
+        "version": "1.9",
+        "verify_reinstall_command": "python -m pip install --upgrade pip wheel GitPython; python -m pip install \"cython<3.0.0\" && python -m pip install --no-build-isolation pyyaml==5.4.1; python -m pip install git+https://github.com/iterative/mock-ssh-server.git || true; python -m pip install -r tests/requirements.txt || true; python -m pip install -r test-requirements.txt || true; python -m pip install -e \".[tests,dev,all_remotes,all,testing]\"; python -m pip install \"numpy<=1.20\"; python -m pip install \"pytest<8\";",
+        "eval_commands": []
+      },
+      "dask__dask-6626": {
+        "repo": "dask/dask",
+        "test_command": "pytest -n0 -rA  --color=no dask/dataframe/tests/test_utils_dataframe.py",
+        "parser_identity": "swebench.harness.log_parsers.parse_log_dask",
+        "version": "2.25",
+        "verify_reinstall_command": "python -m pip install --no-deps -e .",
+        "eval_commands": []
+      },
+      "pydantic__pydantic-8500": {
+        "repo": "pydantic/pydantic",
+        "test_command": "pytest -rA --tb=short -vv -o console_output_style=classic --no-header tests/test_construction.py",
+        "parser_identity": "swebench.harness.log_parsers.parse_log_pydantic",
+        "version": "2.6",
+        "verify_reinstall_command": "export PATH=\"$HOME/.local/bin:$PATH\"; pdm add pre-commit; make install;",
+        "eval_commands": []
+      },
+      "pandas-dev__pandas-48106": {
+        "repo": "pandas-dev/pandas",
+        "test_command": "pytest -rA --tb=long pandas/tests/indexing/test_loc.py",
+        "parser_identity": "swebench.harness.log_parsers.parse_log_pandas",
+        "version": "1.5",
+        "verify_reinstall_command": "python -m pip install 'numpy<2'; python -m pip install -ve . --no-build-isolation -Ceditable-verbose=true; pip uninstall pytest-qt -y;",
+        "eval_commands": []
+      },
+      "facebookresearch__hydra-2189": {
+        "repo": "facebookresearch/hydra",
+        "test_command": "pytest -rA --tb=long tests/instantiate/test_instantiate.py",
+        "parser_identity": "swebench.harness.log_parsers.parse_log_hydra",
+        "version": "1.2",
+        "verify_reinstall_command": "sed -i 's|isort@git+git://github.com/timothycrosley/isort|isort@git+https://github.com/timothycrosley/isort|g' requirements/dev.txt; { tail -n1 requirements/requirements.txt | grep -q \".\" && echo \"\"; } >> requirements/requirements.txt; echo \"pip==24.0\" >> requirements/requirements.txt;pip install \"pip==24.0\"; pip install -r requirements/dev.txt; pip install -e .;",
+        "eval_commands": []
+      },
+      "Project-MONAI__MONAI-2454": {
+        "repo": "Project-MONAI/MONAI",
+        "test_command": "pytest -rA  tests/test_to_tensor.py",
+        "parser_identity": "swebench.harness.log_parsers.parse_log_monai",
+        "version": "0.5",
+        "verify_reinstall_command": "sed -i '/^git+https:\\/\\/github.com\\/Project-MONAI\\//d' requirements-dev.txt; python -m pip install types-pkg-resources==0.1.3 pytest; pip install -r requirements-dev.txt;python setup.py develop;",
+        "eval_commands": []
+      },
+      "modin-project__modin-6608": {
+        "repo": "modin-project/modin",
+        "test_command": "pytest -n0 -rA modin/test/storage_formats/pandas/test_internals.py",
+        "parser_identity": "swebench.harness.log_parsers.parse_log_modin",
+        "version": "0.24",
+        "verify_reinstall_command": "python -m pip install -e .;",
+        "eval_commands": []
+      }
+    }
+  },
+  "research_sha256": {
+    "smith-a-selection.json": "3d58d10ed406551b2a4fec72682b31a01e62023fd51c9f4220b6c571ea0cc7f0",
+    "smith-b-selection.json": "00407d5848779ae7701390f2679b793425823f5fa872ba822568bbae58f31d12",
+    "gym50-frozen.json": "3ec58c1dcfb910469ac72026024d6442b45c78178748ba36c99370c76c332dbf",
+    "swe-image-metadata.json": "e39a68c7bc3b2bf8a4afce8d8fb5402482264bb71e33ae0cd033f255095ffe54",
+    "upstream-smith-python.py": "e2003dd7bab8d80dd6312120bae1d2f0d26c2d794a891f954f8540b805ecb31e",
+    "upstream-smith-base.py": "768be175296020aa8e6e80ded34a9ca088a5e22b21780df887dbcb427361b427",
+    "upstream-smith-grading.py": "0bba8dd0c32db064aa128cb37bd063075084c1278aea229b41c9dc353e211788",
+    "upstream-gym-constants.py": "5bd655172c9a9dfcb494d9c52bcbcc0d79a59cd20c39b8bbdc41ab8b0a9baf14",
+    "upstream-gym-test_spec.py": "94207893a3dc148fc8d010d642bca3e94a6881be4f271265dd0c36fb562da749",
+    "upstream-gym-log_parsers.py": "44ce810ca5bc14fb07f5f765cf6955ad9fac9218f1e1f7112914edbd52fc825f",
+    "upstream-gym-utils.py": "f7b9d10eab20099977b953cdb5333687455db53002390748a7933209d260293b"
+  }
+}

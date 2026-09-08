@@ -4,15 +4,15 @@ M0已于2026-09-08按用户修订的G1/G2/G3范围收尾。G4首次冷准备时�
 
 总计划硬上限 $500；这是实验设计预算，不表示本轮获得全额运行授权。当前[M1扩池计划](plans/2026-09-08-m1-200-case-plan.md)先执行来源和资源画像，再登记精确批次预算。旧32题pilot实际创建过1个沙箱并已独立确认回收，尚无模型请求；旧264创建/$10预留只解释旧campaign，不是200题授权。实际账单未核实，不能写成$0或免费。
 
-## 200题扩池：预算准备中，尚未运行
+## 200题扩池：来源下载完成，逐题云对照预算待登记
 
 用户随后授权持续完成200题准备；当前未分配GPU/沙箱。200题逐题正负对照名义至少400次trial；精确批次费用须先根据资源画像登记，再在本次准备授权和总$500上限内执行，不等同无限创建。先清点各源CPU/RAM/镜像大小/构建和测试时限/网络需求，再核对当期费率、credits、并发配额与缓存重复计费，给出有界估算。原1GiB/5分钟微任务默认不能套用SWE/TB；不满足资源条件的候选在冻结前登记处置，不能随意削弱测试。
 
 第一批固定CPU import：`scripts/m1_import.py`，工作7200秒/控制器7260秒，独占Lab下载锁；仅公开parquet、wheel、归档，不执行上游代码或安装依赖，不启动GPU/沙箱。固定parquet总278698399字节、PyArrow wheel42829529字节；两归档各压缩≤512MiB、展开≤2GiB，另README各≤1MiB，总磁盘预留6GiB，准入空闲≥80GiB。下载逐块处理、SHA/size验证，失败保留已验证资产，不清缓存；home5090只读实测可用733742919680字节。HF官方直连20秒超时，hf-mirror固定Gym分片与codeload固定TB归档实测200；不改服务器网络。Mac仅生成约2.5MiB自建题和短时CPU检查。本批不新增云费用，设备电费未计；后续镜像与对照不含在该下载预算内。
 
-候选复核后增加完整SWE-Gym parquet 43644473字节及README≤1MiB，以寻找真正组合能力题；parquet合计322342872字节，仍在6GiB下载预留内。后续catalog原始JSONL和索引另预留8GiB；16行Arrow批次不是硬内存上限，首次远端解码需观察实际主存。尚未远端执行或安装PyArrow。
+候选复核后增加完整SWE-Gym parquet 43644473字节及README≤1MiB，以寻找真正组合能力题；parquet合计322342872字节，仍在6GiB下载预留内。catalog原始JSONL和索引另预留8GiB；16行Arrow批次不是硬内存上限，Modal首次解码受2GiB容器上限约束并已完成，输出5493296691字节。PyArrow仅装进一次性Modal容器，未修改Mac或5090生产环境。
 
-### CPU下载备用路径（预注册，尚未提交）
+### CPU下载备用路径（已执行，精确结果见EXPERIMENTS）
 
 home5090的`m1-import-v2`静态入口尚未登记，已通过真实任务消息协调，未绕过hlab。用户已允许home5090/Modal/Daytona并要求持续完成准备；若入口继续不可用，采用独立Modal Function，仅下载公开资产和本地目录转换，不运行GPU/模型或题目代码。拟用独立Volume `sandbox-mopd-lab-m1-data-v2`，与主线Volume无关；单写者、最多1容器、1物理核、最多2GiB内存、总时限1200秒、无自动重试、镜像构建时限600秒，保存逐资产状态和哈希，Volume数据预留14GiB。Mac只提交代码与读取小结果，不下载模型/镜像或启动服务。源下载器依赖hardlink原子发布，官方Volume v1不支持，故单独采用支持hardlink的v2（官方仍标beta）；只保存可重下的公开资产和可重建索引，不存唯一训练产物。Volume不提供分布式文件锁，依靠提交前App单写者核对及max_containers=1，不把flock当跨容器互斥证明。
 
@@ -20,7 +20,7 @@ home5090的`m1-import-v2`静态入口尚未登记，已通过真实任务消息�
 
 首提App `ap-9cE27qVBtmfMYoueTrSCdp`在函数创建前因显式`ephemeral_disk=2048`不满足服务端最小524288MiB而拒绝，未开始下载；保留失败身份。按[官方资源文档](https://modal.com/docs/guide/resources)删除该不合法请求，不申请扩容：平台默认临时盘quota512GiB不是本实验实际写入量或额外磁盘预留；资产/索引仍受6+8GiB软件写入上限约束，CPU与内存限额不变。确认旧App无活动写者后才重提；实际账单未核验。
 
-第二提 `ap-h0lgeSAk8BRiYPYquuGajF`进入CPU容器后，在任何数据写入前因`/vol`是平台符号链接而被安全检查拒绝，随后确认stopped/tasks0。同配置只读诊断显示`/vol -> /__modal/volumes/vo-Hs5MyCjulIuJUOOsenUK0t`；首次带嵌套引号的诊断被CLI拆词，第二次直接readlink成功。修复仅允许声明挂载根指向该次hydrated Volume ID的精确平台路径，数据内部链接仍拒绝。诊断与失败CPU秒数计入同一$2预留；尚无真实数据下载或catalog完成证据。
+第二提 `ap-h0lgeSAk8BRiYPYquuGajF`进入CPU容器后，在任何数据写入前因`/vol`是平台符号链接而被安全检查拒绝，随后确认stopped/tasks0。同配置只读诊断显示`/vol -> /__modal/volumes/vo-Hs5MyCjulIuJUOOsenUK0t`；首次带嵌套引号的诊断被CLI拆词，第二次直接readlink成功。修复仅允许声明挂载根指向该次hydrated Volume ID的精确平台路径，数据内部链接仍拒绝。诊断、重提与只读候选提取CPU秒数计入同一$2预留；后续下载和catalog已完成，准确App及计数只在[EXPERIMENTS](EXPERIMENTS.md)维护。实际提供商账单未核验；Mac只接收小型候选审阅材料，完整约5.5GB目录保留远端。
 
 Mac仍无常驻负载，大资产留home5090独立Lab根；共享GPU需每次准入，禁止停止他人负载。Daytona优先CPU，Modal仅另行登记的候选；不使用RunPod。新campaign与旧消费关联，历史费用计入总账。M2/M4训练、joint对照及20/40/80规模曲线须另行预算，不因文档列出就视为已授权。
 
