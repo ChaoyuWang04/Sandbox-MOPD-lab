@@ -1,0 +1,132 @@
+{
+  "schema_version": 2,
+  "metadata_checked": "2026-09-08",
+  "hash_authority": "Hugging Face official fixed-revision tree API lfs.oid",
+  "assets": [
+    {
+      "path": "tools/pyarrow-21.0.0-cp312-cp312-manylinux_2_28_x86_64.whl",
+      "url": "https://files.pythonhosted.org/packages/ad/90/2660332eeb31303c13b653ea566a9918484b6e4d6b9d2d46879a33ab0622/pyarrow-21.0.0-cp312-cp312-manylinux_2_28_x86_64.whl",
+      "revision": "21.0.0",
+      "size": 42829529,
+      "sha256": "b7ae0bbdc8c6674259b25bef5d2a1d6af5d39d7200c819cf99e07f7dfef1c51e"
+    },
+    {
+      "path": "swe-smith/data/train-00000-of-00011.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/data/train-00000-of-00011.parquet",
+      "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
+      "size": 7879557,
+      "sha256": "c9078e71de617fcb1c6e2719b79f09890e93c3e88a61c5ee9cd7bb79850d714d"
+    },
+    {
+      "path": "swe-smith/data/train-00001-of-00011.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/data/train-00001-of-00011.parquet",
+      "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
+      "size": 12372587,
+      "sha256": "3e8af6d9125bfbc5835386e8f992f054de6cda6f57bf0cb7ac3a038f0e11502e"
+    },
+    {
+      "path": "swe-smith/data/train-00002-of-00011.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/data/train-00002-of-00011.parquet",
+      "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
+      "size": 4122704,
+      "sha256": "e17367bdd0fc87fe3bede13f64f0f74c79d71a61a90ff4b444b201ab21d50f5a"
+    },
+    {
+      "path": "swe-smith/data/train-00003-of-00011.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/data/train-00003-of-00011.parquet",
+      "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
+      "size": 10410972,
+      "sha256": "dc8d53b2452eb970fde590546a11f830afee293a7cb8a908ca2c6b93d9a445b4"
+    },
+    {
+      "path": "swe-smith/data/train-00004-of-00011.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/data/train-00004-of-00011.parquet",
+      "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
+      "size": 115987159,
+      "sha256": "b6e9c84aaf149e11a417bb25e66ffccf6f793596bbd6f706fb2ae5a88fd7b360"
+    },
+    {
+      "path": "swe-smith/data/train-00005-of-00011.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/data/train-00005-of-00011.parquet",
+      "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
+      "size": 8833644,
+      "sha256": "e9e3025562ae112f6fb80d53c83971e8d418b271641481ca8715881c9cb274f1"
+    },
+    {
+      "path": "swe-smith/data/train-00006-of-00011.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/data/train-00006-of-00011.parquet",
+      "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
+      "size": 11834513,
+      "sha256": "78dba1970cbd3c466466043e83ed1d0505b45e0e3f1cad0234d40cbbce6fedbd"
+    },
+    {
+      "path": "swe-smith/data/train-00007-of-00011.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/data/train-00007-of-00011.parquet",
+      "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
+      "size": 16168489,
+      "sha256": "27aa219993d814884296b4798a19bbf8ddbf636e3c0b47578cbaa1fb780a74c2"
+    },
+    {
+      "path": "swe-smith/data/train-00008-of-00011.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/data/train-00008-of-00011.parquet",
+      "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
+      "size": 69004755,
+      "sha256": "e3cd42eae5ba5e0543341cf1a4a3f5ea1b0647408883709c6ee5725d20b3ae73"
+    },
+    {
+      "path": "swe-smith/data/train-00009-of-00011.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/data/train-00009-of-00011.parquet",
+      "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
+      "size": 13742636,
+      "sha256": "74dcce80661ef5bbb700709f05e1b23f5934fbd9fece160201c6aa0a86aa9d61"
+    },
+    {
+      "path": "swe-smith/data/train-00010-of-00011.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/data/train-00010-of-00011.parquet",
+      "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
+      "size": 7410190,
+      "sha256": "360c6b5b058dd7404c874d5691482a9be86a77e889008a71a51f55eaee6d3086"
+    },
+    {
+      "path": "swe-gym-lite/data/train-00000-of-00001.parquet",
+      "url": "https://hf-mirror.com/datasets/SWE-Gym/SWE-Gym-Lite/resolve/f70b1a29ab120eb0a0ee7a1deb029825e735b2b0/data/train-00000-of-00001.parquet",
+      "revision": "f70b1a29ab120eb0a0ee7a1deb029825e735b2b0",
+      "size": 931193,
+      "sha256": "f3a7cd934e8cc523b6053298d0abb2c82fd7db2b83f9f2ccba5944545aaa4eb1"
+    },
+    {
+      "path": "swe-smith/README.md",
+      "url": "https://hf-mirror.com/datasets/SWE-bench/SWE-smith/resolve/ea6d7173829c7ec8fa16c22055699ff2e9188091/README.md",
+      "revision": "ea6d7173829c7ec8fa16c22055699ff2e9188091",
+      "max_bytes": 1048576
+    },
+    {
+      "path": "swe-gym-lite/README.md",
+      "url": "https://hf-mirror.com/datasets/SWE-Gym/SWE-Gym-Lite/resolve/f70b1a29ab120eb0a0ee7a1deb029825e735b2b0/README.md",
+      "revision": "f70b1a29ab120eb0a0ee7a1deb029825e735b2b0",
+      "max_bytes": 1048576
+    },
+    {
+      "path": "terminal-bench-2.tar.gz",
+      "url": "https://codeload.github.com/laude-institute/terminal-bench-2/tar.gz/69671fbaac6d67a7ef0dfec016cc38a64ef7a77c",
+      "revision": "69671fbaac6d67a7ef0dfec016cc38a64ef7a77c",
+      "max_bytes": 536870912,
+      "extract": [
+        "*"
+      ],
+      "destination": "terminal-bench-2"
+    },
+    {
+      "path": "harbor.tar.gz",
+      "url": "https://codeload.github.com/harbor-framework/harbor/tar.gz/71c39eafbd134d43ae3f489b5e6488b2a157de65",
+      "revision": "71c39eafbd134d43ae3f489b5e6488b2a157de65",
+      "max_bytes": 536870912,
+      "extract": [
+        "adapters/swegym",
+        "adapters/swesmith",
+        "LICENSE"
+      ],
+      "destination": "harbor"
+    }
+  ]
+}
