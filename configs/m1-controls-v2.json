@@ -1,0 +1,16 @@
+{
+  "campaign": "m1-v2-first-six",
+  "task_ids": ["data_csv-train-00", "andialbrecht__sqlparse.e57923b3.func_basic__0mum3b07", "getmoto__moto-5752"],
+  "agents": ["nop", "oracle"],
+  "max_attempts": 6,
+  "concurrency": 1,
+  "cpus": 4,
+  "memory_mb": 8192,
+  "storage_mb": 10240,
+  "gpus": 0,
+  "trial_seconds": 3600,
+  "ttl_minutes": 60,
+  "controller_seconds": 3900,
+  "reserve_usd": 8,
+  "import_reserve_usd": 2
+}
