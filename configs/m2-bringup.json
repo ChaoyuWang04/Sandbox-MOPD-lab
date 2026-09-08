@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "mode": "m2-bringup",
+  "pool_manifest": "configs/m1-pool-v2-r2.json",
+  "pool_manifest_sha256": "c98a74d88d3641a02c8e9ce40505f9e4f1b26f17042aae43cab801367c600f5b",
+  "stack_lock": "configs/m2-stack-lock.json",
+  "stack_lock_sha256": "d17d7dcf1f06b1774624c7cc2e29f66b5bb1b6e18a6967c477192806da5ba12f",
+  "start_checkpoint_sha256": "ee8091f8197d0dd4c54bfa0054672bee2787270a020966c9f1ddde78329fd65b",
+  "task_ids": [
+    "data_csv-train-00",
+    "self-v2-resource_lifetime-00"
+  ],
+  "sampling": {
+    "group_size": 4,
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "seed": 920001
+  },
+  "trajectory": {
+    "api": "chat/completions",
+    "step_wise_trajectories": true,
+    "merge_stepwise_output": false,
+    "return_token_ids": true,
+    "return_token_logprobs": true,
+    "template_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101"
+  },
+  "placement": {
+    "exclusive_gpu": true,
+    "colocate_all": true,
+    "run_engines_locally": true,
+    "vllm_sleep_wake": true,
+    "policy": "lora_fsdp",
+    "reference": "disabled",
+    "critic": "disabled",
+    "reward_model": "disabled"
+  },
+  "model": {
+    "max_model_len": 16384,
+    "max_generated_tokens_per_trajectory": 4096,
+    "max_turns": 10,
+    "enable_thinking": false
+  },
+  "trainer": {
+    "strategy": "fsdp2",
+    "lora_rank": 32,
+    "lora_alpha": 64,
+    "target_modules": "all-linear",
+    "learning_rate": 0.00001,
+    "weight_decay": 0.0,
+    "max_grad_norm": 1.0,
+    "advantage_estimator": "grpo",
+    "grpo_norm_by_std": false,
+    "use_kl_loss": false,
+    "cpu_offload": true,
+    "micro_train_batch_size_per_gpu": 1,
+    "micro_forward_batch_size_per_gpu": 1
+  },
+  "provider": {
+    "type": "daytona",
+    "credential_file": "/home/samwang/data/sandbox-rl-MOPD-lab/secrets/daytona.env",
+    "credential_file_mode": "0600",
+    "cpus": 1,
+    "memory_mb": 1024,
+    "storage_mb": 3072,
+    "network": false,
+    "ttl_seconds": 300
+  },
+  "limits": {
+    "max_updates": 1,
+    "max_generated_tokens": 32768,
+    "max_training_tokens": 32768,
+    "max_wall_seconds": 5400,
+    "max_created_sandboxes": 8,
+    "daytona_concurrency": 4
+  },
+  "required_evidence": {
+    "mixed_valid_group_count_min": 1,
+    "valid_samples_per_mixed_group_min": 2,
+    "effective_loss_tokens_min": 1,
+    "nonzero_advantage_required": true,
+    "nonzero_pre_step_policy_grad_norm_required": true,
+    "inference_content_receipt_required": true,
+    "next_rollout_weight_binding_required": true,
+    "fresh_process_reload_required": true
+  }
+}

@@ -1,5 +1,13 @@
 # 实验记录
 
+## M2分阶段方案 · 已批准并开始代码准备，未运行训练
+
+2026-09-09用户批准按2–4题真实更新→冻结overfit16→条件性40→train80推进，现有200题保持严格终局0/1，invalid单列。独立计划审查发现GRPO必须使用同一prompt组内0/1混合，不能用跨prompt总体方差冒充学习信号；因此硬门槛补为过滤invalid后至少一组保留≥2条有效样本且同时含0/1，并要求非零advantage、有效loss token及optimizer前policy grad norm。
+
+官方SkyRL v0.2.0源码调查后，严格训练轨迹选择`/chat/completions+return_token_ids`逐轮step-wise路线：generated token、逐token rollout logprob、position、mask和权重版本必须对齐；M1文本trace及上游HarborGenerator的事后重tokenize输出不作训练输入。单5090冻结colocate/local-engine/sleep-wake拓扑并先做无Daytona capacity canary；GPU recipe须独占。final100改为训练/晋级终止后Base+唯一Candidate的一次性同批解封，任何结果可见后本研究不再训练。EvoCodeBench10保持独立eval-only，未下载、未加入200题。本节是跑前契约，不是M1/M2通过或资源已分配。
+
+首个源码锁固定官方`skyrl-v0.2.0@eddb418dd4c560db9d43ffde561f1c5e669c8990`，其`pyproject.toml`/`uv.lock` SHA256分别为`f7c5813b8fc0efd667288b43ee020cde78773d35d7e57c315f674954fc7f421b`/`6919d985d0365ef4a660fb60718355bdfb9bdecaacd13a198157333e68a6bc74`；锁定Harbor `0.4.0@a85628c803dc1713fcd26d2bb1908cde69d62317`、torch2.10.0+cu128、vLLM0.19.0、Ray2.51.1、Transformers5.3.0。该栈尚未在home-5090安装或做容量验证，所以`configs/m2-stack-lock.json`明确`execution_ready=false`。M2契约9项focused测试和全套240项测试通过（2项因独立真实pytest环境不可用而skip）；这只是离线配置/语义检查，不是M2-A训练通过。
+
 ## M1 当前状态 · 实施中，未验收
 
 ### 当前验证策略与复核（用户批准分层方案）

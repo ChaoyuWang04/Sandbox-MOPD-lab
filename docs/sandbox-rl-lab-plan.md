@@ -1,6 +1,6 @@
 # Sandbox RL Lab · 沙箱化 Agentic RL + 多师 OPD 实施计划书
 
-> 当前执行入口：[M1 200题扩池计划](plans/2026-09-08-m1-200-case-plan.md)；独立边界：[README](../README.md)。M0已完成：G1推理、G2授权8并发降级、G3正常阶段链路通过；2026-09-08用户取消M0-G4冷准备速度门槛，非将历史失败改成通过。M1扩池设计已获批准，尚未建成或验收。物理根目录统一为 `sandbox-rl-MOPD-lab/`，下文实验命名 `sandbox-rl-lab` 保留用于 W&B。
+> 当前执行入口：[M2分阶段实施计划](superpowers/plans/2026-09-09-m2-binary-reward-scale.md)，M1剩余边界见[200题扩池计划](plans/2026-09-08-m1-200-case-plan.md)；独立边界：[README](../README.md)。M0已完成：G1推理、G2授权8并发降级、G3正常阶段链路通过；2026-09-08用户取消M0-G4冷准备速度门槛，非将历史失败改成通过。M1的200题资产已装配，TB代表性接入、overfit_16与train/dev基线仍待完成，因此尚未验收。物理根目录统一为 `sandbox-rl-MOPD-lab/`，下文实验命名 `sandbox-rl-lab` 保留用于 W&B。
 > 用户已排除 RunPod，Mac 仅编辑/控制/短时检查、不启动实际长期服务；优先 HOME-5090 模型计算与 Daytona 大规模 CPU 沙箱，Modal 为小规模对照和后续 GPU 候选。用户报告 Daytona $200 credits，余额/有效期/账户配额尚未核对。两家 smoke 见 [EXPERIMENTS](EXPERIMENTS.md)，运行预算见 [BUDGET](BUDGET.md)。用户已授权独立仓库每批验证后提交推送。
 
 > 目标：以最小成本在真沙箱（容器）环境里跑通长程 agentic RL 全链路，并完成两个有原创价值的实验：
@@ -41,7 +41,7 @@ home-5090 的筛选任务经已注册 hlab recipe 执行；没有 recipe 时先�
 | 层 | 选型 | 说明 |
 |---|---|---|
 | 模型 | **Qwen3-4B**（bf16）| 降级预案：任务学不动 → Qwen3-8B；升级预案：都太容易 → 加难任务而非换模型 |
-| RL 框架 | **SkyRL + Harbor**（主）| 起点：Mercor 的 ApexAgents-SkyRL-Recipe 仓库结构；**fallback：verl colocate**（触发条件见 M2-G1 失败分支） |
+| RL 框架 | **SkyRL + Harbor**（主）| 起点：Mercor 的 ApexAgents-SkyRL-Recipe 仓库结构；不按耗时自动切框架，只有已复现接口/实现阻塞且替代路线能满足同一判据时才另立迁移决策 |
 | 微调 | LoRA rank 32, alpha 64, 全线性层 | 优化器只吃 LoRA 参数；具体卡型容量和 colocate 可行性由 M2 实测 |
 | 沙箱 | Harbor 原生 Daytona 优先，Modal 做有界对照 | 沙箱与 GPU 分离；同一 M3 三臂保持 provider 不变 |
 | Rollout | vLLM ≥0.8，同 pod | `gpu_memory_utilization` 训练/推理分割按 M2 实测定 |
@@ -137,7 +137,7 @@ home-5090 的筛选任务经已注册 hlab recipe 执行；没有 recipe 时先�
 
 TB50全在final-test；组合20和OOD20首轮不进入训练。旧16题冻结eval保留在final-test中，明确属于同模板新实例诊断，不冒充模板族完全隔离。其余任务按预先登记的repo/function/PR/patch/template泄漏组分配；跨SWE来源去重，同函数变异与同issue不跨split。分别报告同仓库与仓库留出、同模板与族留出面板；同仓库不等于相同函数/issue，不能冒充仓库留出。旧16题是唯一已批准的同模板跨split诊断例外；其余候选与其预注册泄漏组隔离要求冲突时替换或报告缺口，不能改贴诊断标签凑数。
 
-先用任务结构、来源和组信息定split，再做模型筛选；难度适配只看train/dev。final-test不用于筛题、挑教师、早停、超参或训练轨迹。M1可记录预注册base最终基线；后续只在预注册终点评测冻结模型。harness改变时版本化并重跑可比基线，不能用测试分数挑修法。最终测试已反馈并影响后续扩池时，下一轮需新增留出集或明确声明已适应该benchmark。
+先用任务结构、来源和组信息定split，再做模型筛选；难度适配只看train/dev。final-test不用于筛题、挑教师、早停、超参、训练轨迹或M1基线。唯一终局评测前先不可逆写入“训练、晋级、checkpoint选择和调参全部结束”的决定，再在同一冻结批次评Base与唯一最终Candidate；任一final-test结果可见后，本研究不得继续训练或晋级。后续研究必须新增留出集，不能用测试分数挑修法。
 
 ### 1.3 每题元数据与真实接入
 
@@ -163,7 +163,7 @@ case是独立问题；trajectory是一次完整尝试；真正参与loss的assis
 | G2 | 分层接入与可信判分 | 全量资产/配置检查、自建48题批量正负与边界检查、共享适配器回归、按执行路径的代表性真实环境/判分/隔离/回收证据；记录未抽查镜像与任务，不要求全池逐题双对照，不宣称全量平台认证 |
 | G3 | 真实模型链路 | 有效多轮工具交互及完整成功轨迹；基础设施错误、模型失败、未知usage分列 |
 | G4 | 训练准备 | 从train选择A/B各8的overfit_16，保留train/dev筛选原始结果；final不筛选 |
-| G5 | 冻结基线与审计 | 预注册预算内的base四列测试基线、逐题结果/重复次数/不确定性、费用和清理终态 |
+| G5 | 冻结基线与审计 | 预注册预算内的train/dev Base基线、逐题结果/重复次数/不确定性、费用和清理终态；final100继续密封 |
 
 数量、链路通过和学习收益是不同声明；完成M1不意味着M2过拟合成功或M4融合有效。扩池资源画像和精确批次预算通过后才运行，旧32题campaign不直接执行200题。
 
@@ -183,7 +183,7 @@ sandbox-rl-MOPD-lab/
 ├── recipe/
 │   ├── generator.py             # SkyRL GeneratorInterface 实现: 每 trial 一个 Harbor Trial
 │   ├── agent.py                 # 多轮 tool-calling agent(BaseAgent 子类): bash/read/write 工具
-│   ├── tito.py                  # token-in-token-out 对账(参照 Mercor recipe 方案一: /completions)
+│   ├── tito.py                  # /chat/completions+return_token_ids逐轮step-wise对账
 │   ├── chaos.py                 # M3 故障注入中间件(本阶段空壳)
 │   └── nudge.py                 # context nudge 注入
 ├── opd/                         # M4 蒸馏脚本(本阶段空)
@@ -199,8 +199,8 @@ Agent 工具面刻意最小：`bash`（在沙箱内执行）、`read_file`、`wr
 先选 2-4 个 train 任务，要求最小集合中能观察到 reward 差异；第一轮关闭 context nudge 和动态补样，只跑少量真实更新。以下项目属于 M2-A 硬门槛：
 
 1. **真实更新闭环**：实际 rollout 产生有效 reward，随后出现 loss、backward 和 optimizer step；训练 token 数与参数更新均非零，数值无 NaN/Inf。
-2. **TITO 对账**：训练使用的 generated token IDs 必须来自 rollout 产物；工具观测按固定模板编码。逐 token 对账是正确性检查，不能用重新 tokenize 后“大致相等”替代。
-3. **Loss mask 机器检查**：机器断言 assistant 训练段、工具观测段和系统/nudge 段的 mask 归属与配方一致；可视化样例仅帮助解释，不代替自动检查。
+2. **TITO 对账**：每个模型轮次使用`/chat/completions + return_token_ids`，训练直接消费推理端返回的prompt/generated token IDs与逐token logprob；M1文本trace或事后重新tokenize不能替代。
+3. **Step-wise与Loss mask机器检查**：每轮生成独立训练样本，同轨迹各轮连续且终态标记准确；工具观测只进入下一轮prompt，assistant返回token的mask全为1；prefix merge在另行验证前关闭。
 4. **训推 logprob 画像**：在相同权重、token、位置与精度口径下记录 `mean/P95/max |Δlogprob|` 和 ratio 分布。历史 `0.03/0.05` 只作为异常定位参考，不是本阶段放行线。
 5. **权重交接**：用权重内容或版本身份确认 trainer 更新确实被 inference 消费；仅看到输出变化不算证明。
 6. **保存与恢复**：保存 checkpoint 或 adapter，从新进程重新加载并完成一次推理；恢复后的权重身份与预期版本一致。
@@ -208,19 +208,19 @@ Agent 工具面刻意最小：`bash`（在沙箱内执行）、`read_file`、`wr
 
 ### 2.3 M2-B：学习可行性（观测后判定）
 
-- M2-A 通过后，再冻结 `overfit_16`：仅从 train 抽取 A/B 各8题，固定任务版本、最大更新次数和总训练 token 预算；final-test 不参与筛选或调参。
-- 过拟合前采集可复查 base 轨迹，确认有效 reward 有方差；没有方差时先修任务/采样设计，不把它解释成训练算法失败。
+- M2-A 通过后，再冻结 `overfit_16`：仅从 train 抽取 A/B 各8题，固定任务版本、起始checkpoint内容身份、最大更新次数和总训练 token 预算；final-test 保持密封。
+- 过拟合前采集可复查 base 轨迹。GRPO学习信号必须按prompt组检查：冻结`n_samples_per_prompt`，过滤invalid后至少一组仍有不少于2条有效轨迹且同时包含reward 0/1；跨prompt的总体0/1不算组内advantage。
 - 重点观测 reward 曲线、有效样本率、KL、entropy、grad norm、更新范数、训推 logprob 差异，以及 rollout / verify / train / weight-sync 分段耗时。`30步`、`reward 0.85` 和 `单step 6分钟` 保留为历史参照读数，不作自动停止或裁题门槛。
-- 学习可行性以固定评测集上的改善能否重复、且不是 invalid 样本或 verifier 泄漏造成来判断；最终阈值须根据首轮基线和噪声登记后冻结。
+- 开跑前冻结positive/bounded-negative/invalid机器判据、Base/Candidate配对重复及“重复广泛dev20退化”的定义。只有positive结果才允许16→40→80晋级；负结果或invalid停止扩池。
 - 若失败，按 verifier → harness/轨迹 → reward 方差与采样 → 训练数值 → 算法超参的顺序排查。harness 版本改变后按1.2重测可比基线，不能反复查看 final-test 指导修复。
 
 ### Gate M2
 
 | # | 类型 | 验收对象 | 通过标准或记录方式 |
 |---|---|---|---|
-| G1 | 硬门槛 | 真实训练闭环 | 至少一次有效 rollout→reward→loss/backward→optimizer step；训练 token 和参数更新非零，无 NaN/Inf |
-| G2 | 硬门槛 | token 与 mask | TITO 逐 token 对账通过；mask 由机器检查，且工具观测使用固定模板 |
-| G3 | 硬门槛 | 权重交接与恢复 | trainer 更新后的权重身份被 inference 消费；checkpoint/adapter 可由新进程加载并推理 |
+| G1 | 硬门槛 | 真实训练闭环 | 至少一个过滤invalid后仍含≥2有效样本且组内0/1混合的prompt组；非零advantage、有效loss token、反传后optimizer前policy grad norm及adapter更新，且无NaN/Inf，不能用weight decay或数值漂移冒充 |
+| G2 | 硬门槛 | token、logprob与mask | `/chat/completions+return_token_ids`逐轮step-wise；generated token逐个带finite rollout logprob，长度/位置/mask/rollout权重版本对齐；轨迹连续/终态标记准确，任一token错位即失败 |
+| G3 | 硬门槛 | 权重交接与恢复 | trainer发布adapter内容digest+版本；inference加载侧给出不可由请求方自报的内容receipt，下一rollout绑定该版本；checkpoint/adapter由新进程加载并推理 |
 | G4 | 硬门槛 | 失败语义与回收 | invalid 不混入 reward=0；无未分类错误，运行对象和本实验资源终态明确 |
 | O1 | 重点观测 | logprob 对齐 | 同口径记录 mean/P95/max 差异与 ratio；`0.03/0.05` 只作历史参考，首轮后再冻结合理阈值 |
 | O2 | 重点观测 | 学习信号 | 固定 overfit_16 与评测预算，报告改善、重复性、有效样本率；`30步/0.85` 只作参考 |
@@ -356,7 +356,7 @@ G2/G3是必交科学结果，不强迫结果为正。实验交付完整与“证
 
 | 情况 | 动作 |
 |---|---|
-| SkyRL 单卡跑不通(>1.5天) | → verl colocate 自接 Harbor（M2-G1 分支）|
+| SkyRL 单卡跑不通 | → 保存复现证据；只有确认是SkyRL接口/实现阻塞且候选替代路线能满足同一TITO、更新、权重与恢复判据时，另立迁移决策，不按耗时自动切verl |
 | 4B 过拟合都学不动 | → 先查 verifier/harness；仍不行 → 简化任务（减轮数）；最后才 → 8B |
 | 任务太容易(k 中位数>6) | → 加难任务变体（多步依赖、更大文件、复合条件），**不换更大模型** |
 | pod 单 step >6 min | → 先查瓶颈；更改任务/生成预算或训练规模须另行预注册并获批，不自动缩80训练题，也不裁剪冻结最终测试 |

@@ -9,7 +9,7 @@
 ## 入口与状态
 
 - 总体目标与 M0–M5 门槛：[总计划](docs/sandbox-rl-lab-plan.md)。
-- 当前范围与下一步：[M1 200题扩池计划](docs/plans/2026-09-08-m1-200-case-plan.md)；[已完成的四题模型pilot](docs/plans/2026-09-08-m1-model-pilot-plan.md)；[M0收尾](docs/plans/2026-09-07-m0-environment-plan.md)。
+- 当前范围与下一步：[M2分阶段实施计划](docs/superpowers/plans/2026-09-09-m2-binary-reward-scale.md)；[M1 200题剩余边界](docs/plans/2026-09-08-m1-200-case-plan.md)；[已完成的四题模型pilot](docs/plans/2026-09-08-m1-model-pilot-plan.md)。
 - 实测记录：[EXPERIMENTS](docs/EXPERIMENTS.md)；费用：[BUDGET](docs/BUDGET.md)。
 - Harbor 格式、依赖来源和平台限制：[HARBOR_NOTES](docs/HARBOR_NOTES.md)。
 - 题目索引：[200题清单](configs/m1-pool-v2-r2.json)，每条`task_path`指向本地`data/m1/v2/tasks-r2/`目录，`instruction.md`是题面。原始第三方题目不公开提交；当前清单状态不是运行验收通过。原v2文件保留，用于核对旧运行证据。
@@ -39,3 +39,5 @@ Mac所有Lab文件在本目录。5090源码已落位`/home/samwang/code/projects
 | `cache/`、`logs/`、`artifacts/` | 缓存、日志、机器证据，不提交 |
 
 Python 3.12.13 与 Harbor 0.22.0 已安装在 Lab `.venv/` 下，依赖由 `pyproject.toml` 和 `uv.lock` 固定；这不是 SkyRL/vLLM/GPU 环境锁。后续 Ray working_dir 只打包源码，显式排除环境、密钥和大文件。
+
+当前M2方向已批准为2–4题真实更新→冻结overfit16→仅在前阶段正向学习时扩40/80。final100保持密封，训练与晋级全部结束后只做一次Base+最终Candidate同批评测；解封后本研究不再训练。EvoCodeBench10因官方数据卡明确“不用于模型训练”，仅作为未来独立eval面板，不进入训练或checkpoint选择。
