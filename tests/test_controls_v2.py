@@ -9,6 +9,18 @@ from lab_runtime.controls_v2 import admit, make_trial_config, valid_result
 
 
 class ControlsTests(unittest.TestCase):
+    def test_predecessor_bytes_required(self):
+        from lab_runtime.controls_v2 import verify_predecessor, digest
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root/'ledger').write_text('{}')
+            (root/'receipt').write_text('{}')
+            cfg = {'predecessor': {'ledger_path': 'ledger', 'ledger_sha256': digest(root/'ledger'),
+                   'cleanup_path': 'receipt', 'cleanup_sha256': digest(root/'receipt')}}
+            verify_predecessor(root, cfg)
+            (root/'receipt').write_text('changed')
+            with self.assertRaises(ValueError):
+                verify_predecessor(root, cfg)
     def test_own_peak_rss_platform_units(self):
         from lab_runtime.controls_v2 import peak_rss_bytes
         self.assertEqual(peak_rss_bytes(1234, 'darwin'), 1234)
@@ -66,11 +78,78 @@ class ControlsTests(unittest.TestCase):
         self.assertNotIn('modal.Secret', path.read_text())
 
 
+class CleanupPollingTests(unittest.IsolatedAsyncioTestCase):
+    async def run_case(self, stale_list=False, stale_get=False, never=False):
+        from lab_runtime.controls_v2 import cleanup
+        from daytona import DaytonaNotFoundError
+        labels = {'m1_v2_run': 'ours'}
+        sandbox = SimpleNamespace(id='owned', labels=labels)
+        class Client:
+            lists = 0
+            gets = 0
+            deletes = 0
+            def list(self, *args, **kwargs):
+                async def values():
+                    self.lists += 1
+                    if self.lists == 1 or never or (stale_list and self.lists == 2):
+                        yield sandbox
+                return values()
+            async def get(self, sid):
+                self.gets += 1
+                if stale_get and self.gets == 1:
+                    return sandbox
+                raise DaytonaNotFoundError('gone')
+            async def delete(self, *args, **kwargs):
+                self.deletes += 1
+        client = Client()
+        events = []
+        if never:
+            with self.assertRaises(TimeoutError):
+                await cleanup(client, labels, {'owned'}, events.append, timeout_seconds=.03, poll_seconds=.005)
+        else:
+            await cleanup(client, labels, {'owned'}, events.append, timeout_seconds=1, poll_seconds=.001)
+            self.assertEqual(events[-1]['remaining_ids'], [])
+            self.assertEqual(events[-1]['known_ids_present'], [])
+        self.assertEqual(client.deletes, 1)
+        return events
+
+    async def test_stale_list_then_empty(self):
+        events = await self.run_case(stale_list=True)
+        self.assertTrue(any(e.get('remaining_ids') for e in events))
+
+    async def test_stale_get_then_not_found(self):
+        events = await self.run_case(stale_get=True)
+        self.assertTrue(any(e.get('known_ids_present') for e in events))
+
+    async def test_never_empty_reaches_same_deadline(self):
+        await self.run_case(never=True)
+
+
 class LifecycleTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         source = Path(__file__).resolve().parents[1]
         if not (source/'data/m1/v2/tasks/data_csv-train-00/task.toml').is_file():
             self.skipTest('ignored unified200 generated task assets unavailable')
+        mock = patch('lab_runtime.controls_v2.verify_predecessor')
+        mock.start()
+        self.addCleanup(mock.stop)
+
+    async def test_predecessor_live_object_blocks_new_creation(self):
+        from lab_runtime.controls_v2 import execute
+        source = Path(__file__).resolve().parents[1]
+        class Client:
+            def list(self, query, **kwargs):
+                async def values():
+                    if query.labels['m1_v2_run'] == 'm1-v2-first-six':
+                        yield SimpleNamespace(id='old-object')
+                return values()
+        async def factory(config):
+            self.fail('new trial created with predecessor object present')
+        with tempfile.TemporaryDirectory() as temp:
+            result = await execute(temp, source, lambda: None, 0, client=Client(), trial_factory=factory)
+            self.assertEqual(result['exception_type'], 'RuntimeError')
+            self.assertEqual(result['state'], 'failed')
+            self.assertTrue(result['cleanup_empty'])
 
     async def test_client_setup_is_inside_work_deadline(self):
         from lab_runtime.controls_v2 import _execute
@@ -146,7 +225,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         with tempfile.TemporaryDirectory() as temp:
             result = await execute(temp, source, lambda: None, 0, trial_factory=factory, client=Client())
             self.assertEqual(result['state'], 'passed')
-            ledger = json.loads((Path(temp)/'artifacts/m1/v2/controls/campaign.json').read_text())
+            ledger = json.loads((Path(temp)/'artifacts/m1/v2/controls/m1-v2-first-six-r2/campaign.json').read_text())
             admit(ledger, 1)
 
     async def test_unknown_create_and_cleanup_failure_block_next_attempt(self):
@@ -171,7 +250,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(json.loads(ledger.read_text())['attempts'][0]['state'], 'active')
             return Trial()
         with tempfile.TemporaryDirectory() as temp:
-            ledger = Path(temp)/'artifacts/m1/v2/controls/campaign.json'
+            ledger = Path(temp)/'artifacts/m1/v2/controls/m1-v2-first-six-r2/campaign.json'
             result = await execute(temp, source, lambda: None, 0, trial_factory=factory, client=Client())
             self.assertEqual(result['state'], 'uncertain')
             self.assertTrue(result['cleanup_empty'])

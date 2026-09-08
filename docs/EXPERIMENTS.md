@@ -24,7 +24,13 @@ SWE许可证审计补齐63/63不同源码版本主许可证全文及Trio两份�
 
 固定TB2归档根目录仅有README和.gitignore，没有LICENSE；README提供官方Harbor下载/运行指引，但未声明再分发许可。保持原始题目资产在ignored数据目录/私有实验存储，仅提交来源URL、身份和结果元数据；不冒用Harbor工具许可证，不把本轮内部benchmark准备当成获准公开再分发。SWE构造/真实pytest小夹具已完成，最新代码测试及102条源数据加载证据见[扩池计划](plans/2026-09-08-m1-200-case-plan.md)，仍无200题云运行结论。
 
-以下保留旧32题实施与失败证据。
+### v2首个真实对照与回收等待
+
+源码`3d58e56`，`m1-v2-first-six`的attempt-00执行`data_csv-train-00` NOP，真实reward=0、exception=null、正常阶段隔离到`verification_ready`，grader明确`missing_or_invalid_answer_or_input`。Mac控制器峰值RSS136232960字节（约130MiB），没有本地任务计算或服务。沙箱`8ed26b72-0a56-4c49-94f7-05948e95fe88`删除后即时list仍返回该ID，入口因此保守记`uncertain`，未继续创建。
+
+后续独立客户端精确GET返回`DaytonaNotFoundError`，相同run/attempt标签list为空，证明已回收；不覆盖原账本终态。原账本`artifacts/m1/v2/controls/campaign.json` SHA256 `d3dbdca04b0ccdcf3db10e6f2cebf56677793dc2052bf1ad012f77d0a632e53a`，`attempt-00/independent-cleanup-check.json` SHA256 `95a815524f4d89fdc80053890c893dcc476d87f7b3723795fbb94dd5c0f0f3e6`。根因是新入口缺少旧入口已有的删除后有界列表等待，不是沙箱已确认泄漏或模型失败。下一批登记固定r2身份，修正120秒截止内的list/GET等待，未知创建仍不得放行；总7次上限见BUDGET。
+
+### 旧32题实施与失败证据
 
 - T1源码63b8416：4族32实例（每族train/eval各4），独立oracle和严格grader；7项离线测试逐实例验证oracle=1、NOP及排序/数值/缺项/类型/输入修改等反例=0；JSON<5及==5边界、Harbor30/180秒解析和字节确定性通过。两轮独立审阅通过。冻结清单路径及SHA只维护在M1计划；模型尚未读过这些评测实例。
 - T2源码5cf2ad4：10项接口测试通过，覆盖多轮工具观测、token累计/模板漂移、异常finish、预算、私有路径检查、失败工具轨迹、HTTP取消收敛及usage未知标记。规格和质量审阅通过；mock不证明真实模型或沙箱链路。

@@ -23,13 +23,26 @@ def peak_rss_bytes(value, platform):
 
 def validate_config(cfg):
     # This fixed first-six authorization is deliberately not a general scheduler.
-    expected = dict(campaign='m1-v2-first-six', task_ids=['data_csv-train-00',
+    expected = dict(campaign='m1-v2-first-six-r2', task_ids=['data_csv-train-00',
         'andialbrecht__sqlparse.e57923b3.func_basic__0mum3b07', 'getmoto__moto-5752'],
         agents=['nop', 'oracle'], max_attempts=6, concurrency=1, cpus=4,
         memory_mb=8192, storage_mb=10240, gpus=0, trial_seconds=3600,
         ttl_minutes=60, controller_seconds=3900, reserve_usd=8, import_reserve_usd=2)
+    expected.update(max_cumulative_attempts=7, predecessor=dict(campaign='m1-v2-first-six',
+        attempts_consumed=1, ledger_path='artifacts/m1/v2/controls/campaign.json',
+        ledger_sha256='d3dbdca04b0ccdcf3db10e6f2cebf56677793dc2052bf1ad012f77d0a632e53a',
+        cleanup_path='artifacts/m1/v2/controls/attempt-00/independent-cleanup-check.json',
+        cleanup_sha256='95a815524f4d89fdc80053890c893dcc476d87f7b3723795fbb94dd5c0f0f3e6'))
     if cfg != expected or any(type(cfg[k]) is not type(v) for k, v in expected.items()):
         raise ValueError('unregistered first-six configuration')
+
+
+def verify_predecessor(root, cfg):
+    prior = cfg['predecessor']
+    for name in ('ledger', 'cleanup'):
+        path = Path(root)/prior[name+'_path']
+        if not path.is_file() or path.is_symlink() or digest(path) != prior[name+'_sha256']:
+            raise ValueError('predecessor evidence missing or changed')
 
 
 def source_identity(source):
@@ -72,9 +85,11 @@ def valid_result(record, agent, grading):
             and grading.get('owned_process_group_stopped') is True)))
 
 
-async def cleanup(client, labels, known_ids, emit):
+async def cleanup(client, labels, known_ids, emit, *, timeout_seconds=120, poll_seconds=.5):
     from daytona import ListSandboxesQuery
-    async with asyncio.timeout(120):
+    if not 0 < timeout_seconds <= 120 or not 0 < poll_seconds <= .5:
+        raise ValueError('cleanup bound exceeded')
+    async with asyncio.timeout(timeout_seconds):
         objects = [s async for s in client.list(ListSandboxesQuery(labels=labels), request_timeout=20)]
         for sid in known_ids:
             if sid not in {s.id for s in objects}:
@@ -92,18 +107,23 @@ async def cleanup(client, labels, known_ids, emit):
             except Exception as exc:
                 if type(exc).__name__ not in ('DaytonaNotFoundError', 'DaytonaConflictError'):
                     raise
-        remaining = [s.id async for s in client.list(ListSandboxesQuery(labels=labels), request_timeout=20)]
-        emit(dict(event='cleanup_list', remaining_ids=remaining))
-        if remaining:
-            raise RuntimeError('cleanup remains nonempty')
-        for sid in known_ids:
-            try:
-                await client.get(sid)
-            except Exception as exc:
-                if type(exc).__name__ != 'DaytonaNotFoundError':
-                    raise
-            else:
-                raise RuntimeError('known sandbox ID still exists')
+        # Delete once; list and direct-ID reads may lag the accepted deletion.
+        # Both must independently converge inside the original deadline.
+        while True:
+            remaining = [s.id async for s in client.list(ListSandboxesQuery(labels=labels), request_timeout=20)]
+            present = []
+            for sid in known_ids:
+                try:
+                    await client.get(sid)
+                except Exception as exc:
+                    if type(exc).__name__ != 'DaytonaNotFoundError':
+                        raise
+                else:
+                    present.append(sid)
+            emit(dict(event='cleanup_list', remaining_ids=remaining, known_ids_present=present))
+            if not remaining and not present:
+                break
+            await asyncio.sleep(poll_seconds)
 
 
 def attach_absence(trial, agent):
@@ -143,9 +163,10 @@ async def _execute(root, source, commit, index, *, work_deadline, deadline,
     manifest_path = source/'configs/m1-pool-v2.json'
     cfg = json.loads(config_path.read_text())
     validate_config(cfg)
+    verify_predecessor(root, cfg)
     identity = source_identity(source)
-    ledger_path = root/'artifacts/m1/v2/controls/campaign.json'
-    ledger = json.loads(ledger_path.read_text()) if ledger_path.exists() else dict(identity=identity, attempts=[])
+    ledger_path = root/'artifacts/m1/v2/controls'/cfg['campaign']/'campaign.json'
+    ledger = json.loads(ledger_path.read_text()) if ledger_path.exists() else dict(identity=identity, attempts=[], predecessor=cfg['predecessor'])
     if ledger['identity'] != identity:
         raise ValueError('campaign identity changed')
     admit(ledger, index)
@@ -166,6 +187,7 @@ async def _execute(root, source, commit, index, *, work_deadline, deadline,
                   started=time.time(), events=[], exception_type=None, cleanup_empty=False,
                   create_uncertain=False, reward=None)
     ledger['attempts'].append(record)
+    ledger['cumulative_attempts'] = cfg['predecessor']['attempts_consumed'] + len(ledger['attempts'])
     def persist():
         atomic_json(ledger_path, ledger)
         descriptor = os.open(ledger_path.parent, os.O_RDONLY)
@@ -191,6 +213,10 @@ async def _execute(root, source, commit, index, *, work_deadline, deadline,
             # Read-only admission: old objects block creation, never silently reuse them.
             from daytona import ListSandboxesQuery
             async with asyncio.timeout(30):
+                prior_objects = [s.id async for s in client.list(ListSandboxesQuery(labels={'m1_v2_run': cfg['predecessor']['campaign']}), request_timeout=20)]
+                emit(dict(event='predecessor_admission_list', sandbox_ids=prior_objects))
+                if prior_objects:
+                    raise RuntimeError('predecessor campaign objects still exist')
                 existing = [s.id async for s in client.list(ListSandboxesQuery(labels={'m1_v2_run': cfg['campaign']}), request_timeout=20)]
             emit(dict(event='admission_list', sandbox_ids=existing))
             if existing:

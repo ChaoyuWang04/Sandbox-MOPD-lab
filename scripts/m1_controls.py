@@ -39,7 +39,9 @@ def main():
     args = parser.parse_args()
     from lab_runtime.controls_v2 import execute, validate_config
     from lab_runtime.m1_run import provider_credentials
-    base = SOURCE/'artifacts/m1/v2/controls'
+    cfg = json.loads((SOURCE/'configs/m1-controls-v2.json').read_text())
+    validate_config(cfg)
+    base = SOURCE/'artifacts/m1/v2/controls'/cfg['campaign']
     base.mkdir(parents=True, exist_ok=True)
     with (base/'controller.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)

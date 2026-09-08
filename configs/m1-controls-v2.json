@@ -1,5 +1,14 @@
 {
-  "campaign": "m1-v2-first-six",
+  "campaign": "m1-v2-first-six-r2",
+  "predecessor": {
+    "campaign": "m1-v2-first-six",
+    "attempts_consumed": 1,
+    "ledger_path": "artifacts/m1/v2/controls/campaign.json",
+    "ledger_sha256": "d3dbdca04b0ccdcf3db10e6f2cebf56677793dc2052bf1ad012f77d0a632e53a",
+    "cleanup_path": "artifacts/m1/v2/controls/attempt-00/independent-cleanup-check.json",
+    "cleanup_sha256": "95a815524f4d89fdc80053890c893dcc476d87f7b3723795fbb94dd5c0f0f3e6"
+  },
+  "max_cumulative_attempts": 7,
   "task_ids": ["data_csv-train-00", "andialbrecht__sqlparse.e57923b3.func_basic__0mum3b07", "getmoto__moto-5752"],
   "agents": ["nop", "oracle"],
   "max_attempts": 6,
