@@ -48,6 +48,8 @@
   ],
   "smith": {
     "andialbrecht__sqlparse.e57923b3.func_basic__0mum3b07": {
+      "instance_id": "andialbrecht__sqlparse.e57923b3.func_basic__0mum3b07",
+      "instance_commit": "ba7b24b1144fe13a7c1f6199ecb602009521d9d7",
       "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
       "image_name": "jyangballin/swesmith.x86_64.andialbrecht_1776_sqlparse.e57923b3",
       "generation_method": "func_basic",
@@ -67,6 +69,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "andialbrecht__sqlparse.e57923b3.func_basic__0q0uf0jj": {
+      "instance_id": "andialbrecht__sqlparse.e57923b3.func_basic__0q0uf0jj",
+      "instance_commit": "18a8e2e447a2e73e6c54d40443cd951a8e7fcd61",
       "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
       "image_name": "jyangballin/swesmith.x86_64.andialbrecht_1776_sqlparse.e57923b3",
       "generation_method": "func_basic",
@@ -86,6 +90,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "andialbrecht__sqlparse.e57923b3.func_basic__0zb7o5ky": {
+      "instance_id": "andialbrecht__sqlparse.e57923b3.func_basic__0zb7o5ky",
+      "instance_commit": "d2dc9af40ebbd7e109b5c549fd80de8e9bcbee2d",
       "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
       "image_name": "jyangballin/swesmith.x86_64.andialbrecht_1776_sqlparse.e57923b3",
       "generation_method": "func_basic",
@@ -105,6 +111,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "andialbrecht__sqlparse.e57923b3.func_basic__18agwlyx": {
+      "instance_id": "andialbrecht__sqlparse.e57923b3.func_basic__18agwlyx",
+      "instance_commit": "dc43a3452988dace961c4432a73c14315e123f76",
       "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
       "image_name": "jyangballin/swesmith.x86_64.andialbrecht_1776_sqlparse.e57923b3",
       "generation_method": "func_basic",
@@ -124,6 +132,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "andialbrecht__sqlparse.e57923b3.func_basic__18nuk53l": {
+      "instance_id": "andialbrecht__sqlparse.e57923b3.func_basic__18nuk53l",
+      "instance_commit": "cc2442bd28cacebe5bbb32216988166030c25a95",
       "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
       "image_name": "jyangballin/swesmith.x86_64.andialbrecht_1776_sqlparse.e57923b3",
       "generation_method": "func_basic",
@@ -143,6 +153,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "andialbrecht__sqlparse.e57923b3.func_basic__1upjaqs7": {
+      "instance_id": "andialbrecht__sqlparse.e57923b3.func_basic__1upjaqs7",
+      "instance_commit": "9fb2b2816ebc1eebd3ade3017aa6e2de9e356031",
       "repo": "swesmith/andialbrecht__sqlparse.e57923b3",
       "image_name": "jyangballin/swesmith.x86_64.andialbrecht_1776_sqlparse.e57923b3",
       "generation_method": "func_basic",
@@ -162,6 +174,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "mahmoud__glom.fb3c4e76.func_basic__0n4ho2l0": {
+      "instance_id": "mahmoud__glom.fb3c4e76.func_basic__0n4ho2l0",
+      "instance_commit": "6a1ae8d12939e5a7a437689cb4625bf54bb04090",
       "repo": "swesmith/mahmoud__glom.fb3c4e76",
       "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_glom.fb3c4e76",
       "generation_method": "func_basic",
@@ -181,6 +195,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "mahmoud__glom.fb3c4e76.func_basic__0n76829i": {
+      "instance_id": "mahmoud__glom.fb3c4e76.func_basic__0n76829i",
+      "instance_commit": "f2219e0a9cac9300f648d5f92bec60e2a153aeae",
       "repo": "swesmith/mahmoud__glom.fb3c4e76",
       "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_glom.fb3c4e76",
       "generation_method": "func_basic",
@@ -200,6 +216,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "mahmoud__glom.fb3c4e76.func_basic__0p95nibl": {
+      "instance_id": "mahmoud__glom.fb3c4e76.func_basic__0p95nibl",
+      "instance_commit": "288528627788ecafb6f675aba2a8a6313bfe41be",
       "repo": "swesmith/mahmoud__glom.fb3c4e76",
       "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_glom.fb3c4e76",
       "generation_method": "func_basic",
@@ -219,6 +237,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "mahmoud__glom.fb3c4e76.func_basic__0xzrqz4z": {
+      "instance_id": "mahmoud__glom.fb3c4e76.func_basic__0xzrqz4z",
+      "instance_commit": "71b03ac5c1d6e09a884678248e3950ec3579ee32",
       "repo": "swesmith/mahmoud__glom.fb3c4e76",
       "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_glom.fb3c4e76",
       "generation_method": "func_basic",
@@ -238,6 +258,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "mahmoud__glom.fb3c4e76.func_basic__2dx4odj4": {
+      "instance_id": "mahmoud__glom.fb3c4e76.func_basic__2dx4odj4",
+      "instance_commit": "42e354c66167590dad8514b94adc45ab37a7c18b",
       "repo": "swesmith/mahmoud__glom.fb3c4e76",
       "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_glom.fb3c4e76",
       "generation_method": "func_basic",
@@ -257,6 +279,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "mahmoud__glom.fb3c4e76.func_basic__4fln4x3t": {
+      "instance_id": "mahmoud__glom.fb3c4e76.func_basic__4fln4x3t",
+      "instance_commit": "fb884f5fc55518cf9d660978142d961cb7f38c17",
       "repo": "swesmith/mahmoud__glom.fb3c4e76",
       "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_glom.fb3c4e76",
       "generation_method": "func_basic",
@@ -276,6 +300,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "mahmoud__boltons.3bfcfdd0.func_basic__2bbqxvei": {
+      "instance_id": "mahmoud__boltons.3bfcfdd0.func_basic__2bbqxvei",
+      "instance_commit": "28b1e8fb383adcaaf77734138665a9a1f6384bf4",
       "repo": "swesmith/mahmoud__boltons.3bfcfdd0",
       "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_boltons.3bfcfdd0",
       "generation_method": "func_basic",
@@ -295,6 +321,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "mahmoud__boltons.3bfcfdd0.func_basic__5vq1fa1x": {
+      "instance_id": "mahmoud__boltons.3bfcfdd0.func_basic__5vq1fa1x",
+      "instance_commit": "b75d3f55945769d7f38ba909b86c9d62c5d51738",
       "repo": "swesmith/mahmoud__boltons.3bfcfdd0",
       "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_boltons.3bfcfdd0",
       "generation_method": "func_basic",
@@ -314,6 +342,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "mahmoud__boltons.3bfcfdd0.func_basic__obaisyei": {
+      "instance_id": "mahmoud__boltons.3bfcfdd0.func_basic__obaisyei",
+      "instance_commit": "2e9d512828629dd5b1b4dabb88f987b9a78d98ed",
       "repo": "swesmith/mahmoud__boltons.3bfcfdd0",
       "image_name": "jyangballin/swesmith.x86_64.mahmoud_1776_boltons.3bfcfdd0",
       "generation_method": "func_basic",
@@ -333,6 +363,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "hukkin__tomli.443a0c1b.func_basic__0grznk3s": {
+      "instance_id": "hukkin__tomli.443a0c1b.func_basic__0grznk3s",
+      "instance_commit": "37299c9131cbc0b3438685d4b08088a22626b687",
       "repo": "swesmith/hukkin__tomli.443a0c1b",
       "image_name": "jyangballin/swesmith.x86_64.hukkin_1776_tomli.443a0c1b",
       "generation_method": "func_basic",
@@ -352,6 +384,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "hukkin__tomli.443a0c1b.func_basic__0z3cfhsu": {
+      "instance_id": "hukkin__tomli.443a0c1b.func_basic__0z3cfhsu",
+      "instance_commit": "52fabdbbb98af76cf19e03e4fabbfa1abd060e09",
       "repo": "swesmith/hukkin__tomli.443a0c1b",
       "image_name": "jyangballin/swesmith.x86_64.hukkin_1776_tomli.443a0c1b",
       "generation_method": "func_basic",
@@ -371,6 +405,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "hukkin__tomli.443a0c1b.func_basic__1z83hnoa": {
+      "instance_id": "hukkin__tomli.443a0c1b.func_basic__1z83hnoa",
+      "instance_commit": "4e49a9652a156b35ed27c38eeadd74acd8939acc",
       "repo": "swesmith/hukkin__tomli.443a0c1b",
       "image_name": "jyangballin/swesmith.x86_64.hukkin_1776_tomli.443a0c1b",
       "generation_method": "func_basic",
@@ -390,6 +426,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "marshmallow-code__marshmallow.9716fc62.func_basic__0jrkbh70": {
+      "instance_id": "marshmallow-code__marshmallow.9716fc62.func_basic__0jrkbh70",
+      "instance_commit": "e2c64ac7b3290c2cfe1effeb7a5c46ccf9c6136e",
       "repo": "swesmith/marshmallow-code__marshmallow.9716fc62",
       "image_name": "jyangballin/swesmith.x86_64.marshmallow-code_1776_marshmallow.9716fc62",
       "generation_method": "func_basic",
@@ -409,6 +447,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "marshmallow-code__marshmallow.9716fc62.func_basic__0o3fqphc": {
+      "instance_id": "marshmallow-code__marshmallow.9716fc62.func_basic__0o3fqphc",
+      "instance_commit": "0d1f05499d42219d9dd44748d8b386640be02116",
       "repo": "swesmith/marshmallow-code__marshmallow.9716fc62",
       "image_name": "jyangballin/swesmith.x86_64.marshmallow-code_1776_marshmallow.9716fc62",
       "generation_method": "func_basic",
@@ -428,6 +468,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "marshmallow-code__marshmallow.9716fc62.func_basic__18raipa0": {
+      "instance_id": "marshmallow-code__marshmallow.9716fc62.func_basic__18raipa0",
+      "instance_commit": "321015913aecc54d0dcc477936cec9f99d446e01",
       "repo": "swesmith/marshmallow-code__marshmallow.9716fc62",
       "image_name": "jyangballin/swesmith.x86_64.marshmallow-code_1776_marshmallow.9716fc62",
       "generation_method": "func_basic",
@@ -447,6 +489,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "marshmallow-code__marshmallow.9716fc62.func_basic__1qr1rr2e": {
+      "instance_id": "marshmallow-code__marshmallow.9716fc62.func_basic__1qr1rr2e",
+      "instance_commit": "5738c994219bc306d0234f22fba9ca55913e3a3f",
       "repo": "swesmith/marshmallow-code__marshmallow.9716fc62",
       "image_name": "jyangballin/swesmith.x86_64.marshmallow-code_1776_marshmallow.9716fc62",
       "generation_method": "func_basic",
@@ -466,6 +510,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "gweis__isodate.17cb25eb.func_basic__3o9c1n49": {
+      "instance_id": "gweis__isodate.17cb25eb.func_basic__3o9c1n49",
+      "instance_commit": "fabfd0bf675a5df9e1f97a5f0c2e340658b0c61d",
       "repo": "swesmith/gweis__isodate.17cb25eb",
       "image_name": "jyangballin/swesmith.x86_64.gweis_1776_isodate.17cb25eb",
       "generation_method": "func_basic",
@@ -485,6 +531,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "gweis__isodate.17cb25eb.func_basic__3ty8lwck": {
+      "instance_id": "gweis__isodate.17cb25eb.func_basic__3ty8lwck",
+      "instance_commit": "6312172b257232e5637b2a1bd27a69c7ba64e212",
       "repo": "swesmith/gweis__isodate.17cb25eb",
       "image_name": "jyangballin/swesmith.x86_64.gweis_1776_isodate.17cb25eb",
       "generation_method": "func_basic",
@@ -504,6 +552,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "martinblech__xmltodict.0952f382.func_basic__254qp8xw": {
+      "instance_id": "martinblech__xmltodict.0952f382.func_basic__254qp8xw",
+      "instance_commit": "d6e048fcd86a10792f6c01db1a804b7d0123993f",
       "repo": "swesmith/martinblech__xmltodict.0952f382",
       "image_name": "jyangballin/swesmith.x86_64.martinblech_1776_xmltodict.0952f382",
       "generation_method": "func_basic",
@@ -523,6 +573,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "martinblech__xmltodict.0952f382.func_pm_remove_cond__qc5atj8q": {
+      "instance_id": "martinblech__xmltodict.0952f382.func_pm_remove_cond__qc5atj8q",
+      "instance_commit": "65a02d64c419e40385219f3602de91c05895355c",
       "repo": "swesmith/martinblech__xmltodict.0952f382",
       "image_name": "jyangballin/swesmith.x86_64.martinblech_1776_xmltodict.0952f382",
       "generation_method": "func_pm_remove_cond",
@@ -542,6 +594,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python-trio__trio.cfbbe2c1.func_basic__0l5ww3x0": {
+      "instance_id": "python-trio__trio.cfbbe2c1.func_basic__0l5ww3x0",
+      "instance_commit": "0d68fddfdc4851e2950831c6a8b3d79b4a69ab6d",
       "repo": "swesmith/python-trio__trio.cfbbe2c1",
       "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
       "generation_method": "func_basic",
@@ -561,6 +615,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python-trio__trio.cfbbe2c1.func_basic__158aks7r": {
+      "instance_id": "python-trio__trio.cfbbe2c1.func_basic__158aks7r",
+      "instance_commit": "9610763d6561a4c8a630126ad56d07da049d8178",
       "repo": "swesmith/python-trio__trio.cfbbe2c1",
       "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
       "generation_method": "func_basic",
@@ -580,6 +636,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python-trio__trio.cfbbe2c1.func_basic__16n8sik8": {
+      "instance_id": "python-trio__trio.cfbbe2c1.func_basic__16n8sik8",
+      "instance_commit": "1ffdc6f7382dcb53475dc184e4726cf3e12880dc",
       "repo": "swesmith/python-trio__trio.cfbbe2c1",
       "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
       "generation_method": "func_basic",
@@ -599,6 +657,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python-trio__trio.cfbbe2c1.func_basic__17ms1ssp": {
+      "instance_id": "python-trio__trio.cfbbe2c1.func_basic__17ms1ssp",
+      "instance_commit": "8675e0d943dd6908b4382f1d0745273716ac0ecb",
       "repo": "swesmith/python-trio__trio.cfbbe2c1",
       "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
       "generation_method": "func_basic",
@@ -618,6 +678,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python-trio__trio.cfbbe2c1.func_basic__1itp7mv7": {
+      "instance_id": "python-trio__trio.cfbbe2c1.func_basic__1itp7mv7",
+      "instance_commit": "9f4e257310d83c8465a1bbc01e3cafd6a94e87ca",
       "repo": "swesmith/python-trio__trio.cfbbe2c1",
       "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
       "generation_method": "func_basic",
@@ -637,6 +699,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python-trio__trio.cfbbe2c1.func_basic__1ju1r46i": {
+      "instance_id": "python-trio__trio.cfbbe2c1.func_basic__1ju1r46i",
+      "instance_commit": "b6140fd4b1af5599c77f00fa6c7e822681afeb48",
       "repo": "swesmith/python-trio__trio.cfbbe2c1",
       "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
       "generation_method": "func_basic",
@@ -656,6 +720,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python-trio__trio.cfbbe2c1.func_basic__24kxv4so": {
+      "instance_id": "python-trio__trio.cfbbe2c1.func_basic__24kxv4so",
+      "instance_commit": "49a192e11800b26ee8f8977078c870471f672885",
       "repo": "swesmith/python-trio__trio.cfbbe2c1",
       "image_name": "jyangballin/swesmith.x86_64.python-trio_1776_trio.cfbbe2c1",
       "generation_method": "func_basic",
@@ -675,6 +741,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "benoitc__gunicorn.bacbf8aa.func_basic__01cfz6ly": {
+      "instance_id": "benoitc__gunicorn.bacbf8aa.func_basic__01cfz6ly",
+      "instance_commit": "44c4203f6a628c6a3fbfcc40b818d4d83d12b907",
       "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
       "image_name": "jyangballin/swesmith.x86_64.benoitc_1776_gunicorn.bacbf8aa",
       "generation_method": "func_basic",
@@ -694,6 +762,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "benoitc__gunicorn.bacbf8aa.func_basic__0dozchuh": {
+      "instance_id": "benoitc__gunicorn.bacbf8aa.func_basic__0dozchuh",
+      "instance_commit": "40c21bf86e599cec689954e555a74e57df971f28",
       "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
       "image_name": "jyangballin/swesmith.x86_64.benoitc_1776_gunicorn.bacbf8aa",
       "generation_method": "func_basic",
@@ -713,6 +783,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "benoitc__gunicorn.bacbf8aa.func_basic__0sxs9f9o": {
+      "instance_id": "benoitc__gunicorn.bacbf8aa.func_basic__0sxs9f9o",
+      "instance_commit": "801ee14f7f05a6a952ac786dcf32630378cda6f4",
       "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
       "image_name": "jyangballin/swesmith.x86_64.benoitc_1776_gunicorn.bacbf8aa",
       "generation_method": "func_basic",
@@ -732,6 +804,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "benoitc__gunicorn.bacbf8aa.func_basic__1ngbkdol": {
+      "instance_id": "benoitc__gunicorn.bacbf8aa.func_basic__1ngbkdol",
+      "instance_commit": "099ddc0eb2076617f1ae5a07ae9ddcf22d37fff9",
       "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
       "image_name": "jyangballin/swesmith.x86_64.benoitc_1776_gunicorn.bacbf8aa",
       "generation_method": "func_basic",
@@ -751,6 +825,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "benoitc__gunicorn.bacbf8aa.func_basic__2akacgtq": {
+      "instance_id": "benoitc__gunicorn.bacbf8aa.func_basic__2akacgtq",
+      "instance_commit": "e4e5c97303278a044a6ab31d247273bd3e5e4c92",
       "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
       "image_name": "jyangballin/swesmith.x86_64.benoitc_1776_gunicorn.bacbf8aa",
       "generation_method": "func_basic",
@@ -770,6 +846,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "benoitc__gunicorn.bacbf8aa.func_basic__2md1k5bn": {
+      "instance_id": "benoitc__gunicorn.bacbf8aa.func_basic__2md1k5bn",
+      "instance_commit": "f4247716288658301add467a3a5869e696f361ec",
       "repo": "swesmith/benoitc__gunicorn.bacbf8aa",
       "image_name": "jyangballin/swesmith.x86_64.benoitc_1776_gunicorn.bacbf8aa",
       "generation_method": "func_basic",
@@ -789,6 +867,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "jd__tenacity.0d40e76f.func_basic__101pcgqa": {
+      "instance_id": "jd__tenacity.0d40e76f.func_basic__101pcgqa",
+      "instance_commit": "6cef6914ccbf6c5cab8966f9bbc673bb6a874915",
       "repo": "swesmith/jd__tenacity.0d40e76f",
       "image_name": "jyangballin/swesmith.x86_64.jd_1776_tenacity.0d40e76f",
       "generation_method": "func_basic",
@@ -808,6 +888,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "jd__tenacity.0d40e76f.func_basic__1l3yf5xv": {
+      "instance_id": "jd__tenacity.0d40e76f.func_basic__1l3yf5xv",
+      "instance_commit": "215ccd4da454c6704d98622ac480ef2f45dba280",
       "repo": "swesmith/jd__tenacity.0d40e76f",
       "image_name": "jyangballin/swesmith.x86_64.jd_1776_tenacity.0d40e76f",
       "generation_method": "func_basic",
@@ -827,6 +909,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "jd__tenacity.0d40e76f.func_basic__3k3115n5": {
+      "instance_id": "jd__tenacity.0d40e76f.func_basic__3k3115n5",
+      "instance_commit": "415c2264530c0f93302a2e4d2a7d12d706731977",
       "repo": "swesmith/jd__tenacity.0d40e76f",
       "image_name": "jyangballin/swesmith.x86_64.jd_1776_tenacity.0d40e76f",
       "generation_method": "func_basic",
@@ -846,6 +930,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "dbader__schedule.82a43db1.func_basic__3uvexel4": {
+      "instance_id": "dbader__schedule.82a43db1.func_basic__3uvexel4",
+      "instance_commit": "1fff29a26286356da5e1497c587e187053a58305",
       "repo": "swesmith/dbader__schedule.82a43db1",
       "image_name": "jyangballin/swesmith.x86_64.dbader_1776_schedule.82a43db1",
       "generation_method": "func_basic",
@@ -865,6 +951,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "dbader__schedule.82a43db1.func_basic__4to1fjde": {
+      "instance_id": "dbader__schedule.82a43db1.func_basic__4to1fjde",
+      "instance_commit": "e7cab58202a55847d92741aec69dc3041d407aeb",
       "repo": "swesmith/dbader__schedule.82a43db1",
       "image_name": "jyangballin/swesmith.x86_64.dbader_1776_schedule.82a43db1",
       "generation_method": "func_basic",
@@ -884,6 +972,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "dbader__schedule.82a43db1.func_basic__91tae94o": {
+      "instance_id": "dbader__schedule.82a43db1.func_basic__91tae94o",
+      "instance_commit": "65e98eba3231d9b0558f2059b994b962c5ebb9bc",
       "repo": "swesmith/dbader__schedule.82a43db1",
       "image_name": "jyangballin/swesmith.x86_64.dbader_1776_schedule.82a43db1",
       "generation_method": "func_basic",
@@ -903,6 +993,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "dbader__schedule.82a43db1.func_basic__avciypb3": {
+      "instance_id": "dbader__schedule.82a43db1.func_basic__avciypb3",
+      "instance_commit": "ad1d420d3fbb12f4fc93ba37019be506185780b7",
       "repo": "swesmith/dbader__schedule.82a43db1",
       "image_name": "jyangballin/swesmith.x86_64.dbader_1776_schedule.82a43db1",
       "generation_method": "func_basic",
@@ -922,6 +1014,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "theskumar__python-dotenv.2b8635b7.func_basic__1q1u3iv4": {
+      "instance_id": "theskumar__python-dotenv.2b8635b7.func_basic__1q1u3iv4",
+      "instance_commit": "c54145b65487da854381ed7aa78128595d51dab3",
       "repo": "swesmith/theskumar__python-dotenv.2b8635b7",
       "image_name": "jyangballin/swesmith.x86_64.theskumar_1776_python-dotenv.2b8635b7",
       "generation_method": "func_basic",
@@ -941,6 +1035,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "theskumar__python-dotenv.2b8635b7.func_basic__3att6j7k": {
+      "instance_id": "theskumar__python-dotenv.2b8635b7.func_basic__3att6j7k",
+      "instance_commit": "1fbedbded08bfecdaf5b4e878049e3e79295edb4",
       "repo": "swesmith/theskumar__python-dotenv.2b8635b7",
       "image_name": "jyangballin/swesmith.x86_64.theskumar_1776_python-dotenv.2b8635b7",
       "generation_method": "func_basic",
@@ -960,6 +1056,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python-hyper__h11.bed0dd4a.func_basic__29zrns57": {
+      "instance_id": "python-hyper__h11.bed0dd4a.func_basic__29zrns57",
+      "instance_commit": "871f846f965ece2b6e60b6cd1be394b18e82456c",
       "repo": "swesmith/python-hyper__h11.bed0dd4a",
       "image_name": "jyangballin/swesmith.x86_64.python-hyper_1776_h11.bed0dd4a",
       "generation_method": "func_basic",
@@ -979,6 +1077,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python-hyper__h11.bed0dd4a.func_basic__2r14k6u7": {
+      "instance_id": "python-hyper__h11.bed0dd4a.func_basic__2r14k6u7",
+      "instance_commit": "3b1adb272ca4acf09d698745312d8b045150f39a",
       "repo": "swesmith/python-hyper__h11.bed0dd4a",
       "image_name": "jyangballin/swesmith.x86_64.python-hyper_1776_h11.bed0dd4a",
       "generation_method": "func_basic",
@@ -998,6 +1098,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python-hyper__h11.bed0dd4a.func_basic__3v18db0m": {
+      "instance_id": "python-hyper__h11.bed0dd4a.func_basic__3v18db0m",
+      "instance_commit": "a056ec2745af3a4f9b10300aa2e371907d6c2110",
       "repo": "swesmith/python-hyper__h11.bed0dd4a",
       "image_name": "jyangballin/swesmith.x86_64.python-hyper_1776_h11.bed0dd4a",
       "generation_method": "func_basic",
@@ -1017,6 +1119,8 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python-hyper__h11.bed0dd4a.func_basic__58396e6q": {
+      "instance_id": "python-hyper__h11.bed0dd4a.func_basic__58396e6q",
+      "instance_commit": "47e6d74b3385248f7a568026199e845aa02f8060",
       "repo": "swesmith/python-hyper__h11.bed0dd4a",
       "image_name": "jyangballin/swesmith.x86_64.python-hyper_1776_h11.bed0dd4a",
       "generation_method": "func_basic",
@@ -1038,6 +1142,7 @@
   },
   "gym": {
     "getmoto__moto-5752": {
+      "instance_id": "getmoto__moto-5752",
       "repo": "getmoto/moto",
       "version": "4.0",
       "base_commit": "b2300f1eae1323e3e8bc45f97e530ce129dff12e",
@@ -1063,6 +1168,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "getmoto__moto-5545": {
+      "instance_id": "getmoto__moto-5545",
       "repo": "getmoto/moto",
       "version": "4.0",
       "base_commit": "1a8f93dce33f1c1c7983a8052ef54de30ff64407",
@@ -1088,6 +1194,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "getmoto__moto-7105": {
+      "instance_id": "getmoto__moto-7105",
       "repo": "getmoto/moto",
       "version": "4.2",
       "base_commit": "85156f59396a85e83e83200c9df41b66d6f82b68",
@@ -1113,6 +1220,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "getmoto__moto-6185": {
+      "instance_id": "getmoto__moto-6185",
       "repo": "getmoto/moto",
       "version": "4.1",
       "base_commit": "dc460a325839bc6797084a54afc297a2c9d87e63",
@@ -1138,6 +1246,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "getmoto__moto-6308": {
+      "instance_id": "getmoto__moto-6308",
       "repo": "getmoto/moto",
       "version": "4.1",
       "base_commit": "52846c9555a3077b11a391fbfcd619d0d6e776f6",
@@ -1163,6 +1272,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "getmoto__moto-5794": {
+      "instance_id": "getmoto__moto-5794",
       "repo": "getmoto/moto",
       "version": "4.0",
       "base_commit": "027572177da3e95b8f5b4a3e611fe6a7f969e1b1",
@@ -1188,6 +1298,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "getmoto__moto-5134": {
+      "instance_id": "getmoto__moto-5134",
       "repo": "getmoto/moto",
       "version": "3.1",
       "base_commit": "0e3ac260682f3354912fe552c61d9b3e590903b8",
@@ -1214,6 +1325,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "getmoto__moto-7484": {
+      "instance_id": "getmoto__moto-7484",
       "repo": "getmoto/moto",
       "version": "5.0",
       "base_commit": "ca5d514c61d74b7278ad9c3a035d179f54ed0b92",
@@ -1241,6 +1353,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "getmoto__moto-5960": {
+      "instance_id": "getmoto__moto-5960",
       "repo": "getmoto/moto",
       "version": "4.1",
       "base_commit": "d1e3f50756fdaaea498e8e47d5dcd56686e6ecdf",
@@ -1266,6 +1379,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python__mypy-10392": {
+      "instance_id": "python__mypy-10392",
       "repo": "python/mypy",
       "version": "0.820",
       "base_commit": "322ef60ba7231bbd4f735b273e88e67afb57ad17",
@@ -1293,6 +1407,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python__mypy-10308": {
+      "instance_id": "python__mypy-10308",
       "repo": "python/mypy",
       "version": "0.820",
       "base_commit": "1567e36165b00d532f232cb3d33d1faf04aaf63d",
@@ -1320,6 +1435,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python__mypy-10430": {
+      "instance_id": "python__mypy-10430",
       "repo": "python/mypy",
       "version": "0.820",
       "base_commit": "204c7dada412b0ca4ce22315d2acae640adb128f",
@@ -1347,6 +1463,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "python__mypy-16905": {
+      "instance_id": "python__mypy-16905",
       "repo": "python/mypy",
       "version": "1.10",
       "base_commit": "837f7e0ed4f87869f314ec102c0d6e47ec3272ec",
@@ -1373,6 +1490,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "conan-io__conan-13788": {
+      "instance_id": "conan-io__conan-13788",
       "repo": "conan-io/conan",
       "version": "1.60",
       "base_commit": "c1b3978914dd09e4c07fc8d1e688d5636fda6e79",
@@ -1406,6 +1524,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "conan-io__conan-11560": {
+      "instance_id": "conan-io__conan-11560",
       "repo": "conan-io/conan",
       "version": "1.51",
       "base_commit": "345be91a038e1bda707e07a19889953412d358dc",
@@ -1439,6 +1558,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "conan-io__conan-12397": {
+      "instance_id": "conan-io__conan-12397",
       "repo": "conan-io/conan",
       "version": "1.54",
       "base_commit": "883eff8961d6e0d96652f78e3d7d3884479e769e",
@@ -1472,6 +1592,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "conan-io__conan-13326": {
+      "instance_id": "conan-io__conan-13326",
       "repo": "conan-io/conan",
       "version": "2.0",
       "base_commit": "00700331f59e1e01b53315fec786e7f78d7bced2",
@@ -1505,6 +1626,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "conan-io__conan-13230": {
+      "instance_id": "conan-io__conan-13230",
       "repo": "conan-io/conan",
       "version": "2.0",
       "base_commit": "c2001bad8aa873eaf2c392ab6e3ff8b8bdfec971",
@@ -1538,6 +1660,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "conan-io__conan-11594": {
+      "instance_id": "conan-io__conan-11594",
       "repo": "conan-io/conan",
       "version": "1.51",
       "base_commit": "4ed1bee0fb81b2826208e8c1c824c99fb6d69be8",
@@ -1571,6 +1694,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "conan-io__conan-15422": {
+      "instance_id": "conan-io__conan-15422",
       "repo": "conan-io/conan",
       "version": "2.1",
       "base_commit": "f08b9924712cf0c2f27b93cbb5206d56d0d824d8",
@@ -1604,6 +1728,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "iterative__dvc-4785": {
+      "instance_id": "iterative__dvc-4785",
       "repo": "iterative/dvc",
       "version": "1.9",
       "base_commit": "7da3de451f1580d0c48d7f0a82b1f96ea0e91157",
@@ -1634,6 +1759,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "iterative__dvc-1712": {
+      "instance_id": "iterative__dvc-1712",
       "repo": "iterative/dvc",
       "version": "0.31",
       "base_commit": "5c39c6b8bd01f543a27abe1d3091640d4e844bf8",
@@ -1664,6 +1790,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "iterative__dvc-3527": {
+      "instance_id": "iterative__dvc-3527",
       "repo": "iterative/dvc",
       "version": "0.91",
       "base_commit": "42e3b8aa2577b7633407cdd17763d72ed7dfc18c",
@@ -1694,6 +1821,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "iterative__dvc-3620": {
+      "instance_id": "iterative__dvc-3620",
       "repo": "iterative/dvc",
       "version": "0.92",
       "base_commit": "e05157f8e05e856d2e9966c30a3150c26b32b86f",
@@ -1725,6 +1853,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "dask__dask-6626": {
+      "instance_id": "dask__dask-6626",
       "repo": "dask/dask",
       "version": "2.25",
       "base_commit": "56cd4597630feb1b01501c16d52aa862dd257a83",
@@ -1753,6 +1882,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "dask__dask-6818": {
+      "instance_id": "dask__dask-6818",
       "repo": "dask/dask",
       "version": "2.30",
       "base_commit": "554ca8877d36d30732712698f3135e13edd6654a",
@@ -1781,6 +1911,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "dask__dask-7894": {
+      "instance_id": "dask__dask-7894",
       "repo": "dask/dask",
       "version": "2021.07",
       "base_commit": "bf4bc7dd8dc96021b171e0941abde7a5f60ce89f",
@@ -1809,6 +1940,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "dask__dask-7305": {
+      "instance_id": "dask__dask-7305",
       "repo": "dask/dask",
       "version": "2021.02",
       "base_commit": "8663c6b7813fbdcaaa85d4fdde04ff42b1bb6ed0",
@@ -1837,6 +1969,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "dask__dask-6801": {
+      "instance_id": "dask__dask-6801",
       "repo": "dask/dask",
       "version": "2.30",
       "base_commit": "5589bfddb5982777d29e424fa438f1667a74a60a",
@@ -1865,6 +1998,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "dask__dask-9378": {
+      "instance_id": "dask__dask-9378",
       "repo": "dask/dask",
       "version": "2022.8",
       "base_commit": "8b95f983c232c1bd628e9cba0695d3ef229d290b",
@@ -1893,6 +2027,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "pydantic__pydantic-8500": {
+      "instance_id": "pydantic__pydantic-8500",
       "repo": "pydantic/pydantic",
       "version": "2.6",
       "base_commit": "069d0205424f98912f8b670b1bc5cfc7df37b2f3",
@@ -1927,6 +2062,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "pydantic__pydantic-9066": {
+      "instance_id": "pydantic__pydantic-9066",
       "repo": "pydantic/pydantic",
       "version": "2.7",
       "base_commit": "a3b7214a1d6ac8e32c29e9d4436ea6a9e253ead7",
@@ -1961,6 +2097,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "pydantic__pydantic-8567": {
+      "instance_id": "pydantic__pydantic-8567",
       "repo": "pydantic/pydantic",
       "version": "2.6",
       "base_commit": "8060fa1cff965850e5e08a67ca73d5272dcdcf9f",
@@ -1995,6 +2132,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "pydantic__pydantic-8793": {
+      "instance_id": "pydantic__pydantic-8793",
       "repo": "pydantic/pydantic",
       "version": "2.7",
       "base_commit": "832225b90672c68e2d4067bd0ffecf834d62b48b",
@@ -2029,6 +2167,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "pandas-dev__pandas-48106": {
+      "instance_id": "pandas-dev__pandas-48106",
       "repo": "pandas-dev/pandas",
       "version": "1.5",
       "base_commit": "8b72297c8799725e98cb2c6aee664325b752194f",
@@ -2058,6 +2197,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "pandas-dev__pandas-50319": {
+      "instance_id": "pandas-dev__pandas-50319",
       "repo": "pandas-dev/pandas",
       "version": "2.0",
       "base_commit": "1613f26ff0ec75e30828996fd9ec3f9dd5119ca6",
@@ -2087,6 +2227,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "pandas-dev__pandas-51605": {
+      "instance_id": "pandas-dev__pandas-51605",
       "repo": "pandas-dev/pandas",
       "version": "2.1",
       "base_commit": "b070d87f118709f7493dfd065a17ed506c93b59a",
@@ -2116,6 +2257,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "facebookresearch__hydra-2189": {
+      "instance_id": "facebookresearch__hydra-2189",
       "repo": "facebookresearch/hydra",
       "version": "1.2",
       "base_commit": "277ff54b71e31531923a51459b328391d76bb5b3",
@@ -2144,6 +2286,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "facebookresearch__hydra-1915": {
+      "instance_id": "facebookresearch__hydra-1915",
       "repo": "facebookresearch/hydra",
       "version": "1.2",
       "base_commit": "d674cd2803e561ca25cbd7ced127d69d9f4f633b",
@@ -2173,6 +2316,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "facebookresearch__hydra-1741": {
+      "instance_id": "facebookresearch__hydra-1741",
       "repo": "facebookresearch/hydra",
       "version": "1.1",
       "base_commit": "896be9086ca9b0fc2ad71ce97ab19b71b7c4f264",
@@ -2201,6 +2345,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "Project-MONAI__MONAI-2454": {
+      "instance_id": "Project-MONAI__MONAI-2454",
       "repo": "Project-MONAI/MONAI",
       "version": "0.5",
       "base_commit": "eb29e99299ee2fffd2a204dfd5a1dbabfcc830fe",
@@ -2226,6 +2371,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "Project-MONAI__MONAI-4633": {
+      "instance_id": "Project-MONAI__MONAI-4633",
       "repo": "Project-MONAI/MONAI",
       "version": "0.9",
       "base_commit": "398466c28adda2af25ed931786f22af1ea74483f",
@@ -2251,6 +2397,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "Project-MONAI__MONAI-6975": {
+      "instance_id": "Project-MONAI__MONAI-6975",
       "repo": "Project-MONAI/MONAI",
       "version": "1.2",
       "base_commit": "392c5c1b860c0f0cfd0aa14e9d4b342c8b5ef5e7",
@@ -2277,6 +2424,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "Project-MONAI__MONAI-4583": {
+      "instance_id": "Project-MONAI__MONAI-4583",
       "repo": "Project-MONAI/MONAI",
       "version": "0.9",
       "base_commit": "9c4710199b80178ad11f7dd74925eee3ae921863",
@@ -2302,6 +2450,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "modin-project__modin-6608": {
+      "instance_id": "modin-project__modin-6608",
       "repo": "modin-project/modin",
       "version": "0.24",
       "base_commit": "22ce95e78b4db2f21d5940cbd8ee656e7e565d15",
@@ -2331,6 +2480,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "modin-project__modin-5940": {
+      "instance_id": "modin-project__modin-5940",
       "repo": "modin-project/modin",
       "version": "0.23",
       "base_commit": "e1d42410c3900f93be420303e745de29c1e6bda1",
@@ -2360,6 +2510,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "modin-project__modin-6854": {
+      "instance_id": "modin-project__modin-6854",
       "repo": "modin-project/modin",
       "version": "0.26",
       "base_commit": "45ad9deced24fa0e5c8e119b15fcec8bb95dbd8d",
@@ -2389,6 +2540,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "modin-project__modin-6937": {
+      "instance_id": "modin-project__modin-6937",
       "repo": "modin-project/modin",
       "version": "0.27",
       "base_commit": "d54dcfd8e4cceecdbf818a48bbc712854dda906e",
@@ -2418,6 +2570,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "modin-project__modin-6400": {
+      "instance_id": "modin-project__modin-6400",
       "repo": "modin-project/modin",
       "version": "0.23",
       "base_commit": "2a6aafed41f7758d75dab88517c76b5cdb1905fc",
@@ -2447,6 +2600,7 @@
       "image_metadata_path": "data/m1/v2/research/swe-image-metadata.json"
     },
     "modin-project__modin-6298": {
+      "instance_id": "modin-project__modin-6298",
       "repo": "modin-project/modin",
       "version": "0.23",
       "base_commit": "5cd15a51b00a6338783454c5ddb77da25422f7db",

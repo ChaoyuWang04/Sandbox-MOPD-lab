@@ -59,6 +59,10 @@ class StandaloneProfilesTests(unittest.TestCase):
         for kind, count in (("smith", 52), ("gym", 50)):
             self.assertEqual(len(config[kind]), count)
             self.assertEqual(sorted(config[kind]), expected["instance_ids"][kind])
+            for identity, profile in config[kind].items():
+                self.assertEqual(profile["instance_id"], identity)
+                if kind == "smith":
+                    self.assertRegex(profile["instance_commit"], r"^[0-9a-f]{40}$")
             for instance_id, values in expected["representatives"][kind].items():
                 for key, value in values.items():
                     self.assertEqual(config[kind][instance_id][key], value, (instance_id, key))

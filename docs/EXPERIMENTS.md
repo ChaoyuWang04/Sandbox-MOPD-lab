@@ -16,11 +16,13 @@ SWE-Gym已从Lite230扩展调查完整2438题，冻结原始记录支持A20/B20/
 
 后续App `ap-EcF3cSGivqD61WaxzrT8mD`（源码`f37929b`）通过下载复验、Harbor选定子集解包及离线wheel安装，终态在catalog失败，App已停止、tasks=0。只读逐行诊断确定首个问题是Smith首分片第3行`oauthlib__oauthlib.1fd52536.combine_file__0fukhdzk`的`problem_statement`为空（patch11399字符、FTP37/PTP636）；不是下载失败或磁盘不足证据。修复方向为原始行完整保留、无效行单独审计并排除候选，不放宽题面完整性要求；校验和、重复身份及输出量边界仍是硬错误。
 
-修复`a567031`经两级审阅、全套146项测试通过（21.380秒）。真实App `ap-yzPJEsSEAIlMUFOQZxwm94`返回`phase=complete`：61804原始行（Smith59136、Gym2438、Lite230），accepted43771/rejected18033，输出5493296691字节。所有原始行保留；此为来源格式有效性，不是逐题可运行验收。Volume路径`data/m1/v2/catalog-77d2debc41878734/`，index SHA256 `7a71a8de06412a565093295b35a273b8ba4d96386ba500b6691fa1c29f5688cb`，rejected SHA256 `85ed9ea9926272bdd491f3307e7e61baadfddc62cabbbd9b53eab7cc81157ec3`；其余原始JSONL哈希在`artifacts/m1/v2/modal-catalog-77d2debc41878734.json`。不能从第3行的原因推断全部18033行都是空题面，原因分布待读取拒绝索引。
+修复`a567031`经两级审阅、全套146项测试通过（21.380秒）。真实App `ap-yzPJEsSEAIlMUFOQZxwm94`返回`phase=complete`：61804原始行（Smith59136、Gym2438、Lite230），accepted43771/rejected18033，输出5493296691字节。所有原始行保留；此为来源格式有效性，不是逐题可运行验收。Volume路径`data/m1/v2/catalog-77d2debc41878734/`，index SHA256 `7a71a8de06412a565093295b35a273b8ba4d96386ba500b6691fa1c29f5688cb`，rejected SHA256 `85ed9ea9926272bdd491f3307e7e61baadfddc62cabbbd9b53eab7cc81157ec3`；其余原始JSONL哈希在`artifacts/m1/v2/modal-catalog-77d2debc41878734.json`。后续完整读取rejected索引确认18033行均为`invalid_problem_statement`，不是仅据首个失败行推断。
 
 冻结数据复核已选Smith52（A26/B26）及Gym50；加self48/TB50构成200内容候选。按原子替换4题划dev、其他新增self题train，来源配额和80/20/100切分核对通过；Smith仓库跨桶不重叠且与Gym仓库不重叠。Gym直接patch路径/作用域审计保留历史移动别名未穷尽的限制，最终清单尚未冻结。SWE63个不同镜像的Docker Hub元数据均返回Linux/amd64与摘要，最大压缩体积8183947224字节，存在性不等于启动通过。官方执行配置在`configs/m1-swe-profiles-v2.json`，6项本地测试与规格/质量审阅通过；沙箱API凭据只读验证成功、列表为空，组织管理接口401不当成key失效。没有创建或删除新的任务沙箱。
 
 SWE许可证审计补齐63/63不同源码版本主许可证全文及Trio两份引用条款，无剩余下载缺口；主任务逐项复验63份正文SHA。审阅产物`data/m1/v2/research/swe-licenses-complete.json` SHA256 `0272886e941444a6bcdb5ca6227935d3d339deb62514f5b3fa468ed4d4754152`，每项保留精确commit/URL/全文和识别依据，尚待随正式任务包归档。Gym harness来源仓库标签已纠正为SWE-Bench-Fork，数据来源及任务身份未变。
+
+固定TB2归档根目录仅有README和.gitignore，没有LICENSE；README提供官方Harbor下载/运行指引，但未声明再分发许可。保持原始题目资产在ignored数据目录/私有实验存储，仅提交来源URL、身份和结果元数据；不冒用Harbor工具许可证，不把本轮内部benchmark准备当成获准公开再分发。SWE构造/真实pytest小夹具已完成，最新代码测试及102条源数据加载证据见[扩池计划](plans/2026-09-08-m1-200-case-plan.md)，仍无200题云运行结论。
 
 以下保留旧32题实施与失败证据。
 
