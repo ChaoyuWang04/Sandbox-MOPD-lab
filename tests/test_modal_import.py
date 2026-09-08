@@ -83,7 +83,8 @@ class ModalImportTests(unittest.TestCase):
         function = next(n for n in calls if n.func.attr == 'function')
         values = {kw.arg: ast.literal_eval(kw.value) for kw in function.keywords
                   if kw.arg not in {'image', 'volumes'}}
-        self.assertEqual(values, dict(cpu=(1, 1), memory=(1024, 2048), ephemeral_disk=2048,
+        self.assertNotIn('ephemeral_disk', values)
+        self.assertEqual(values, dict(cpu=(1, 1), memory=(1024, 2048),
                          max_containers=1, retries=0, timeout=1200, startup_timeout=600))
         mounts = [ast.literal_eval(n.args[1]) for n in calls
                   if n.func.attr in {'add_local_dir', 'add_local_file'}]

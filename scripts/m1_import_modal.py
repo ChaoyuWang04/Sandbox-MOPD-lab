@@ -13,7 +13,7 @@ image = (modal.Image.debian_slim(python_version='3.12')
          .add_local_file(REPO / 'environments/home5090/uv.lock', '/root/environments/home5090/uv.lock'))
 
 
-@app.function(image=image, cpu=(1, 1), memory=(1024, 2048), ephemeral_disk=2048,
+@app.function(image=image, cpu=(1, 1), memory=(1024, 2048),
               max_containers=1, retries=0, timeout=1200, startup_timeout=600,
               volumes={'/vol': volume})
 def import_catalog():
