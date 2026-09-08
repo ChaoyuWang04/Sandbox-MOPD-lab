@@ -23,16 +23,18 @@ def peak_rss_bytes(value, platform):
 
 def validate_config(cfg):
     # This fixed first-six authorization is deliberately not a general scheduler.
-    expected = dict(campaign='m1-v2-first-six-r2', task_ids=['data_csv-train-00',
+    expected = dict(campaign='m1-v2-swe-four-r3', task_ids=[
         'andialbrecht__sqlparse.e57923b3.func_basic__0mum3b07', 'getmoto__moto-5752'],
-        agents=['nop', 'oracle'], max_attempts=6, concurrency=1, cpus=4,
+        agents=['nop', 'oracle'], max_attempts=4, concurrency=1, cpus=4,
         memory_mb=8192, storage_mb=10240, gpus=0, trial_seconds=3600,
         ttl_minutes=60, controller_seconds=3900, reserve_usd=8, import_reserve_usd=2)
-    expected.update(max_cumulative_attempts=7, predecessor=dict(campaign='m1-v2-first-six',
-        attempts_consumed=1, ledger_path='artifacts/m1/v2/controls/campaign.json',
-        ledger_sha256='d3dbdca04b0ccdcf3db10e6f2cebf56677793dc2052bf1ad012f77d0a632e53a',
-        cleanup_path='artifacts/m1/v2/controls/attempt-00/independent-cleanup-check.json',
-        cleanup_sha256='95a815524f4d89fdc80053890c893dcc476d87f7b3723795fbb94dd5c0f0f3e6'))
+    expected.update(manifest='configs/m1-pool-v2-r2.json',
+        manifest_sha256='c98a74d88d3641a02c8e9ce40505f9e4f1b26f17042aae43cab801367c600f5b',
+        max_cumulative_attempts=8, predecessor=dict(campaign='m1-v2-first-six-r2',
+        attempts_consumed=4, ledger_path='artifacts/m1/v2/controls/m1-v2-first-six-r2/campaign.json',
+        ledger_sha256='7ae7d7680e88c98a737b921bb6e3b7199fbc053e3a7e34d3d5dfacef65e54bbb',
+        cleanup_path='artifacts/m1/v2/controls/m1-v2-first-six-r2/independent-cleanup-check.json',
+        cleanup_sha256='5611e93cb4dfc17e4a18ccdd33ca34f39d8938d2df22f4938414c481bc7d14b8'))
     if cfg != expected or any(type(cfg[k]) is not type(v) for k, v in expected.items()):
         raise ValueError('unregistered first-six configuration')
 
@@ -49,16 +51,39 @@ def source_identity(source):
     source = Path(source)
     paths = list((source/'lab_runtime').glob('*.py'))
     paths += [source/p for p in ('scripts/m1_controls.py', 'configs/m1-controls-v2.json',
-        'configs/m1-pool-v2.json', 'configs/m1-swe-profiles-v2.json', 'uv.lock', 'pyproject.toml')]
+        'configs/m1-pool-v2.json', 'configs/m1-pool-v2-r2.json', 'configs/m1-swe-profiles-v2.json', 'uv.lock', 'pyproject.toml')]
     return {p.relative_to(source).as_posix(): digest(p) for p in sorted(paths)}
 
 
-def admit(ledger, index):
+def admit(ledger, index, cfg):
     attempts = ledger['attempts']
-    if type(index) is not int or index != len(attempts) or not 0 <= index < 6:
+    if (type(index) is not int or index != len(attempts) or not 0 <= index < cfg['max_attempts']
+            or cfg['predecessor']['attempts_consumed']+index+1 > cfg['max_cumulative_attempts']):
         raise ValueError('only the next unattempted control may run')
     if any(a['state'] != 'passed' for a in attempts):
         raise ValueError('previous attempt requires diagnosis; no retry or new creation')
+
+
+def validate_carried_self(prior, old, new):
+    for i, agent in enumerate(('nop', 'oracle')):
+        rows = prior.get('attempts', [])
+        if len(rows) <= i:
+            raise ValueError('missing prior self controls')
+        row = rows[i]
+        if (row.get('task_id') != 'data_csv-train-00' or row.get('agent') != agent
+                or row.get('state') != 'passed' or row.get('reward') != i
+                or row.get('cleanup_empty') is not True or row.get('create_uncertain') is not False
+                or row.get('exception_type') is not None):
+            raise ValueError('prior self control not accepted')
+    before = {r['id']: r['task_files_sha256'] for r in old['records'] if r['source'] == 'self'}
+    after = {r['id']: r['task_files_sha256'] for r in new['records'] if r['source'] == 'self'}
+    if not before or before != after:
+        raise ValueError('carried self task bytes changed')
+
+
+def compact_result(record):
+    return {key: record.get(key) for key in ('task_id', 'agent', 'state', 'reward',
+        'exception_type', 'phase', 'cleanup_empty', 'create_uncertain', 'controller_peak_rss_bytes')}
 
 
 def make_trial_config(task, run, agent, labels):
@@ -160,16 +185,32 @@ async def _execute(root, source, commit, index, *, work_deadline, deadline,
     from .swe_hooks import attach_swe_hooks
     source, root = Path(source).resolve(), Path(root).resolve()
     config_path = source/'configs/m1-controls-v2.json'
-    manifest_path = source/'configs/m1-pool-v2.json'
     cfg = json.loads(config_path.read_text())
     validate_config(cfg)
+    manifest_path = source/cfg['manifest']
+    if digest(manifest_path) != cfg['manifest_sha256']:
+        raise ValueError('registered manifest changed')
     verify_predecessor(root, cfg)
+    prior = json.loads((root/cfg['predecessor']['ledger_path']).read_text())
+    old_manifest = source/'configs/m1-pool-v2.json'
+    if prior['identity']['configs/m1-pool-v2.json'] != digest(old_manifest):
+        raise ValueError('predecessor manifest changed')
+    current = json.loads(manifest_path.read_text())
+    validate_carried_self(prior, json.loads(old_manifest.read_text()), current)
+    for self_row in (r for r in current['records'] if r['source'] == 'self'):
+        self_task = source/self_row['task_path']
+        if (any(p.is_symlink() for p in self_task.rglob('*')) or
+                {p.relative_to(self_task).as_posix(): digest(p) for p in self_task.rglob('*') if p.is_file()}
+                != self_row['task_files_sha256']):
+            raise ValueError('current carried self files changed')
     identity = source_identity(source)
     ledger_path = root/'artifacts/m1/v2/controls'/cfg['campaign']/'campaign.json'
     ledger = json.loads(ledger_path.read_text()) if ledger_path.exists() else dict(identity=identity, attempts=[], predecessor=cfg['predecessor'])
+    ledger['carried_self_controls'] = {'predecessor_indices': [0, 1],
+        'task_id': 'data_csv-train-00', 'all_self_files_identical': True}
     if ledger['identity'] != identity:
         raise ValueError('campaign identity changed')
-    admit(ledger, index)
+    admit(ledger, index, cfg)
     task_id, agent = cfg['task_ids'][index//2], cfg['agents'][index%2]
     rows = [r for r in json.loads(manifest_path.read_text())['records'] if r['id'] == task_id]
     if len(rows) != 1:

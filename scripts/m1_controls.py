@@ -37,7 +37,7 @@ def main():
     parser.add_argument('--action', choices=('status', 'trial'), default='status')
     parser.add_argument('--trial-index', type=int)
     args = parser.parse_args()
-    from lab_runtime.controls_v2 import execute, validate_config
+    from lab_runtime.controls_v2 import execute, validate_config, compact_result
     from lab_runtime.m1_run import provider_credentials
     cfg = json.loads((SOURCE/'configs/m1-controls-v2.json').read_text())
     validate_config(cfg)
@@ -47,7 +47,8 @@ def main():
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         ledger = base/'campaign.json'
         if args.action == 'status':
-            print(ledger.read_text() if ledger.exists() else '{"attempts": []}')
+            saved = json.loads(ledger.read_text()) if ledger.exists() else {'attempts': []}
+            print(json.dumps({'campaign': cfg['campaign'], 'attempts': [compact_result(r) for r in saved['attempts']]}))
             return
         if args.trial_index is None:
             parser.error('--trial-index required for trial')
@@ -69,7 +70,7 @@ def main():
             raise ValueError('provider key missing')
         with provider_credentials(values):
             result = run_foreground(execute(SOURCE, SOURCE, lambda: None, args.trial_index), cfg['controller_seconds'])
-        print(json.dumps(result, sort_keys=True))
+        print(json.dumps(compact_result(result), sort_keys=True))
         if result['state'] != 'passed':
             raise SystemExit(1)
 

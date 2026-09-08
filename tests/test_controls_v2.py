@@ -8,7 +8,37 @@ from unittest.mock import patch
 from lab_runtime.controls_v2 import admit, make_trial_config, valid_result
 
 
+def prepared_root(temp):
+    """Copy immutable real predecessor fixtures; exercise the actual hash guard."""
+    source = Path(__file__).resolve().parents[1]
+    cfg = json.loads((source/'configs/m1-controls-v2.json').read_text())
+    for key in ('ledger_path', 'cleanup_path'):
+        relative = cfg['predecessor'][key]
+        target = Path(temp)/relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((source/relative).read_bytes())
+    return temp
+
+
 class ControlsTests(unittest.TestCase):
+    def test_compact_result_omits_node_maps(self):
+        from lab_runtime.controls_v2 import compact_result
+        result = compact_result({'state': 'passed', 'reward': 1, 'grading': {'nodes': ['large']}})
+        self.assertEqual(result['state'], 'passed')
+        self.assertNotIn('grading', result)
+
+    def test_carried_self_requires_passes_and_identical_bytes(self):
+        from lab_runtime.controls_v2 import validate_carried_self
+        rows = [{'id': 'data_csv-train-00', 'source': 'self', 'task_files_sha256': {'task.toml': 'abc'}}]
+        prior = {'attempts': [{'task_id': 'data_csv-train-00', 'agent': a, 'state': 'passed',
+                  'reward': i, 'cleanup_empty': True, 'create_uncertain': False,
+                  'exception_type': None} for i, a in enumerate(('nop', 'oracle'))]}
+        validate_carried_self(prior, {'records': rows}, {'records': rows})
+        with self.assertRaises(ValueError):
+            validate_carried_self(prior, {'records': rows}, {'records': []})
+        prior['attempts'][1]['cleanup_empty'] = False
+        with self.assertRaises(ValueError):
+            validate_carried_self(prior, {'records': rows}, {'records': rows})
     def test_predecessor_bytes_required(self):
         from lab_runtime.controls_v2 import verify_predecessor, digest
         with tempfile.TemporaryDirectory() as temp:
@@ -46,14 +76,15 @@ class ControlsTests(unittest.TestCase):
             self.assertIn(path, identity)
 
     def test_admission_serial_and_no_retry(self):
-        admit({'attempts': []}, 0)
+        cfg = json.loads((Path(__file__).resolve().parents[1]/'configs/m1-controls-v2.json').read_text())
+        admit({'attempts': []}, 0, cfg)
         for state in ('active', 'failed', 'uncertain'):
             with self.assertRaises(ValueError):
-                admit({'attempts': [{'state': state}]}, 1)
+                admit({'attempts': [{'state': state}]}, 1, cfg)
         with self.assertRaises(ValueError):
-            admit({'attempts': []}, 1)
+            admit({'attempts': []}, 1, cfg)
         with self.assertRaises(ValueError):
-            admit({'attempts': [{'state': 'passed'}]*6}, 6)
+            admit({'attempts': [{'state': 'passed'}]*4}, 4, cfg)
 
     def test_real_harbor_config(self):
         from pathlib import Path
@@ -128,11 +159,11 @@ class CleanupPollingTests(unittest.IsolatedAsyncioTestCase):
 class LifecycleTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         source = Path(__file__).resolve().parents[1]
-        if not (source/'data/m1/v2/tasks/data_csv-train-00/task.toml').is_file():
+        if not (source/'data/m1/v2/tasks-r2/data_csv-train-00/task.toml').is_file():
             self.skipTest('ignored unified200 generated task assets unavailable')
-        mock = patch('lab_runtime.controls_v2.verify_predecessor')
-        mock.start()
-        self.addCleanup(mock.stop)
+        cfg = json.loads((source/'configs/m1-controls-v2.json').read_text())
+        if any(not (source/cfg['predecessor'][k]).is_file() for k in ('ledger_path', 'cleanup_path')):
+            self.skipTest('ignored immutable predecessor evidence unavailable')
 
     async def test_predecessor_live_object_blocks_new_creation(self):
         from lab_runtime.controls_v2 import execute
@@ -140,13 +171,13 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         class Client:
             def list(self, query, **kwargs):
                 async def values():
-                    if query.labels['m1_v2_run'] == 'm1-v2-first-six':
+                    if query.labels['m1_v2_run'] == 'm1-v2-first-six-r2':
                         yield SimpleNamespace(id='old-object')
                 return values()
         async def factory(config):
             self.fail('new trial created with predecessor object present')
         with tempfile.TemporaryDirectory() as temp:
-            result = await execute(temp, source, lambda: None, 0, client=Client(), trial_factory=factory)
+            result = await execute(prepared_root(temp), source, lambda: None, 0, client=Client(), trial_factory=factory)
             self.assertEqual(result['exception_type'], 'RuntimeError')
             self.assertEqual(result['state'], 'failed')
             self.assertTrue(result['cleanup_empty'])
@@ -158,7 +189,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         async def stuck():
             await asyncio.sleep(30)
         with tempfile.TemporaryDirectory() as temp, patch.object(DaytonaClientManager, 'get_instance', side_effect=stuck):
-            result = await _execute(temp, source, lambda: None, 0,
+            result = await _execute(prepared_root(temp), source, lambda: None, 0,
                 work_deadline=asyncio.get_running_loop().time()+0.03,
                 deadline=asyncio.get_running_loop().time()+1)
             self.assertEqual(result['exception_type'], 'TimeoutError')
@@ -184,7 +215,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         async def get_instance():
             return manager
         with tempfile.TemporaryDirectory() as temp, patch.object(DaytonaClientManager, 'get_instance', side_effect=get_instance):
-            result = await execute(temp, source, lambda: None, 0)
+            result = await execute(prepared_root(temp), source, lambda: None, 0)
             self.assertTrue(result['sdk_closed'])
             self.assertTrue(client.closed)
             self.assertIsNone(manager._client)
@@ -218,15 +249,21 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
                     await hook(None)
                 output = self.config.trials_dir/'control/verifier'
                 output.mkdir(parents=True)
-                (output/'result.json').write_text(json.dumps({'passed': False, 'detail': 'missing_or_invalid_answer_or_input'}))
+                (output/'run.json').write_text(json.dumps({'protocol_complete': True, 'reward': 0,
+                    'runtime_errors': [], 'owned_process_group_stopped': True}))
                 return SimpleNamespace(exception_info=None, verifier_result=SimpleNamespace(rewards={'reward': 0}))
         async def factory(config):
             return Trial(config)
-        with tempfile.TemporaryDirectory() as temp:
-            result = await execute(temp, source, lambda: None, 0, trial_factory=factory, client=Client())
+        from lab_runtime.controls_v2 import attach_absence
+        def mocked_workspace(trial, private, source, profile, gold_paths, agent):
+            return attach_absence(trial, agent)
+        # Workspace shell execution is independently tested in swe_hooks; this fake
+        # trial exercises controller grading/cleanup/admission with its real hooks.
+        with tempfile.TemporaryDirectory() as temp, patch('lab_runtime.swe_hooks.attach_swe_hooks', side_effect=mocked_workspace):
+            result = await execute(prepared_root(temp), source, lambda: None, 0, trial_factory=factory, client=Client())
             self.assertEqual(result['state'], 'passed')
-            ledger = json.loads((Path(temp)/'artifacts/m1/v2/controls/m1-v2-first-six-r2/campaign.json').read_text())
-            admit(ledger, 1)
+            ledger = json.loads((Path(temp)/'artifacts/m1/v2/controls/m1-v2-swe-four-r3/campaign.json').read_text())
+            admit(ledger, 1, json.loads((source/'configs/m1-controls-v2.json').read_text()))
 
     async def test_unknown_create_and_cleanup_failure_block_next_attempt(self):
         from lab_runtime.controls_v2 import execute
@@ -250,8 +287,8 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(json.loads(ledger.read_text())['attempts'][0]['state'], 'active')
             return Trial()
         with tempfile.TemporaryDirectory() as temp:
-            ledger = Path(temp)/'artifacts/m1/v2/controls/m1-v2-first-six-r2/campaign.json'
-            result = await execute(temp, source, lambda: None, 0, trial_factory=factory, client=Client())
+            ledger = Path(temp)/'artifacts/m1/v2/controls/m1-v2-swe-four-r3/campaign.json'
+            result = await execute(prepared_root(temp), source, lambda: None, 0, trial_factory=factory, client=Client())
             self.assertEqual(result['state'], 'uncertain')
             self.assertTrue(result['cleanup_empty'])
             with self.assertRaises(ValueError):
@@ -279,7 +316,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
                     yield
                 return values()
         with tempfile.TemporaryDirectory() as temp:
-            result = await execute(temp, source, lambda: None, 0, client=Client())
+            result = await execute(prepared_root(temp), source, lambda: None, 0, client=Client())
             self.assertEqual(result['state'], 'uncertain')
             self.assertEqual(result['cleanup_error_type'], 'ConnectionError')
 
@@ -297,7 +334,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
             daytona_v2.EVENT_SINK({'status': 'uncertain', 'sandbox_id': None})
             raise TimeoutError()
         with tempfile.TemporaryDirectory() as temp:
-            result = await execute(temp, source, lambda: None, 0, client=Client(), trial_factory=factory)
+            result = await execute(prepared_root(temp), source, lambda: None, 0, client=Client(), trial_factory=factory)
             self.assertTrue(result['create_uncertain'])
             self.assertEqual(result['state'], 'uncertain')
 
