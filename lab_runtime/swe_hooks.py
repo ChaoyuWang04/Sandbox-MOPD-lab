@@ -14,8 +14,8 @@ def attach_swe_hooks(trial, private_output_dir, source, profile, gold_patch_path
                      agent_name, hook_timeout=120, *, workspace_root='/testbed',
                      disposable=True):
     from harbor.trial.hooks import TrialEvent
-    if agent_name not in ('nop', 'oracle'):
-        raise ValueError('only trusted nop/oracle supported')
+    if agent_name not in ('nop', 'oracle', 'm1'):
+        raise ValueError('unsupported agent for the private SWE boundary')
     if source not in ('smith', 'gym') or hook_timeout <= 0:
         raise ValueError('invalid hook configuration')
     expected = profile['instance_commit' if source == 'smith' else 'base_commit']

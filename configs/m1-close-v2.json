@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "campaign": "m1-close-v2",
+  "manifest": "configs/m1-pool-v2-r2.json",
+  "manifest_sha256": "c98a74d88d3641a02c8e9ce40505f9e4f1b26f17042aae43cab801367c600f5b",
+  "model": {
+    "id": "Qwen/Qwen3-4B",
+    "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+    "max_model_len": 16384,
+    "max_output_tokens": 4096,
+    "max_turns": 10
+  },
+  "phases": {
+    "tb-controls": {
+      "task_id": "regex-log",
+      "agents": ["nop", "oracle"]
+    },
+    "train-screen": {
+      "candidate_task_ids": [
+        "fs_logs-train-00",
+        "data_csv-train-00",
+        "data_json-train-00",
+        "fs_logs-train-01",
+        "data_csv-train-01",
+        "data_json-train-01",
+        "fs_logs-train-02",
+        "data_csv-train-02",
+        "data_json-train-02",
+        "fs_logs-train-03",
+        "fs_inventory-train-00",
+        "self-v2-config_precedence-00",
+        "self-v2-resource_lifetime-00",
+        "self-v2-async_dependencies-00",
+        "fs_inventory-train-01",
+        "self-v2-config_precedence-01",
+        "self-v2-resource_lifetime-01",
+        "self-v2-async_dependencies-01",
+        "fs_inventory-train-02",
+        "fs_inventory-train-03"
+      ],
+      "group_size": 4,
+      "temperature": 1.0,
+      "top_p": 1.0,
+      "seed": 930001,
+      "select_per_skill": {"A": 8, "B": 8}
+    },
+    "dev-baseline": {
+      "task_ids": [
+        "self-v2-atomic_replace-00",
+        "self-v2-atomic_replace-01",
+        "self-v2-atomic_replace-02",
+        "self-v2-atomic_replace-03",
+        "mahmoud__boltons.3bfcfdd0.func_basic__2bbqxvei",
+        "mahmoud__boltons.3bfcfdd0.func_basic__5vq1fa1x",
+        "mahmoud__boltons.3bfcfdd0.func_basic__obaisyei",
+        "hukkin__tomli.443a0c1b.func_basic__0grznk3s",
+        "hukkin__tomli.443a0c1b.func_basic__0z3cfhsu",
+        "hukkin__tomli.443a0c1b.func_basic__1z83hnoa",
+        "jd__tenacity.0d40e76f.func_basic__101pcgqa",
+        "jd__tenacity.0d40e76f.func_basic__1l3yf5xv",
+        "jd__tenacity.0d40e76f.func_basic__3k3115n5",
+        "pydantic__pydantic-8500",
+        "pydantic__pydantic-9066",
+        "pydantic__pydantic-8567",
+        "pydantic__pydantic-8793",
+        "facebookresearch__hydra-2189",
+        "facebookresearch__hydra-1915",
+        "facebookresearch__hydra-1741"
+      ],
+      "repetitions": 1,
+      "temperature": 0.6,
+      "top_p": 1.0,
+      "seed": 940001
+    }
+  },
+  "resource_profiles": {
+    "self": {"cpus": 1, "memory_mb": 1024, "storage_mb": 3072, "network": false,
+             "ttl_seconds": 300, "trial_seconds": 360},
+    "swe": {"cpus": 4, "memory_mb": 8192, "storage_mb": 10240, "network": true,
+            "ttl_seconds": 3600, "trial_seconds": 3600},
+    "terminal-bench": {"cpus": 1, "memory_mb": 2048, "storage_mb": 10240,
+                       "network": true, "ttl_seconds": 3600, "trial_seconds": 1800}
+  },
+  "limits": {
+    "daytona_concurrency": 1,
+    "max_total_creates": 102,
+    "max_consecutive_invalid": 3,
+    "max_wall_seconds": 21600,
+    "daytona_reserve_usd": 15.0
+  }
+}

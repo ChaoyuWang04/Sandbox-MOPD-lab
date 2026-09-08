@@ -157,7 +157,7 @@ def attach_absence(trial, agent):
     async def check(event):
         phase = evidence['phase']
         command = 'test ! -e /tests && test ! -L /tests'
-        if phase == 'registered' or agent == 'nop':
+        if phase == 'registered' or agent != 'oracle':
             command += ' && test ! -e /solution && test ! -L /solution'
         result = await trial.agent_environment.exec(command=command, timeout_sec=30)
         if result.return_code != 0:

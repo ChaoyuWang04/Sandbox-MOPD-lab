@@ -1,6 +1,7 @@
 import importlib.util
 import unittest
 import hashlib
+import copy
 from pathlib import Path
 from lab_runtime.home5090 import SETTINGS
 
@@ -109,3 +110,100 @@ class M1ReportTest(unittest.TestCase):
             summaries[-1][field] = value
             with self.assertRaisesRegex(ValueError, 'identity'):
                 m.audit(manifest, summaries, 'pool')
+
+
+class M1CloseV2Test(unittest.TestCase):
+    def manifest(self):
+        records = []
+        for skill in ('A', 'B'):
+            for index in range(10):
+                task_id = f'{skill.lower()}-{index:02d}'
+                records.append({'id': task_id, 'split': 'train', 'source': 'self',
+                    'primary_skill': skill, 'task_files_sha256': {'instruction.md': f'{index:064x}'}})
+        records.extend([
+            {'id': 'dev-a', 'split': 'dev', 'source': 'self', 'primary_skill': 'A',
+             'task_files_sha256': {'instruction.md': 'a' * 64}},
+            {'id': 'final-a', 'split': 'final', 'source': 'terminal-bench', 'primary_skill': 'A',
+             'task_files_sha256': {'instruction.md': 'b' * 64}},
+        ])
+        return {'records': records}
+
+    def config(self):
+        return {'schema_version': 1, 'candidate_task_ids':
+            [f'{skill}-{index:02d}' for skill in ('a', 'b') for index in range(10)],
+            'group_size': 4, 'temperature': 1.0, 'top_p': 1.0, 'seed': 930000,
+            'select_per_skill': {'A': 8, 'B': 8}}
+
+    def screen(self):
+        manifest = {row['id']: row for row in self.manifest()['records']}
+        records = []
+        for candidate_index, task_id in enumerate(self.config()['candidate_task_ids']):
+            for repetition_id, value in enumerate((0, 1, 0, 1)):
+                records.append({'task_id': task_id, 'group_id': f'm1-close/{task_id}',
+                    'repetition_id': repetition_id,
+                    'seed': 930000 + candidate_index * 4 + repetition_id,
+                    'temperature': 1.0, 'top_p': 1.0, 'reward': value,
+                    'invalid_reason': None,
+                    'task_files_sha256': manifest[task_id]['task_files_sha256']})
+        return records
+
+    def test_selects_first_eight_mixed_train_tasks_per_skill(self):
+        from lab_runtime import m1_report
+        result = m1_report.select_overfit16_v2(self.manifest(), self.screen(), self.config())
+        self.assertEqual(result['overfit_16'],
+            [f'a-{i:02d}' for i in range(8)] + [f'b-{i:02d}' for i in range(8)])
+        self.assertEqual(result['mixed_group_count'], 20)
+        self.assertEqual(result['invalid_attempts'], 0)
+
+    def test_zero_variance_and_invalid_groups_do_not_fake_eligibility(self):
+        from lab_runtime import m1_report
+        records = self.screen()
+        for record in records:
+            if record['task_id'] == 'a-00':
+                record['reward'] = 0
+            if record['task_id'] == 'b-00' and record['repetition_id'] > 0:
+                record.update(reward=None, invalid_reason='sandbox_timeout')
+        result = m1_report.select_overfit16_v2(self.manifest(), records, self.config())
+        self.assertNotIn('a-00', result['overfit_16'])
+        self.assertNotIn('b-00', result['overfit_16'])
+        self.assertEqual(result['invalid_attempts'], 3)
+
+    def test_split_hash_sampling_and_attempt_set_fail_closed(self):
+        from lab_runtime import m1_report
+        mutations = []
+        cfg = self.config()
+        bad_split = copy.deepcopy(cfg)
+        bad_split['candidate_task_ids'][0] = 'dev-a'
+        mutations.append((self.screen(), bad_split))
+        bad_final = copy.deepcopy(cfg)
+        bad_final['candidate_task_ids'][0] = 'final-a'
+        mutations.append((self.screen(), bad_final))
+        for key, value in (('task_files_sha256', {}), ('temperature', 0.6), ('seed', 1)):
+            records = self.screen()
+            records[0][key] = value
+            mutations.append((records, cfg))
+        records = self.screen()
+        records.append(copy.deepcopy(records[0]))
+        mutations.append((records, cfg))
+        records = self.screen()[1:]
+        mutations.append((records, cfg))
+        for records, config in mutations:
+            with self.subTest(config=config), self.assertRaises(ValueError):
+                m1_report.select_overfit16_v2(self.manifest(), records, config)
+
+    def test_terminal_bench_control_requires_both_poles_and_lifecycle(self):
+        from lab_runtime import m1_report
+        manifest = self.manifest()
+        task = next(row for row in manifest['records'] if row['id'] == 'final-a')
+        controls = [{'task_id': 'final-a', 'agent': agent, 'reward': reward,
+            'invalid_reason': None, 'task_files_sha256': task['task_files_sha256'],
+            'verifier_complete': True, 'private_files_absent_during_agent': True,
+            'cleanup_confirmed_empty': True} for agent, reward in (('nop', 0), ('oracle', 1))]
+        self.assertEqual(m1_report.validate_tb_representative(manifest, 'final-a', controls),
+                         {'task_id': 'final-a', 'status': 'representative_control_passed'})
+        for field in ('verifier_complete', 'private_files_absent_during_agent',
+                      'cleanup_confirmed_empty'):
+            broken = copy.deepcopy(controls)
+            broken[0][field] = False
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                m1_report.validate_tb_representative(manifest, 'final-a', broken)

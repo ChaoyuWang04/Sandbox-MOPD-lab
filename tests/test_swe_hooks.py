@@ -117,6 +117,25 @@ class WorkspaceTests(unittest.TestCase):
                 await hooks[TrialEvent.AGENT_START](None)
         asyncio.run(exercise())
 
+    def test_model_agent_uses_same_private_absence_boundary(self):
+        from harbor.trial.hooks import TrialEvent
+        from lab_runtime.swe_hooks import attach_swe_hooks
+        hooks = {}
+        commands = []
+        class Environment:
+            async def exec(self, command, **kwargs):
+                commands.append(command)
+                return SimpleNamespace(return_code=1, stdout='', stderr='fixture stop')
+        trial = SimpleNamespace(agent_environment=Environment(),
+            add_hook=lambda event, hook: hooks.update({event: hook}))
+        attach_swe_hooks(trial, Path(self.tmp.name) / 'private', 'gym',
+            {'instance_id': 'fixture', 'base_commit': self.head}, [], 'm1')
+        async def exercise():
+            with self.assertRaises(RuntimeError):
+                await hooks[TrialEvent.AGENT_START](None)
+        asyncio.run(exercise())
+        self.assertIn('test ! -e /solution', commands[0])
+
     def test_real_harbor_registration_and_phase_upload(self):
         from harbor.trial.trial import Trial
         from harbor.trial.hooks import TrialEvent
