@@ -2,6 +2,23 @@
 
 ## M1 当前状态 · 实施中，未验收
 
+### 当前验证策略与复核（用户批准分层方案）
+
+全池200题双对照不再是准备阶段门槛；旧394次追加云运行没有启动，专用调度器不继续建设，三个未上线草稿已移至ignored `artifacts/m1/v2/retired-full-controls/`，可恢复但不在配置/模块/测试入口内。预算撤销见BUDGET，历史六个有效控制/八次创建不改写。
+
+本次直接复核当前r2清单的200目录、2311文件SHA及无符号链接，全部经真实Harbor Task解析通过；重跑全套246项测试，30.993秒、零失败，无skip汇总（真实pytest使用独立SWE_TEST_PYTHON）。上一轮自建专项12个测试方法19.892秒通过，其中循环覆盖48实例的正负/错误解；测试方法数不等于题目数。无新增云任务、模型、训练或服务。
+
+| 执行路径 | 现有证据 | 剩余范围 |
+|---|---|---|
+| 自建48/8族 | 全实例短CPU逻辑检查；data_csv真实正负对照 | 新增代码修复型执行路径尚需代表性云接入，不按48实例复跑 |
+| Smith52 | 52共享同一test_command及安装阶段；13仓库/13镜像；sqlparse真实正负对照 | 其他12镜像未运行，不将一个样例外推镜像兼容性 |
+| Gym50 | 10仓库/50镜像；按reinstall命令+eval_commands+parser分12组；moto真实正负对照 | mypy选择器、Conan环境导出等分支仍需定向样例；其余镜像不是默认追加双对照 |
+| TB50 | 原任务资产/摘要/Harbor解析；原生pytest与CTRF | 本池尚无真实参考解样例，M0 hello-world不替代；优先补该接入路径 |
+
+已安装Harbor0.22 CLI只读确认`run`是`job start`别名，支持JobConfig、`--n-concurrent`（默认4）及`--print-config`；无需新建全池调度器。原先全局create事件回调只适用单trial，不能直接并发复用；后续先核对原生Job的逐trial生命周期接口，保留必要的薄层保护，不以增加自写控制层为默认。
+
+阶段仍为准备中：资产与离线回归通过，代表性云覆盖尚有上述缺口，不宣称G2完成或全部200云端验证。后续RL奖励只作为诊断线索，infra/verifier invalid不能混进模型0分；最终验收契约见总计划G2和扩池计划P3。
+
 2026-09-08用户批准持续完成200题准备；能力/来源/切分与验收见[总计划M1](sandbox-rl-lab-plan.md)，当前队列见[扩池计划](plans/2026-09-08-m1-200-case-plan.md)。统一200题文件已实际装配并经Harbor加载，train80/dev20/final100；8项组装检查与两级审阅通过，精确清单身份见扩池计划。外部来源19个登记资产已在独立Modal Volume下载并由导入器校验（448384495字节），完整catalog已完成。当前是文件准备完成，尚无200题逐题云对照；无有效模型基线，未启动M2。旧32题campaign不直接复跑。
 
 ### v2自建与下载准备
@@ -33,6 +50,12 @@ SWE许可证审计补齐63/63不同源码版本主许可证全文及Trio两份�
 r2（源码`614c296`）实际运行3次：self NOP=0、oracle=1，分别33.659/34.433秒，均正常判分/隔离/回收通过；Mac峰值130/132MiB。Smith NOP的指定镜像与commit、私有测试恢复、单根历史隔离均已执行，464个测试完整收集且有终态，runtime_errors为空；但不参与本题计分的`test_issue484_comments_and_newlines`得到XPASS，适配器把该常见pytest终态误列为未知，导致reward=null。沙箱全部确认删除，无模型请求。
 
 r2账本`artifacts/m1/v2/controls/m1-v2-first-six-r2/campaign.json` SHA256 `7ae7d7680e88c98a737b921bb6e3b7199fbc053e3a7e34d3d5dfacef65e54bbb`；Smith的`attempt-02/trials/control/verifier/run.json` SHA256 `0bfcdc728998d1f9e4f1e20698de1cdd4fbdd74977a1f66ad82883c5635a3262`。只读重放证明确认XPASS为已知非通过状态后，同一记录得到有效NOP=0，10个失败的计分键不变。按[pytest官方状态说明](https://docs.pytest.org/en/stable/how-to/skipping.html)修正适配：PASSED/XFAIL通过集合不变，计分项XPASS仍不得分，非计分项XPASS不再冒充协议损坏。源题面/patch/测试集合不改，旧云记录不追改；须生成新任务版本并真实复跑SWE后才能验收。
+
+### v2 六个有效首批对照 · PASS，非全池验收
+
+XPASS兼容修正已生成独立`tasks-r2`任务版本，未覆盖原任务包或失败账本。源码`be10019`的`m1-v2-swe-four-r3`完成四次真实Daytona对照：Smith NOP=0/oracle=1（31.378/40.757秒，均464个测试收集且有终态）；Gym `getmoto__moto-5752` NOP=0/oracle=1（133.004/48.100秒，均80个测试收集且有终态）。四次protocol有效、exception=null、阶段到`verification_ready`、独立清理确认为空，SDK正常关闭。Mac单控制器峰值约128–129MiB，无本地模型、容器或服务。
+
+账本`artifacts/m1/v2/controls/m1-v2-swe-four-r3/campaign.json` SHA256 `0b1237e8086b97504ac6937e44a0afb0c79544cadb4b66416e18ebfeb33d4663`。连同r2中任务文件未变的self正负对照，共三个任务、六个有效控制；历史实际创建八次，两个诊断失败仍保留计数与费用。全池尚余197题/394个控制，不能据此宣称200题运行验收完成；固定批次、复用证据和资源预算见扩池计划P3与BUDGET。
 
 ### 旧32题实施与失败证据
 
