@@ -121,19 +121,25 @@ def extract(archive, destination, prefixes, deadline, *, max_bytes=MAX_EXTRACT, 
         for member in tar:
             remaining(deadline, clock)
             parts = PurePosixPath(member.name).parts
-            if not parts or member.name.startswith('/') or '..' in parts or '\\' in member.name or not (member.isfile() or member.isdir()):
+            if not parts or member.name.startswith('/') or '..' in parts or '\\' in member.name:
                 raise ImportFailure('unsafe_archive_member')
             total += member.size
             if total > max_bytes:
                 raise ImportFailure('extracted_size_limit')
             relative = '/'.join(parts[1:])
-            if not relative or member.isdir():
+            if not relative:
+                continue
+            if '*' not in prefixes and not any(relative == p or relative.startswith(p + '/') for p in prefixes):
+                continue
+            # Unselected members are never materialized or followed. Only the
+            # requested subset needs a regular-file/directory type contract.
+            if not (member.isfile() or member.isdir()):
+                raise ImportFailure('unsafe_archive_member')
+            if member.isdir():
                 continue
             if relative in seen:
                 raise ImportFailure('duplicate_archive_member')
             seen.add(relative)
-            if '*' not in prefixes and not any(relative == p or relative.startswith(p + '/') for p in prefixes):
-                continue
             target = safe_path(destination / relative)
             # Stream the member into an owned temporary file while hashing. Existing
             # output is reused only after comparison to these actual archive bytes.

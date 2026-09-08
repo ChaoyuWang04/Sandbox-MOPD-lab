@@ -9,6 +9,35 @@ from lab_runtime import task_sources as sources
 
 
 class SourcesTests(unittest.TestCase):
+    def test_unselected_archive_special_members_are_skipped(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            archive = root / 'archive'
+            with tarfile.open(archive, 'w:gz') as tar:
+                for name, kind in [('CLAUDE.md', tarfile.SYMTYPE), ('docs/CLAUDE.md', tarfile.LNKTYPE), ('docs/device', tarfile.CHRTYPE)]:
+                    member = tarfile.TarInfo('repo/' + name)
+                    member.type = kind
+                    member.linkname = 'AGENTS.md'
+                    tar.addfile(member)
+                member = tarfile.TarInfo('repo/adapters/swegym/adapter.py')
+                member.size = 3
+                tar.addfile(member, io.BytesIO(b'abc'))
+            records = sources.extract(archive, root / 'out', ['adapters/swegym'], 10, clock=lambda: 0)
+            self.assertEqual([r['path'] for r in records], ['adapters/swegym/adapter.py'])
+            self.assertFalse((root / 'out/docs').exists())
+            self.assertFalse((root / 'out/CLAUDE.md').is_symlink())
+            for kind in [tarfile.SYMTYPE, tarfile.LNKTYPE, tarfile.CHRTYPE]:
+                self.archive(archive, 'repo/adapters/swegym/unsafe', kind)
+                with self.assertRaises(sources.ImportFailure):
+                    sources.extract(archive, root / 'out', ['adapters/swegym'], 10, clock=lambda: 0)
+            for name in ['repo/docs/../escape', '/docs/escape']:
+                self.archive(archive, name)
+                with self.assertRaises(sources.ImportFailure):
+                    sources.extract(archive, root / 'out', ['adapters/swegym'], 10, clock=lambda: 0)
+            self.archive(archive, 'repo/docs/large')
+            with self.assertRaises(sources.ImportFailure):
+                sources.extract(archive, root / 'out', ['adapters/swegym'], 10, max_bytes=2, clock=lambda: 0)
+
     def test_extract_reads_members_in_bounded_chunks_and_resumes(self):
         from unittest.mock import patch
         original = tarfile.TarFile.extractfile
