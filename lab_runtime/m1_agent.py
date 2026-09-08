@@ -151,7 +151,7 @@ class M1Agent(BaseAgent):
                 async with asyncio.timeout(seconds):
                     result = await environment.exec(command=ISOLATION, timeout_sec=max(1, int(seconds)))
                 record.update(observation(result))
-                if result.return_code != 0 or result.stdout != 'private-absent':
+                if result.return_code != 0 or result.stdout not in ('private-absent', 'private-absent\n', 'private-absent\r\n'):
                     raise RuntimeError('private task material visible or isolation probe failed')
                 record['status'] = 'passed'
             except BaseException as exc:

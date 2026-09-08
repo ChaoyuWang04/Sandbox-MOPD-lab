@@ -12,6 +12,23 @@ from harbor.models.agent.context import AgentContext
 
 
 class M1AgentTest(unittest.IsolatedAsyncioTestCase):
+    async def test_isolation_accepts_transport_line_ending_only(self):
+        m = self.module()
+        for output in ('private-absent\n', 'private-absent\r\n', 'private-absent\nextra', ' private-absent'):
+            with self.subTest(output=output), tempfile.TemporaryDirectory() as d:
+                class Environment:
+                    async def exec(self, **kwargs):
+                        return ExecResult(return_code=0, stdout=output)
+                context = AgentContext()
+                with patch.object(m, 'count_prompt', return_value=17000):
+                    agent = m.M1Agent(logs_dir=Path(d), model_name='Qwen/Qwen3-4B')
+                    if output in ('private-absent\n', 'private-absent\r\n'):
+                        await agent.run('task', Environment(), context)
+                        self.assertEqual(context.metadata['termination'], 'context_budget')
+                    else:
+                        with self.assertRaises(RuntimeError):
+                            await agent.run('task', Environment(), context)
+
     def module(self):
         self.assertIsNotNone(importlib.util.find_spec('lab_runtime.m1_agent'), 'M1 agent missing')
         from lab_runtime import m1_agent

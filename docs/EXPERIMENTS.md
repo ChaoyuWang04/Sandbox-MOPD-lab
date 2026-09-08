@@ -8,10 +8,20 @@
 - T2源码5cf2ad4：10项接口测试通过，覆盖多轮工具观测、token累计/模板漂移、异常finish、预算、私有路径检查、失败工具轨迹、HTTP取消收敛及usage未知标记。规格和质量审阅通过；mock不证明真实模型或沙箱链路。
 - T3固定入口及持久campaign已实现、规格与质量复审通过：跨run消费pilot/全部32实例控制证据，未知创建或清理阻断后续创建；T6汇总保留全部尝试和未分类错误，不把未知usage算成零。主任务独立执行全套89项离线测试通过（6.894秒），质量审阅者独立重跑89项通过，其中真实Harbor Trial构造验证未连接provider。实际时限、云生命周期与基线尚未验证。
 - 只读hlab doctor/recipes/runs确认本Lab活动任务0，GPU空闲31411MiB，磁盘734599720960bytes，为时点读数不构成预留。服务器负责人已部署控制器d4b62e6608b4f6019d512fa8ed6a8d9329e92cee；本任务现场recipes核对m1-small-pool登记一致，无新共享特性。
-- 远端Lab secrets目录的只读SSH元数据检查被权限策略拒绝，未执行、未读密钥、未用其他路径绕过。真实云运行前需解决凭据可达性并遵守精确plan人工门控。
-- 本批尚无M1云创建、推理结果或基线；Daytona实际账单/credits抵扣未验证。
+- 早先远端Lab secrets目录检查被权限策略拒绝后未绕过。用户随后明确批准精确pilot计划及凭据检查/缺失时供应；2026-09-08重新核对目录缺失，仅将本地已有Daytona key经SSH标准输入供应到专用secrets/daytona.env（独占创建0600，目录0700），未输出密钥或复制其他凭据。
+- 首批pilot已失败并结束，未发生模型请求；尚无有效推理样本或基线，Daytona实际账单/credits抵扣未验证。
 - 已评审执行源码`b9fc5787aeff6883fbb72100f574b028bd1701fb`已push到`origin/codex/m1-small-pool`，并由hlab从独立Lab主checkout同步到`refs/hlab/b9fc5787aeff6883fbb72100f574b028bd1701fb`（working_tree_not_synced=false）。linked worktree被客户端self-contained检查拒绝后，改用同一仓库主checkout传送同一已提交对象；未合并或同步脏文件。服务器负责人已确认独立Lab边界，普通recipe扩展不涉及Syncopate主线迁移。
-- 首pilot4精确计划已生成但未提交：`plan-sandbox-rl-mopd-20260907t175341z-82fc6534`，执行上述b9fc578源码，argv `[/usr/bin/python3, scripts/m1_run.py]`、cwd `.`、env/bindings空、timeout3660秒、risk=training、approval_required=true；registry_digest `f8a2d202abe6fe6b7d7e57bea915d1219e41a971c94af0f387c3771c7290c2d5`。需要用户批准该精确plan及专用Daytona凭据检查/缺失时安全供应；尚无M1 run，不得把计划生成当成运行。
+- 首pilot4精确计划`plan-sandbox-rl-mopd-20260907t175341z-82fc6534`，执行上述b9fc578源码，argv `[/usr/bin/python3, scripts/m1_run.py]`、cwd `.`、env/bindings空、timeout3660秒、risk=training、approval_required=true；registry_digest `f8a2d202abe6fe6b7d7e57bea915d1219e41a971c94af0f387c3771c7290c2d5`。用户原文“我同意你上面的计划”，随后“可以的请开始吧”；2026-09-08T02:12:08Z唯一提交为`run-sandbox-rl-mopd-20260908t021208z-d1853cfa`，unit为`hlab-run-sandbox-rl-mopd-20260908t021208z-d1853cfa.service`。02:13:13Z终态failed/exit1，不重复提交已消费plan。
+
+### 首pilot失败与修复（2026-09-08）
+
+原始目录`/home/samwang/data/sandbox-rl-MOPD-lab/artifacts/m1/home5090/m1-373b33adc10e43899f6bb5dbc600cf05`；state SHA256 `3d0e6805c27ac6a163892dc797efb9e1e2101599698bf71f945569e1851cf7b5`，summary SHA256 `2388713bd8d3e59da5cbdc2c94c6c6feec76f99052d06ac52a26be9fa0784909`。
+
+- 创建1个sandbox（ID `6cd0449c-0a8b-48e4-8278-001a3b89fbc2`，创建返回9.317秒），仅尝试fs_logs-train-00，其余3个未启动。START/END隔离探针均exit0、stdout为`private-absent\n`；代码严格比较无换行文本导致误判，error_phase=isolation_start，turns=[]，模型调用0，reward=null。不是模型能力失败或证实私有答案可见。
+- Harbor清理后独立delete遇DaytonaConflictError，再次清理遇DaytonaNotFoundError，批次因此CleanupUncertain。之后使用独立客户端只读GET精确ID取得DaytonaNotFoundError，按精确Lab/run标签list为空；确认该时点无本批沙箱，未新建或追加删除。旧summary保留原来的不确定状态，不能追改为成功。
+- 脚本60.174秒，显存1秒采样峰值22946MiB，owned_group_gone=true；失败路径post_model_check=not_checked，不能声称模型前后复验完成。hlab活动Lab任务复核0；共享GPU空闲27224MiB是复核时点，不把其他占用归成本实验或停止他人。
+- 最小修复：隔离判据仅允许精确标记后无换行/LF/CRLF，仍拒绝额外内容；清理只捕获409/404竞态并在原截止时间内等待fresh list空，不直接把异常当成功、不重复delete。新增3项测试先RED后GREEN；全套92 tests PASS（12.315秒），独立审阅41项M1测试通过。尚未真实复跑。
+- 下一步需显式campaign恢复设计：保留旧run/summary哈希、1次尝试和既有预算消耗，附独立清理确认，登记修复后的agent身份继承，不能清空账本或抹掉失败。当前ledger的unresolved_cleanup=true和旧agent身份仍保留，禁止直接新建；恢复与新pilot需预注册、审阅并生成新的精确plan再按人类门控执行。
 
 ## M0 收尾 · PASS（2026-09-08，用户修订验收范围）
 

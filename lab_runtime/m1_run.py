@@ -137,7 +137,7 @@ def select_trials(config, manifest):
 
 
 async def cleanup_sandboxes(client, labels, events, deadline):
-    from daytona import ListSandboxesQuery
+    from daytona import ListSandboxesQuery, DaytonaConflictError, DaytonaNotFoundError
     try:
         async with asyncio.timeout(runtime.remaining(deadline)):
             sandboxes = [sandbox async for sandbox in client.list(ListSandboxesQuery(labels=labels), request_timeout=min(15, runtime.remaining(deadline)))]
@@ -146,13 +146,20 @@ async def cleanup_sandboxes(client, labels, events, deadline):
                     raise CleanupUncertain('provider returned a sandbox outside the exact batch labels')
                 event = {'status': 'deleting', 'sandbox_id': sandbox.id, 'start_monotonic': time.monotonic()}
                 events.append(event)
-                await client.delete(sandbox, wait=True, timeout=min(30, runtime.remaining(deadline)))
-                event.update(status='delete_returned', wall_seconds=time.monotonic()-event['start_monotonic'])
-            remaining_ids = [sandbox.id async for sandbox in client.list(ListSandboxesQuery(labels=labels), request_timeout=min(15, runtime.remaining(deadline)))]
-            if remaining_ids:
+                try:
+                    await client.delete(sandbox, wait=True, timeout=min(30, runtime.remaining(deadline)))
+                    event.update(status='delete_returned', wall_seconds=time.monotonic()-event['start_monotonic'])
+                except (DaytonaConflictError, DaytonaNotFoundError) as exc:
+                    # Harbor may already be deleting it. Neither error proves absence.
+                    event.update(status='delete_race', error_type=type(exc).__name__,
+                                 wall_seconds=time.monotonic()-event['start_monotonic'])
+            while True:
+                remaining_ids = [sandbox.id async for sandbox in client.list(ListSandboxesQuery(labels=labels), request_timeout=min(15, runtime.remaining(deadline)))]
+                if not remaining_ids:
+                    events.append({'status': 'empty', 'monotonic': time.monotonic()})
+                    break
                 events.append({'status': 'not_empty', 'sandbox_ids': remaining_ids})
-                raise CleanupUncertain('batch deletion is not independently confirmed')
-            events.append({'status': 'empty', 'monotonic': time.monotonic()})
+                await asyncio.sleep(min(0.5, runtime.remaining(deadline)))
     except BaseException as exc:
         events.append({'status': 'uncertain', 'error_type': type(exc).__name__})
         if isinstance(exc, (KeyboardInterrupt, SystemExit)):

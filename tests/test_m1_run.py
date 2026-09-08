@@ -107,6 +107,38 @@ class M1RunTests(unittest.TestCase):
 
 
 class CleanupTests(unittest.IsolatedAsyncioTestCase):
+    async def test_delete_race_requires_fresh_empty_list(self):
+        from daytona import DaytonaConflictError, DaytonaNotFoundError
+        m = self.module()
+        labels = {'lab': 'sandbox-rl-mopd', 'm1_run': 'unit'}
+        for error in (DaytonaConflictError('unit'), DaytonaNotFoundError('unit')):
+            with self.subTest(error=type(error).__name__):
+                calls = 0
+                async def listing(*args, **kwargs):
+                    nonlocal calls
+                    calls += 1
+                    if calls == 1:
+                        yield SimpleNamespace(id='own-id', labels=labels)
+                client = SimpleNamespace(list=listing, delete=AsyncMock(side_effect=error))
+                events = []
+                await m.cleanup_sandboxes(client, labels, events, m.time.monotonic()+2)
+                self.assertGreaterEqual(calls, 2)
+                self.assertEqual(events[-1]['status'], 'empty')
+                self.assertTrue(any(event.get('error_type') == type(error).__name__ for event in events))
+
+    async def test_delete_conflict_not_success_when_list_stays_nonempty(self):
+        from daytona import DaytonaConflictError
+        m = self.module()
+        labels = {'lab': 'sandbox-rl-mopd', 'm1_run': 'unit'}
+        async def listing(*args, **kwargs):
+            yield SimpleNamespace(id='own-id', labels=labels)
+        client = SimpleNamespace(list=listing, delete=AsyncMock(side_effect=DaytonaConflictError('unit')))
+        events = []
+        with self.assertRaises(m.CleanupUncertain):
+            await m.cleanup_sandboxes(client, labels, events, m.time.monotonic()+0.05)
+        self.assertFalse(any(event['status'] == 'empty' for event in events))
+        self.assertEqual(client.delete.await_count, 1)
+
     def module(self):
         self.assertIsNotNone(importlib.util.find_spec('lab_runtime.m1_run'), 'M1 runner missing')
         return importlib.import_module('lab_runtime.m1_run')
