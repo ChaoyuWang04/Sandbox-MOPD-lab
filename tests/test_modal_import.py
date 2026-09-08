@@ -4,11 +4,41 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from lab_runtime import modal_import as m
 
 
 class ModalImportTests(unittest.TestCase):
+    def test_trusted_volume_root_requires_exact_mount_identity(self):
+        root = Path('/vol')
+        expected = Path('/__modal/volumes/vo-example')
+        with patch.object(Path, 'is_symlink', side_effect=lambda: False):
+            self.assertEqual(m.resolve_volume_root(Path('/regular'), 'vo-example'), Path('/regular'))
+        with patch.object(Path, 'is_symlink', return_value=True), \
+             patch.object(Path, 'readlink', return_value=expected), \
+             patch.object(Path, 'resolve', return_value=expected), \
+             patch.object(m, 'safe_path', side_effect=lambda p: p) as checked:
+            self.assertEqual(m.resolve_volume_root(root, 'vo-example'), expected)
+            checked.assert_called_once_with(expected)
+            with self.assertRaises(ValueError):
+                m.resolve_volume_root(Path('/other'), 'vo-example')
+            with self.assertRaises(ValueError):
+                m.resolve_volume_root(root, 'vo-wrong')
+
+    def test_volume_root_rejects_indirect_or_unsafe_target(self):
+        expected = Path('/__modal/volumes/vo-example')
+        with patch.object(Path, 'is_symlink', return_value=True), \
+             patch.object(Path, 'readlink', return_value=expected), \
+             patch.object(Path, 'resolve', return_value=Path('/elsewhere')):
+            with self.assertRaises(ValueError):
+                m.resolve_volume_root(Path('/vol'), 'vo-example')
+        with patch.object(Path, 'is_symlink', return_value=True), \
+             patch.object(Path, 'readlink', return_value=expected), \
+             patch.object(Path, 'resolve', return_value=expected):
+            with self.assertRaises(ValueError):
+                m.resolve_volume_root(Path('/vol'), 'vo-example')
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)

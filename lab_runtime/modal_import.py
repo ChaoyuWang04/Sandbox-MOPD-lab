@@ -13,6 +13,21 @@ from lab_runtime.task_sources import atomic_json, relative_path, run_import, saf
 SECONDS = 1150
 
 
+def resolve_volume_root(root, volume_id):
+    """Allow only Modal's declared /vol alias to this hydrated Volume object."""
+    root = Path(root)
+    if not root.is_symlink():
+        return safe_path(root)
+    if (root != Path('/vol') or not isinstance(volume_id, str)
+            or not volume_id.startswith('vo-')
+            or not volume_id[3:] or not volume_id[3:].isalnum()):
+        raise ValueError('volume_mount_identity')
+    expected = Path('/__modal/volumes') / volume_id
+    if root.readlink() != expected or root.resolve(strict=True) != expected:
+        raise ValueError('volume_mount_identity')
+    return safe_path(expected)
+
+
 def job(root, manifest, commit, *, runner=subprocess.run, importer=run_import, reader=None):
     root, manifest = Path(root), Path(manifest)
     sha = digest(manifest)

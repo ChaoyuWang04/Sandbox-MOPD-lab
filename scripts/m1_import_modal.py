@@ -17,8 +17,9 @@ image = (modal.Image.debian_slim(python_version='3.12')
               max_containers=1, retries=0, timeout=1200, startup_timeout=600,
               volumes={'/vol': volume})
 def import_catalog():
-    from lab_runtime.modal_import import job
-    return job(Path('/vol'), Path('/root/configs/m1-sources-v2.json'), volume.commit)
+    from lab_runtime.modal_import import job, resolve_volume_root
+    root = resolve_volume_root(Path('/vol'), volume.object_id)
+    return job(root, Path('/root/configs/m1-sources-v2.json'), volume.commit)
 
 
 @app.local_entrypoint()

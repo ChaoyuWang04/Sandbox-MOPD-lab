@@ -20,6 +20,8 @@ home5090的`m1-import-v2`静态入口尚未登记，已通过真实任务消息�
 
 首提App `ap-9cE27qVBtmfMYoueTrSCdp`在函数创建前因显式`ephemeral_disk=2048`不满足服务端最小524288MiB而拒绝，未开始下载；保留失败身份。按[官方资源文档](https://modal.com/docs/guide/resources)删除该不合法请求，不申请扩容：平台默认临时盘quota512GiB不是本实验实际写入量或额外磁盘预留；资产/索引仍受6+8GiB软件写入上限约束，CPU与内存限额不变。确认旧App无活动写者后才重提；实际账单未核验。
 
+第二提 `ap-h0lgeSAk8BRiYPYquuGajF`进入CPU容器后，在任何数据写入前因`/vol`是平台符号链接而被安全检查拒绝，随后确认stopped/tasks0。同配置只读诊断显示`/vol -> /__modal/volumes/vo-Hs5MyCjulIuJUOOsenUK0t`；首次带嵌套引号的诊断被CLI拆词，第二次直接readlink成功。修复仅允许声明挂载根指向该次hydrated Volume ID的精确平台路径，数据内部链接仍拒绝。诊断与失败CPU秒数计入同一$2预留；尚无真实数据下载或catalog完成证据。
+
 Mac仍无常驻负载，大资产留home5090独立Lab根；共享GPU需每次准入，禁止停止他人负载。Daytona优先CPU，Modal仅另行登记的候选；不使用RunPod。新campaign与旧消费关联，历史费用计入总账。M2/M4训练、joint对照及20/40/80规模曲线须另行预算，不因文档列出就视为已授权。
 
 以下为M0及旧微任务预算历史，不作为扩池批次授权。
