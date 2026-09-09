@@ -140,18 +140,86 @@ def execute_probe(client, run_id: str) -> dict:
         return receipt
 
 
+def cleanup_rejected_create(client, run_id: str) -> dict:
+    """Resolve an uncertain rejected create without ever issuing another create."""
+    labels = {"project": "sandbox-rl-mopd", "campaign": CAMPAIGN, "run_id": run_id}
+    receipt = {"schema_version": 1, "campaign": CAMPAIGN, "run_id": run_id,
+               "phase": "cleanup_uncertain", "cleanup_confirmed": False,
+               "matched_sandbox_ids": []}
+    try:
+        matches = list(client.list(ListSandboxesQuery(labels=labels), request_timeout=20))
+    except Exception as exc:
+        receipt["error_type"] = type(exc).__name__
+        return receipt
+    if len(matches) > 1:
+        receipt["reason"] = "multiple_label_matches"
+        return receipt
+    if matches:
+        sandbox = matches[0]
+        if getattr(sandbox, "labels", None) != labels:
+            receipt["reason"] = "label_mismatch"
+            return receipt
+        receipt["matched_sandbox_ids"] = [sandbox.id]
+        try:
+            client.delete(sandbox, timeout=60, wait=True)
+        except Exception as exc:
+            receipt["error_type"] = type(exc).__name__
+            return receipt
+    try:
+        remaining = list(client.list(ListSandboxesQuery(labels=labels), request_timeout=20))
+    except Exception as exc:
+        receipt["error_type"] = type(exc).__name__
+        return receipt
+    if remaining:
+        receipt["reason"] = "owned_sandbox_still_present"
+        return receipt
+    receipt.update(phase="cleanup_confirmed_no_retry", cleanup_confirmed=True)
+    return receipt
+
+
+def _load_rejection_for_cleanup(root: Path) -> str | None:
+    authorization_path = root / "authorization.json"
+    result_path = root / "result.json"
+    if not authorization_path.exists() and not result_path.exists():
+        return None
+    if not authorization_path.is_file() or not result_path.is_file():
+        raise RuntimeError("incomplete Daytona GPU probe ledger")
+    authorization = json.loads(authorization_path.read_text(encoding="utf-8"))
+    result = json.loads(result_path.read_text(encoding="utf-8"))
+    run_id = authorization.get("run_id")
+    if (authorization.get("campaign") != CAMPAIGN or not isinstance(run_id, str)
+            or result.get("campaign") != CAMPAIGN or result.get("run_id") != run_id
+            or result.get("phase") != "provider_rejected"
+            or result.get("cleanup_confirmed") is not False):
+        raise RuntimeError("existing Daytona GPU probe is not an eligible rejected-create ledger")
+    return run_id
+
+
 def main() -> None:
     if len(sys.argv) != 1 or platform.system() != "Linux" or platform.machine() != "x86_64":
         raise ValueError("fixed Daytona GPU probe must run on home-5090 through hlab")
+    rejected_run_id = _load_rejection_for_cleanup(ARTIFACT_ROOT)
+    credentials = read_credentials(SECRET_PATH)
+    if rejected_run_id is not None:
+        with provider_credentials(credentials):
+            receipt = cleanup_rejected_create(Daytona(), rejected_run_id)
+        cleanup_path = ARTIFACT_ROOT / "cleanup-after-rejection.json"
+        with cleanup_path.open("x", encoding="utf-8") as handle:
+            json.dump(receipt, handle, sort_keys=True)
+            handle.write("\n")
+        print(json.dumps(receipt, sort_keys=True))
+        if receipt["phase"] != "cleanup_confirmed_no_retry":
+            raise RuntimeError(f"Daytona rejected-create cleanup ended in {receipt['phase']}")
+        return
     run_id = f"probe-{time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())}-{uuid.uuid4().hex[:8]}"
     authorize_once(ARTIFACT_ROOT, run_id)
-    credentials = read_credentials(SECRET_PATH)
     with provider_credentials(credentials):
         receipt = execute_probe(Daytona(), run_id)
     result_path = ARTIFACT_ROOT / "result.json"
     with result_path.open("x", encoding="utf-8") as handle:
         json.dump(receipt, handle, sort_keys=True)
         handle.write("\n")
+    print(json.dumps(receipt, sort_keys=True))
     if receipt["phase"] != "complete":
         raise RuntimeError(f"Daytona GPU probe ended in {receipt['phase']}")
 

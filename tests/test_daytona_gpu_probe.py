@@ -70,6 +70,47 @@ class DaytonaGpuProbeTests(unittest.TestCase):
             with self.assertRaisesRegex(FileExistsError, "already authorized"):
                 probe.authorize_once(root, "run-456")
 
+    def test_rejection_followup_never_creates_and_cleans_only_exact_labels(self):
+        labels = {"project": "sandbox-rl-mopd", "campaign": probe.CAMPAIGN,
+                  "run_id": "run-123"}
+        owned = SimpleNamespace(id="owned-1", labels=labels)
+        client = SimpleNamespace(
+            create=Mock(side_effect=AssertionError("must not create")),
+            list=Mock(side_effect=[iter((owned,)), iter(())]), delete=Mock())
+        receipt = probe.cleanup_rejected_create(client, "run-123")
+        client.delete.assert_called_once_with(owned, timeout=60, wait=True)
+        self.assertTrue(receipt["cleanup_confirmed"])
+        self.assertEqual(receipt["phase"], "cleanup_confirmed_no_retry")
+        self.assertEqual(client.create.call_count, 0)
+
+    def test_rejection_followup_refuses_mismatched_object(self):
+        foreign = SimpleNamespace(id="foreign", labels={"project": "somebody-else"})
+        client = SimpleNamespace(list=Mock(return_value=iter((foreign,))), delete=Mock())
+        receipt = probe.cleanup_rejected_create(client, "run-123")
+        self.assertEqual(receipt["phase"], "cleanup_uncertain")
+        self.assertEqual(client.delete.call_count, 0)
+
+    def test_existing_rejection_ledger_selects_cleanup_without_new_authorization(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "authorization.json").write_text(json.dumps({
+                "campaign": probe.CAMPAIGN, "run_id": "run-123"}))
+            (root / "result.json").write_text(json.dumps({
+                "campaign": probe.CAMPAIGN, "run_id": "run-123",
+                "phase": "provider_rejected", "cleanup_confirmed": False}))
+            self.assertEqual(probe._load_rejection_for_cleanup(root), "run-123")
+
+    def test_non_rejection_ledger_cannot_enter_cleanup_path(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "authorization.json").write_text(json.dumps({
+                "campaign": probe.CAMPAIGN, "run_id": "run-123"}))
+            (root / "result.json").write_text(json.dumps({
+                "campaign": probe.CAMPAIGN, "run_id": "run-123",
+                "phase": "complete", "cleanup_confirmed": True}))
+            with self.assertRaisesRegex(RuntimeError, "not an eligible"):
+                probe._load_rejection_for_cleanup(root)
+
 
 if __name__ == "__main__":
     unittest.main()

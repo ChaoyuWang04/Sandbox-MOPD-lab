@@ -8,6 +8,8 @@
 
 首个源码锁固定官方`skyrl-v0.2.0@eddb418dd4c560db9d43ffde561f1c5e669c8990`，其`pyproject.toml`/`uv.lock` SHA256分别为`f7c5813b8fc0efd667288b43ee020cde78773d35d7e57c315f674954fc7f421b`/`6919d985d0365ef4a660fb60718355bdfb9bdecaacd13a198157333e68a6bc74`；锁定Harbor `0.4.0@a85628c803dc1713fcd26d2bb1908cde69d62317`、torch2.10.0+cu128、vLLM0.19.0、Ray2.51.1、Transformers5.3.0。2026-09-09用户改定M2训练不使用home-5090，目标顺序为Daytona GPU→Modal回退；配置已移除5090硬件身份和共享主机独占假设，Daytona SDK身份校正为本Lab实装的0.210.0。Daytona GPU配额、provider driver/runtime、持久卷和真实capacity canary尚未验证，所以`configs/m2-stack-lock.json`仍明确`execution_ready=false`。这些仍只是离线配置/语义检查，不是M2-A训练通过。
 
+Daytona一次性GPU探测已按源码`adf118ab706306d51321b06403c43777aa0d9d6b`提交：plan `plan-sandbox-rl-mopd-20260909t042639z-ba3ddf2d`、run `run-sandbox-rl-mopd-20260909t042655z-aff1553e`在约12秒后以`provider_rejected`结束，未下载模型、未训练、未自动重试。结果文件`artifacts/m2/daytona-gpu-probe-v1/result.json` SHA256为`edacb66550eedeeee0b5d81ceb75169cf05ce67d45a7c2d1597b674460e98632`；当前控制器未暴露提供商错误正文，故只认拒绝分类，不猜测是付费资格、配额或卡型库存。创建调用抛错时无法证明服务端绝未落对象，因此后续入口只读既有run账本，按精确三标签查询并只清理唯一匹配对象，绝不再次create；该清理确认完成前保留`cleanup_confirmed=false`。按用户裁定，训练平台现转入一次Modal L40S能力探测；这仍不代表M2-A开跑。
+
 ## M1 当前状态 · 实施中，未验收
 
 ### M1-close 运行与首次熔断修复
