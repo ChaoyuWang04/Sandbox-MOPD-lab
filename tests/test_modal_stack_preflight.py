@@ -17,6 +17,10 @@ class ModalStackPreflightTests(unittest.TestCase):
                                   "retries": 0, "timeout": 300, "startup_timeout": 300})
         self.assertNotIn("gpu=", source)
         self.assertIn("novaskyai/skyrl-train-ray-2.51.1-py3.12-cu12.8", source)
+        self.assertIn("eddb418dd4c560db9d43ffde561f1c5e669c8990", source)
+        self.assertIn("uv sync --frozen --extra fsdp --extra harbor --no-dev", source)
+        self.assertIn("/root/SkyRL/.venv/bin/python", source)
+        self.assertNotIn("uv_pip_install", source)
 
 
 if __name__ == "__main__":

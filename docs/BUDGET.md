@@ -14,15 +14,17 @@ Daytona探测实际在创建阶段被提供商拒绝，约12秒结束；未获�
 
 Modal探测App `ap-QyoWdSR0v7NW5lUMUO0CZM`已停止且tasks=0，从创建到停止约90秒（含容器等待与执行，镜像构建另约77秒）；不拿App墙钟直接冒充精确计费GPU秒数，按最保守300秒上界仍为$0.1626。没有第二次GPU重跑。后续M2-A训练和最多8个任务沙箱的精确预算仍须在capacity canary实测后冻结；Modal任务沙箱不使用Daytona credits。
 
-官方SkyRL镜像的CPU-only依赖预检App `ap-g4KROwURhyoXoOkVkXodGD`无GPU、无模型、无训练，发现镜像仅提供Ray基础层，所需训练包须另装。下一次capacity canary预注册单张L40S、8 CPU、64GiB内存、最长1800秒、并发1、重试0；按上限计算GPU $0.9756、CPU约$0.1886、内存约$0.2557，合计函数资源约$1.42，另有镜像构建/网络/Volume小额。它只做两次短推理和一个合成LoRA optimizer step，不创建任务沙箱；仅在M1 train-screen通过后提交一次，失败不自动重跑。
+官方SkyRL镜像的CPU-only依赖预检App `ap-g4KROwURhyoXoOkVkXodGD`无GPU、无模型、无训练，发现镜像仅提供Ray基础层，所需训练包须另装。第二个CPU-only App `ap-TrZzCMlvSnkHSf7vv0W3kx`也未分配GPU、未下载模型或训练；普通pip在镜像构建时发现vLLM0.19的Transformers `<5`声明与SkyRL锁定5.3冲突并停止。固定SkyRL源码明确依靠uv override及锁文件解决该冲突，后续CPU预检与canary改用`uv sync --frozen --extra fsdp --extra harbor --no-dev`，不以绕过依赖或降级凑绿。下一次capacity canary预注册单张L40S、8 CPU、64GiB内存、最长1800秒、并发1、重试0；按上限计算GPU $0.9756、CPU约$0.1886、内存约$0.2557，合计函数资源约$1.42，另有镜像构建/网络/Volume小额。它只做两次短推理和一个合成LoRA optimizer step，不创建任务沙箱；仅在M1 train-screen通过后提交一次，失败不自动重跑。
 
 ## 200题扩池：分层验证，取消全池双对照预算
 
-### M1-close 冻结批次（已准备，未运行）
+### M1-close 冻结批次（train-screen已终止，未通过选择门槛）
 
 `configs/m1-close-v2.json`登记三个串行批次：Terminal-Bench代表题NOP/oracle 2次、20个自建train候选各4次共80次、dev20各1次，共102个Daytona创建授权；不重试、并发1、连续3次infra-invalid即停止新建、总控制器墙钟上限6小时。自建trial为1 vCPU/1GiB/3GiB、5分钟TTL、禁网；SWE为4 vCPU/8GiB/10GiB、60分钟TTL；TB代表为1 vCPU/2GiB/10GiB、60分钟TTL且单trial外层最多30分钟。总Daytona预留$15，按实际生命周期核算，不是账户硬账单。
 
 TB批次不启GPU；train-screen和dev-baseline各使用一次home-5090非独占GPU recipe及已有Qwen3-4B/M1环境，可与Ollama共存，但实时资源闸不满足即拒绝启动且不处理未知进程。Mac仅同步了51MiB冻结任务包到Lab独立数据根并做2311文件聚合SHA复核，不运行模型、容器或常驻服务。已运行TB 2次和首个screen 3次：前者估算$0.001878并通过；后者因runner协议误收紧三连invalid后安全停止，估算$0.003405，余下77次未创建。两项均非账单读数，失败证据不删除、不覆盖。
+
+修复后的train-screen另完成80次：80次有效、0 invalid、77个reward0、3个reward1，Daytona估算$0.077254、累计沙箱生命周期4155.700秒，均非账单读数。home-5090峰值自有显存23302MiB且自有进程组已退出，没有停止或修改Ollama/其他进程。只有2个题组出现组内混合reward，未达到冻结A8+B8的16题选择条件；因此dev20未启动，预注册Modal GPU capacity canary也不提交，相关预算继续只是上界而非消费。
 
 用户批准以全量轻量检查、自建批量逻辑测试、共享适配器回归和代表性Daytona验证替代逐题双对照。原394次新增、402累计上限、$180追加预留及固定2并发计划均撤销，未启动该全池campaign；不再将$190作为当前预留。已发生的八次v2创建/六个有效对照、失败记录与原$10预留（下载$2+首批$8）保留，不重置消费。
 
