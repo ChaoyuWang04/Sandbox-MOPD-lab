@@ -75,6 +75,8 @@
 
 ## Task 5: Implement update, weight-sync, and recovery evidence
 
+**Status 2026-09-09:** 依赖无关的更新、推理装载和恢复回执层已实现，并有5项fail-closed测试。它要求optimizer参数与LoRA白名单完全相等、base/adapter命名空间不重叠、base内容不变、adapter内容改变、四项学习信号为正且有限；推理装载和下一批rollout绑定实际张量内容而非仅版本字符串，checkpoint manifest不可覆盖地原子发布并由不同进程复验。真实SkyRL hook、vLLM装载与Modal Volume checkpoint仍属于Task 6/7，离线通过不等于真实更新完成。
+
 **Files:** create `recipe/checkpoint.py`, `tests/test_m2_checkpoint.py`.
 
 1. Add failing tests for base/adapter identity, optimizer parameter allowlist, nonzero effective loss tokens/advantage/pre-step policy-gradient norm, pre/post update digest, finite update norm, inference-side loaded-tensor receipt, next-rollout version binding, echoed/stale adapter rejection, atomic checkpoint manifest, and fresh-process reload receipt.

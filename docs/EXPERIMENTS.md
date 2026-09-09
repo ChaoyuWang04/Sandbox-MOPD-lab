@@ -22,6 +22,8 @@ capacity canary的固定序列仍为Qwen3-4B推理→vLLM level-1 sleep→单步
 
 固定SkyRL提交的`GeneratorOutput`和step-wise官方契约已用于实现`recipe/tito.py`的依赖无关构造/验真层：每个LLM turn保存推理引擎返回的prompt/response token、逐token rollout logprob、显式position、全1 response mask、模板SHA、权重版本、截断和观测长度；最后一步最后一个token承载0/1结果，轨迹必须连续。5项TITO测试先取得缺模块RED，再覆盖单token、logprob、position、mask、模板、权重版本和边界篡改的fail-closed。`recipe/generator.py`进一步实现依赖注入式Harbor→SkyRL纯桥接层，5项测试覆盖精确请求/输出顺序、整组无效剔除、mixed-group统计、非负训练步、身份/采样漂移、取消回收和零有效组审计。两层都拒绝文本字段，不能对trace事后重tokenize；但尚未在冻结SkyRL进程内和真实Harbor 0.4 `ModalEnvironment`上运行，因此真实入口的`strict_stepwise_bridge_not_implemented`与`harbor_0.4_task_compatibility_not_run`仍保留。
 
+`recipe/checkpoint.py`已增加依赖无关的更新/权重交接/恢复证据层，5项测试先取得缺模块RED后通过。有效更新要求optimizer参数与LoRA白名单完全一致、base与adapter命名空间不重叠、base逐名张量字节摘要保持相等、adapter摘要确实改变，并同时观察到正且有限的有效loss token、advantage、step前policy梯度范数和update norm。推理端必须以实际加载的base/adapter张量内容回执匹配新版本，下一批rollout逐条绑定该版本；仅回显版本号或仅输出变化均不能通过。checkpoint manifest以内容摘要、不可覆盖和原子rename发布，并要求不同进程复验恢复后的张量内容。该项仍是纯契约测试，没有真实optimizer step、vLLM装载或Modal Volume恢复，不能称M2-A更新/交接通过。
+
 ## M1 当前状态 · train-screen终止于科学门槛，未验收
 
 新的train-screen使用源码`adf118ab706306d51321b06403c43777aa0d9d6b`、plan `plan-sandbox-rl-mopd-20260909t041738z-ae521390`、run `run-sandbox-rl-mopd-20260909t041753z-fd79237d`在home-5090非独占GPU入口完成。80/80次均为有效reward，invalid=0、reward0=77、reward1=3，逐次verifier、agent阶段私有材料隔离和Daytona清理均完整；累计沙箱生命周期4155.700秒、估算$0.077254且`billing_verified=false`。两次出现组内0/1混合的题都是`self-v2-resource_lifetime-00/01`，其余18组零方差；A8+B8规则因此得到`selection_ready=false`、空`overfit_16`和`phase_accepted=false`。详细summary SHA256为`5f82248ecbb3aa876da3e3365cff7b80a555d0bae788f93fc886db5e8c104f64`；wrapper记录峰值自有显存23302MiB、自有进程组已退出。该结果证明80次推理/判分/回收链路可运行，也说明当前候选不足以构造冻结的overfit16；它不是infra失败，不授权dev20、Modal GPU canary或M2训练，且不通过放宽选择规则或追加同身份样本来改写。
