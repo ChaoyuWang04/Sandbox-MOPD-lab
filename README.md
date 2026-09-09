@@ -18,7 +18,7 @@
 
 2026-09-07 用户批准本 Lab 独立于父项目：新模型 Qwen/Qwen3-4B、新任务池、新运行时、新训练环境。不导入父项目 syncopate/、不使用父项目模型、数据、venv、锁文件、runbook、Volume 或审计目录。harness-lab 仅供目录与记录方式参考，服务、密钥和产物各自独立。
 
-用户已排除RunPod；本Lab优先home-5090模型推理与调度、Daytona CPU沙箱、Modal有界对照与云训练候选。遵循HOME-5090手册，Mac不跑长期服务。普通prepare/probe已接入并验收；冷prepare接入和测试已取消。终态与证据见EXPERIMENTS，未运行训练或故障注入。
+用户已排除RunPod；M1纯推理与调度留在共享home-5090并与Ollama共存，仍由运行器按实时空闲显存/内存准入且只清理自有进程。M2训练暂不使用home-5090：先验证Daytona单GPU训练与持久卷，若账号配额或功能不成立则使用Modal。Daytona CPU仍承担任务沙箱。遵循HOME-5090手册，Mac不跑长期服务。终态与证据见EXPERIMENTS，尚未运行RL训练或故障注入。
 
 Mac所有Lab文件在本目录。5090源码已落位`/home/samwang/code/projects/sandbox-rl-MOPD-lab`，控制器按commit创建独立运行worktree；持久环境/模型/cache/artifacts统一在独立`/home/samwang/data/sandbox-rl-MOPD-lab`，不写回source_repo。这是控制器源码与资产分离边界，不是借用其他项目资源。云端使用独立Lab路径，不借用父项目Volume。禁止将父仓库、宿主机HOME、密钥目录或Docker socket挂给agent。
 

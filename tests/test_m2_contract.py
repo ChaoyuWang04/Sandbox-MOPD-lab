@@ -34,10 +34,9 @@ class M2ContractTests(unittest.TestCase):
                         "transformers": "5.3.0", "peft": "0.18.1",
                         "flash_attn": "2.8.3", "flashinfer_python": "0.6.6",
                         "daytona": "0.161.0"},
-            "target": {"host": "5090home", "gpu_name": "NVIDIA GeForce RTX 5090",
-                       "gpu_uuid": "GPU-11111111-2222-3333-4444-555555555555",
-                       "gpu_memory_mib": 32607,
-                       "data_root": "/home/samwang/data/sandbox-rl-MOPD-lab"},
+            "target": {"training_platform_order": ["daytona", "modal"],
+                       "home5090_training": False, "gpu_count": 1,
+                       "persistence_required": True},
             "entrypoint": "examples.train_integrations.harbor.entrypoints.main_harbor",
             "execution_ready": False,
             "unverified": ["strict_stepwise_bridge_not_implemented"],
@@ -55,7 +54,10 @@ class M2ContractTests(unittest.TestCase):
             "trajectory": {"api": "chat/completions", "step_wise_trajectories": True,
                            "merge_stepwise_output": False, "return_token_ids": True,
                            "return_token_logprobs": True, "template_sha256": "1" * 64},
-            "placement": {"exclusive_gpu": True, "colocate_all": True,
+            "training_backend": {"type": "daytona", "gpu_count": 1,
+                                 "gpu_types": ["RTX-5090", "RTX-4090"], "spot": False,
+                                 "persistence": "volume"},
+            "placement": {"gpu_isolation": "dedicated_cloud_sandbox", "colocate_all": True,
                           "run_engines_locally": True, "vllm_sleep_wake": True,
                           "policy": "lora_fsdp", "reference": "disabled",
                           "critic": "disabled", "reward_model": "disabled"},
@@ -69,8 +71,8 @@ class M2ContractTests(unittest.TestCase):
                         "micro_train_batch_size_per_gpu": 1,
                         "micro_forward_batch_size_per_gpu": 1},
             "provider": {"type": "daytona",
-                         "credential_file": "/home/samwang/data/sandbox-rl-MOPD-lab/secrets/daytona.env",
-                         "credential_file_mode": "0600", "cpus": 1, "memory_mb": 1024,
+                         "credential_source": "injected_secret_env",
+                         "credential_env": "DAYTONA_API_KEY", "cpus": 1, "memory_mb": 1024,
                          "storage_mb": 3072, "network": False, "ttl_seconds": 300},
             "limits": {"max_updates": 1, "max_generated_tokens": 32768,
                        "max_training_tokens": 32768, "max_wall_seconds": 5400,
@@ -104,8 +106,9 @@ class M2ContractTests(unittest.TestCase):
         paths = (("sources", "skyrl", "commit"), ("sources", "skyrl", "uv_lock_sha256"),
                  ("sources", "harbor", "commit"), ("model", "revision"),
                  ("model", "model_manifest_sha256"), ("runtime", "torch"),
-                 ("runtime", "peft"), ("runtime", "daytona"), ("target", "gpu_uuid"),
-                 ("target", "data_root"), (None, "entrypoint"), (None, "execution_ready"),
+                 ("runtime", "peft"), ("runtime", "daytona"),
+                 ("target", "training_platform_order"), ("target", "home5090_training"),
+                 (None, "entrypoint"), (None, "execution_ready"),
                  (None, "unverified"))
         for path in paths:
             broken = copy.deepcopy(lock)
@@ -185,9 +188,12 @@ class M2ContractTests(unittest.TestCase):
             with self.subTest(key=key, value=value), self.assertRaises(ValueError):
                 self.validate(broken)
 
-    def test_single_gpu_and_strict_tito_are_explicit(self):
+    def test_cloud_training_backend_and_strict_tito_are_explicit(self):
         config = self.run_config()
-        mutations = (("placement", "exclusive_gpu", False), ("placement", "colocate_all", False),
+        mutations = (("training_backend", "type", "home5090"),
+                     ("training_backend", "spot", True),
+                     ("placement", "gpu_isolation", "shared_host"),
+                     ("placement", "colocate_all", False),
                      ("placement", "reference", "enabled"), ("trajectory", "api", "completions"),
                      ("trajectory", "return_token_ids", False),
                      ("trajectory", "return_token_logprobs", False))

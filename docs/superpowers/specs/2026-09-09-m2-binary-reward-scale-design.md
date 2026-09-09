@@ -13,8 +13,8 @@ Prove that the Lab can train Qwen3-4B from real Harbor agent trajectories with s
 - The 200-task asset set is assembled as train80/dev20/final100, but M1 is not closed: a representative Terminal-Bench control, `overfit_16`, and frozen model baselines remain.
 - A four-task Qwen3-4B to Daytona pilot proved the model/tool/verifier/cleanup path and produced valid rewards `0/1/0/0`; it performed no optimizer step.
 - `recipe/` contains no trainer implementation. SkyRL, the GPU dependency lock, TITO, loss masks, weight synchronization, and checkpoint recovery are unimplemented.
-- Mac remains the source, Git, review, and short CPU-test control plane. Home-5090 owns the model, GPU environment, caches, checkpoints, and large artifacts. Daytona owns CPU task sandboxes. No Mac model, container, trainer, or durable service is introduced.
-- Home-5090 is shared. Admission checks never stop an unknown process. Every durable GPU run uses an allowlisted `hlab` recipe, immutable committed ref, exact run ID, and the user's 2026-09-09 approval of this design.
+- Mac remains the source, Git, review, and short CPU-test control plane. M1 inference remains on shared home-5090 alongside Ollama, guarded by live free-memory admission and owned-process cleanup. M2 training does not use home-5090. Daytona owns the primary single-GPU trainer sandbox and CPU task sandboxes; Modal is the fallback trainer platform. No Mac model, container, trainer, or durable service is introduced.
+- Daytona GPU quota, runtime compatibility, paid billing eligibility, and durable volume behavior are unverified and block training. A single bounded capability probe is required; quota or capability rejection switches the training target to a separately frozen Modal config instead of repeated retries.
 
 ## Architecture
 
@@ -22,9 +22,9 @@ Prove that the Lab can train Qwen3-4B from real Harbor agent trajectories with s
 
 ```text
 Mac committed source/config
-  -> hlab sync/plan/submit
-  -> home-5090 systemd-user run worktree
-       -> SkyRL trainer + colocated vLLM on one RTX 5090
+  -> bounded Daytona API submission (Modal API only on fallback)
+  -> dedicated cloud GPU sandbox + durable Lab volume
+       -> SkyRL trainer + colocated vLLM on one GPU
        -> Harbor Trial controller
        -> Daytona CPU sandbox per rollout
        -> verifier reward (0/1 or invalid)
@@ -36,7 +36,7 @@ Mac committed source/config
 
 The first implementation target is a single coherent released SkyRL custom-generator contract, using the upstream Harbor-generator pattern as a reference without importing the parent Syncopate environment or business code. Exact SkyRL, PyTorch, vLLM, Transformers, Ray, Harbor, CUDA, and driver identities must be frozen together before GPU execution. A dependency being latest does not establish compatibility.
 
-The one-GPU topology is also part of the lock: `colocate_all=true`, `run_engines_locally=true`, vLLM sleep/wake enabled, LoRA policy under FSDP, and reference/critic/reward-model components disabled. A no-Daytona capacity canary must load the exact topology and complete one sleep/train/wake/inference cycle before any provider sandbox is created. The `hlab` GPU recipe is `exclusive_gpu=true`; admission failure stops without killing an unknown process.
+The one-GPU topology is also part of the lock: a dedicated on-demand cloud GPU sandbox, `colocate_all=true`, `run_engines_locally=true`, vLLM sleep/wake enabled, LoRA policy under FSDP, and reference/critic/reward-model components disabled. Before any task sandbox is created, the chosen training sandbox must mount durable storage and complete one no-task sleep/train/wake/inference capacity canary. Daytona is tried once with ordered RTX 5090 then RTX 4090 preference; provider quota/capability failure triggers a newly frozen Modal fallback rather than changing home-5090.
 
 ### Trajectory contract
 
@@ -105,16 +105,16 @@ Current rule:
 ## Failure handling and stop conditions
 
 - Any environment, model-HTTP, test-collection, verifier-protocol, missing-reward, cleanup-unknown, NaN/Inf, TITO, mask, weight-identity, or checkpoint-reload failure is not a model reward zero.
-- A cleanup-unknown result stops new Daytona creation for that campaign. A GPU ownership conflict stops the GPU run without killing anything.
+- A cleanup-unknown result stops new Daytona creation for that campaign. A cloud GPU sandbox with uncertain ownership or deletion state stops the run without adopting or deleting unrelated objects.
 - The plan stops scaling when reward groups have no usable variance, dev repeatedly degrades, the registered wall-time/cost envelope is exceeded, or task/harness identities drift.
 - Failed runs keep immutable evidence and are read-only. Mutating phases do not auto-resume: a new attempt requires a new run/attempt identity, while the ledger prevents replay of provider creation or optimizer actions. A submitted `hlab` plan is never submitted twice after an uncertain response.
-- The Daytona credential is read only inside the generator worker from a fixed mode-0600 host file and is scoped to the Daytona SDK client. It must not enter Ray `runtime_env`, model/inference processes, sandboxes, committed configs, or logs.
+- The Daytona credential is read by the short-lived controller from the existing private configuration and injected into the training sandbox as a provider secret only when nested CPU task creation is required. It must not enter committed configs, task sandboxes, model prompts, trajectories, or logs. The training sandbox and secret injection must be destroyed and confirmed by exact object identity.
 
 ## Documentation and artifacts
 
 - Versioned experiment configs live in `configs/`.
 - Reusable Python implementation lives in `recipe/` and `lab_runtime/`; `scripts/` contains fixed entrypoints only.
-- Small summaries and manifests are committed. Models, task source archives, environments, trajectories, checkpoints, caches, and large logs stay under `/home/samwang/data/sandbox-rl-MOPD-lab/` or the provider-owned sandbox.
+- Small summaries and manifests are committed. M1 assets remain under `/home/samwang/data/sandbox-rl-MOPD-lab/`; M2 environments, trajectories, checkpoints, caches, and large logs stay in the selected cloud provider's Lab-specific durable volume and never depend on the Mac filesystem.
 - `docs/EXPERIMENTS.md` records observed runs and conclusions; `docs/BUDGET.md` records preregistered and actual resources; the total plan is rewritten in place rather than accumulating conflicting status.
 
 ## Acceptance boundary

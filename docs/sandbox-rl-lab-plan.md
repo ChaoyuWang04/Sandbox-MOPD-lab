@@ -1,7 +1,7 @@
 # Sandbox RL Lab · 沙箱化 Agentic RL + 多师 OPD 实施计划书
 
 > 当前执行入口：[M2分阶段实施计划](superpowers/plans/2026-09-09-m2-binary-reward-scale.md)，M1剩余边界见[200题扩池计划](plans/2026-09-08-m1-200-case-plan.md)；独立边界：[README](../README.md)。M0已完成：G1推理、G2授权8并发降级、G3正常阶段链路通过；2026-09-08用户取消M0-G4冷准备速度门槛，非将历史失败改成通过。M1的200题资产已装配，TB代表性接入、overfit_16与train/dev基线仍待完成，因此尚未验收。物理根目录统一为 `sandbox-rl-MOPD-lab/`，下文实验命名 `sandbox-rl-lab` 保留用于 W&B。
-> 用户已排除 RunPod，Mac 仅编辑/控制/短时检查、不启动实际长期服务；优先 HOME-5090 模型计算与 Daytona 大规模 CPU 沙箱，Modal 为小规模对照和后续 GPU 候选。用户报告 Daytona $200 credits，余额/有效期/账户配额尚未核对。两家 smoke 见 [EXPERIMENTS](EXPERIMENTS.md)，运行预算见 [BUDGET](BUDGET.md)。用户已授权独立仓库每批验证后提交推送。
+> 用户已排除 RunPod，Mac 仅编辑/控制/短时检查、不启动实际长期服务。M1纯推理留在共享HOME-5090并与Ollama共存；M2训练暂不使用HOME-5090，首选Daytona单GPU，功能/配额不成立时回退Modal。Daytona CPU继续承担任务沙箱。用户报告 Daytona $200 credits，但官方账单文档说明免费credit不可用于GPU，余额/有效期/实际GPU配额仍须实测。两家 smoke 见 [EXPERIMENTS](EXPERIMENTS.md)，运行预算见 [BUDGET](BUDGET.md)。用户已授权独立仓库每批验证后提交推送。
 
 > 目标：以最小成本在真沙箱（容器）环境里跑通长程 agentic RL 全链路，并完成两个有原创价值的实验：
 > ① **Runtime 稳定性三臂消融**——定量回答"不稳定的执行环境到底给 RL 训练带来多大伤害、以何种机制伤害"；
@@ -20,9 +20,10 @@
 | 端 | 角色 | 用途 |
 |---|---|---|
 | Mac (24GB) | 指挥部 | 代码编写、结果分析、短时控制；不跑模型、沙箱或常驻服务 |
-| 5090 服务器 (32GB, sm_120) | 筛选与调试 | vLLM 推理与 agent 调度；当前不要求安装 Docker，任务工具交给远端沙箱 |
+| 5090 服务器 (32GB, sm_120) | M1筛选与调试 | vLLM 推理与 agent 调度，与Ollama共存；实时资源不足即不启动，不停止其他人的进程；M2训练暂不在此运行 |
 | Daytona CPU Sandbox | 大规模工具执行首选 | 先通过小规模 smoke 与配额检查，再按计划扩并发；不自动等同 GPU 训练平台 |
-| Modal GPU（卡型与容量待 M2 计划冻结） | 云训练候选 | rollout(vLLM) 与 LoRA 训练摆放实测；工具沙箱可独立使用 Modal/Daytona |
+| Daytona GPU | M2云训练首选 | 单个专用GPU沙箱内共置rollout(vLLM)与LoRA训练；先验GPU配额、运行栈和持久卷，spot不用于正确性验收 |
+| Modal GPU | M2训练回退 | Daytona功能、配额或付费路径不成立时启用；另行冻结卡型、Volume、时限与预算 |
 
 home-5090 的筛选任务经已注册 hlab recipe 执行；没有 recipe 时先接入，不使用临时 SSH 后台训练。后文 pod 一词泛指云训练资源，不代表 RunPod，也不要求内嵌 Docker。
 
@@ -360,14 +361,15 @@ G2/G3是必交科学结果，不强迫结果为正。实验交付完整与“证
 | 4B 过拟合都学不动 | → 先查 verifier/harness；仍不行 → 简化任务（减轮数）；最后才 → 8B |
 | 任务太容易(k 中位数>6) | → 加难任务变体（多步依赖、更大文件、复合条件），**不换更大模型** |
 | pod 单 step >6 min | → 先查瓶颈；更改任务/生成预算或训练规模须另行预注册并获批，不自动缩80训练题，也不裁剪冻结最终测试 |
+| Daytona GPU配额/功能/持久卷不成立 | → 保存一次有界探测证据并切换Modal，不反复付费重试 |
 | Modal 所选 GPU 不可用 | → 重新登记替代卡型并验证容量/正确性，不默认硬件等价 |
 | 预算逼近 $500 | → 暂停并报告缩减方案；单教师OPD仅可另行批准为管线试验，不能替代当前双教师及5×4矩阵验收 |
 
 ## 附录 B · 每日开工/收工清单
 
 ```bash
-# home-5090：hlab doctor/projects/recipes → 精确 commit/plan → 获批运行 → 保存 run_id
-# 云端：Mac 直接控制 Modal，明确函数与 Sandbox ID、超时和清理
+# home-5090：仅M1经hlab doctor/projects/recipes → 精确 commit/plan → 保存 run_id
+# 云端训练：Daytona GPU优先，Modal回退；明确Sandbox/App ID、持久卷、超时和清理
 # 收工：checkpoint/证据保存 → 记录费用 → 精确停止并查询确认
 # 断线后按 run_id 恢复；不通过 tmux/nohup 绕过 hlab
 ```
@@ -376,6 +378,6 @@ G2/G3是必交科学结果，不强迫结果为正。实验交付完整与“证
 
 - 不做 SFT 冷启（与 Mercor 同款选择：RL 是最难搞对的部分，直接攻它）
 - 不做 fully-async（单卡无意义；staleness 研究属于 Syncopate 线）
-- 不使用 RunPod；允许按实测选择 home-5090 Docker 或 Modal/Daytona 托管沙箱
+- 不使用 RunPod；M1推理使用home-5090，M2训练只使用Daytona或Modal托管GPU
 - 不训 MoE（GSPO 话题留在简历项目一的叙事里）
 - 不追 Terminal-Bench 榜分（external 集只当外部效度温度计）

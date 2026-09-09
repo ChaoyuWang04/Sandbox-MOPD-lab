@@ -4,7 +4,7 @@
   "pool_manifest": "configs/m1-pool-v2-r2.json",
   "pool_manifest_sha256": "c98a74d88d3641a02c8e9ce40505f9e4f1b26f17042aae43cab801367c600f5b",
   "stack_lock": "configs/m2-stack-lock.json",
-  "stack_lock_sha256": "d17d7dcf1f06b1774624c7cc2e29f66b5bb1b6e18a6967c477192806da5ba12f",
+  "stack_lock_sha256": "e6a05176b035224fa126e5f5c722484602d4bef3d7457a49ede14a8db88d524b",
   "start_checkpoint_sha256": "ee8091f8197d0dd4c54bfa0054672bee2787270a020966c9f1ddde78329fd65b",
   "task_ids": [
     "data_csv-train-00",
@@ -24,8 +24,18 @@
     "return_token_logprobs": true,
     "template_sha256": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101"
   },
+  "training_backend": {
+    "type": "daytona",
+    "gpu_count": 1,
+    "gpu_types": [
+      "RTX-5090",
+      "RTX-4090"
+    ],
+    "spot": false,
+    "persistence": "volume"
+  },
   "placement": {
-    "exclusive_gpu": true,
+    "gpu_isolation": "dedicated_cloud_sandbox",
     "colocate_all": true,
     "run_engines_locally": true,
     "vllm_sleep_wake": true,
@@ -57,8 +67,8 @@
   },
   "provider": {
     "type": "daytona",
-    "credential_file": "/home/samwang/data/sandbox-rl-MOPD-lab/secrets/daytona.env",
-    "credential_file_mode": "0600",
+    "credential_source": "injected_secret_env",
+    "credential_env": "DAYTONA_API_KEY",
     "cpus": 1,
     "memory_mb": 1024,
     "storage_mb": 3072,

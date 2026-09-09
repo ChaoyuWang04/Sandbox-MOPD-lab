@@ -22,7 +22,7 @@
   "runtime": {
     "python": "3.12.3",
     "cuda": "12.8",
-    "driver": "595.71.05",
+    "driver": "provider-managed-pending-probe",
     "torch": "2.10.0+cu128",
     "vllm": "0.19.0",
     "ray": "2.51.1",
@@ -30,21 +30,25 @@
     "peft": "0.18.1",
     "flash_attn": "2.8.3+cu12torch2.10cxx11abiTRUE",
     "flashinfer_python": "0.6.6",
-    "daytona": "0.161.0"
+    "daytona": "0.210.0"
   },
   "target": {
-    "host": "5090home",
-    "gpu_name": "NVIDIA GeForce RTX 5090",
-    "gpu_uuid": "GPU-6f371680-d503-cc25-1a11-24afcc8bbe9e",
-    "gpu_memory_mib": 32607,
-    "data_root": "/home/samwang/data/sandbox-rl-MOPD-lab"
+    "training_platform_order": [
+      "daytona",
+      "modal"
+    ],
+    "home5090_training": false,
+    "gpu_count": 1,
+    "persistence_required": true
   },
   "entrypoint": "examples.train_integrations.harbor.entrypoints.main_harbor",
   "execution_ready": false,
   "unverified": [
-    "isolated_environment_not_prepared",
+    "daytona_gpu_quota_not_probed",
+    "daytona_gpu_runtime_not_probed",
+    "daytona_volume_persistence_not_probed",
     "harbor_0.4_task_compatibility_not_run",
-    "single_gpu_capacity_canary_not_run",
+    "daytona_single_gpu_capacity_canary_not_run",
     "strict_stepwise_bridge_not_implemented"
   ]
 }

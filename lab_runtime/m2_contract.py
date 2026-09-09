@@ -18,9 +18,8 @@ _STACK_KEYS = {"schema_version", "sources", "model", "runtime", "target", "entry
                "execution_ready", "unverified"}
 _RUN_KEYS = {"schema_version", "mode", "pool_manifest", "pool_manifest_sha256",
              "stack_lock", "stack_lock_sha256", "start_checkpoint_sha256", "task_ids",
-             "sampling", "trajectory", "placement", "model", "trainer", "provider",
-             "limits", "required_evidence"}
-_GPU_UUID = re.compile(r"GPU-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}", re.I)
+             "sampling", "trajectory", "training_backend", "placement", "model", "trainer",
+             "provider", "limits", "required_evidence"}
 _INVALID_REASONS = {
     "provider_auth", "provider_create_rejected", "provider_create_uncertain",
     "sandbox_setup_failure", "sandbox_timeout", "sandbox_cleanup_uncertain",
@@ -98,15 +97,16 @@ def validate_stack_lock(lock: dict) -> dict:
     for key in _RUNTIME_KEYS:
         _text(runtime.get(key), f"runtime {key}")
     target = _object(lock.get("target"), "target")
-    _require(set(target) == {"host", "gpu_name", "gpu_uuid", "gpu_memory_mib", "data_root"},
+    _require(set(target) == {"training_platform_order", "home5090_training", "gpu_count",
+                             "persistence_required"},
              "target has unknown or missing fields")
-    _require(target.get("host") == "5090home", "M2 target host must be 5090home")
-    _require(target.get("gpu_name") == "NVIDIA GeForce RTX 5090", "unexpected target GPU")
-    _require(isinstance(target.get("gpu_uuid"), str)
-             and _GPU_UUID.fullmatch(target["gpu_uuid"]) is not None, "invalid target GPU UUID")
-    _integer(target.get("gpu_memory_mib"), "target GPU memory", minimum=30_000, maximum=40_000)
-    _require(target.get("data_root") == "/home/samwang/data/sandbox-rl-MOPD-lab",
-             "unexpected M2 data root")
+    _require(target.get("training_platform_order") == ["daytona", "modal"],
+             "M2 training platform order must be Daytona then Modal")
+    _require(target.get("home5090_training") is False,
+             "home-5090 training is disabled for M2")
+    _require(target.get("gpu_count") == 1, "M2 bring-up requires one cloud GPU")
+    _require(target.get("persistence_required") is True,
+             "cloud training requires durable checkpoint persistence")
     _require(lock.get("entrypoint") == "examples.train_integrations.harbor.entrypoints.main_harbor",
              "unexpected SkyRL Harbor entrypoint")
     _require(type(lock.get("execution_ready")) is bool, "execution_ready must be boolean")
@@ -230,9 +230,14 @@ def validate_run_config(config: dict, manifest: dict, stack_lock: dict, *,
     _require(isinstance(template, str) and _SHA256.fullmatch(template) is not None,
              "template_sha256 must be an immutable SHA256")
 
+    training_backend = _object(config.get("training_backend"), "training_backend")
+    _require(training_backend == {"type": "daytona", "gpu_count": 1,
+                                  "gpu_types": ["RTX-5090", "RTX-4090"], "spot": False,
+                                  "persistence": "volume"},
+             "M2 primary training backend must be the registered on-demand Daytona GPU")
     placement = _object(config.get("placement"), "placement")
     expected_placement = {
-        "exclusive_gpu": True,
+        "gpu_isolation": "dedicated_cloud_sandbox",
         "colocate_all": True,
         "run_engines_locally": True,
         "vllm_sleep_wake": True,
@@ -242,7 +247,7 @@ def validate_run_config(config: dict, manifest: dict, stack_lock: dict, *,
         "reward_model": "disabled",
     }
     _require(placement == expected_placement,
-             "single-GPU M2 placement must match the registered colocated topology")
+             "cloud single-GPU M2 placement must match the registered colocated topology")
 
     model = _object(config.get("model"), "model")
     _require(model == {"max_model_len": 16384,
@@ -260,8 +265,8 @@ def validate_run_config(config: dict, manifest: dict, stack_lock: dict, *,
              "trainer must match the registered single-GPU LoRA contract")
     provider = _object(config.get("provider"), "provider")
     _require(provider == {"type": "daytona",
-                          "credential_file": "/home/samwang/data/sandbox-rl-MOPD-lab/secrets/daytona.env",
-                          "credential_file_mode": "0600", "cpus": 1,
+                          "credential_source": "injected_secret_env",
+                          "credential_env": "DAYTONA_API_KEY", "cpus": 1,
                           "memory_mb": 1024, "storage_mb": 3072,
                           "network": False, "ttl_seconds": 300},
              "provider must match the registered private Daytona contract")
