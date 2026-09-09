@@ -13,7 +13,7 @@ _SHA256 = re.compile(r"[0-9a-f]{64}")
 _MUTABLE_IDENTITIES = {"", "main", "master", "latest", "head"}
 _MODES = {"m2-bringup", "m2-overfit16", "m2-scale40", "m2-scale80"}
 _RUNTIME_KEYS = ("python", "cuda", "driver", "torch", "vllm", "ray", "transformers",
-                 "peft", "flash_attn", "flashinfer_python", "daytona")
+                 "peft", "flash_attn", "flashinfer_python", "modal")
 _STACK_KEYS = {"schema_version", "sources", "model", "runtime", "target", "entrypoint",
                "execution_ready", "unverified"}
 _RUN_KEYS = {"schema_version", "mode", "pool_manifest", "pool_manifest_sha256",
@@ -97,11 +97,13 @@ def validate_stack_lock(lock: dict) -> dict:
     for key in _RUNTIME_KEYS:
         _text(runtime.get(key), f"runtime {key}")
     target = _object(lock.get("target"), "target")
-    _require(set(target) == {"training_platform_order", "home5090_training", "gpu_count",
-                             "persistence_required"},
+    _require(set(target) == {"training_platform_order", "selected_training_platform",
+                             "home5090_training", "gpu_count", "persistence_required"},
              "target has unknown or missing fields")
     _require(target.get("training_platform_order") == ["daytona", "modal"],
              "M2 training platform order must be Daytona then Modal")
+    _require(target.get("selected_training_platform") == "modal",
+             "Daytona rejection selects the registered Modal fallback")
     _require(target.get("home5090_training") is False,
              "home-5090 training is disabled for M2")
     _require(target.get("gpu_count") == 1, "M2 bring-up requires one cloud GPU")
@@ -231,10 +233,10 @@ def validate_run_config(config: dict, manifest: dict, stack_lock: dict, *,
              "template_sha256 must be an immutable SHA256")
 
     training_backend = _object(config.get("training_backend"), "training_backend")
-    _require(training_backend == {"type": "daytona", "gpu_count": 1,
-                                  "gpu_types": ["RTX-5090", "RTX-4090"], "spot": False,
+    _require(training_backend == {"type": "modal", "gpu_count": 1,
+                                  "gpu_types": ["L40S"], "spot": False,
                                   "persistence": "volume"},
-             "M2 primary training backend must be the registered on-demand Daytona GPU")
+             "M2 training backend must be the registered Modal L40S fallback")
     placement = _object(config.get("placement"), "placement")
     expected_placement = {
         "gpu_isolation": "dedicated_cloud_sandbox",
@@ -264,24 +266,23 @@ def validate_run_config(config: dict, manifest: dict, stack_lock: dict, *,
                          "micro_forward_batch_size_per_gpu": 1},
              "trainer must match the registered single-GPU LoRA contract")
     provider = _object(config.get("provider"), "provider")
-    _require(provider == {"type": "daytona",
-                          "credential_source": "injected_secret_env",
-                          "credential_env": "DAYTONA_API_KEY", "cpus": 1,
+    _require(provider == {"type": "modal",
+                          "credential_source": "modal_runtime_identity", "cpus": 1,
                           "memory_mb": 1024, "storage_mb": 3072,
                           "network": False, "ttl_seconds": 300},
-             "provider must match the registered private Daytona contract")
+             "provider must match the registered private Modal task-sandbox contract")
 
     limits = _object(config.get("limits"), "limits")
     _require(set(limits) == {"max_updates", "max_generated_tokens", "max_training_tokens",
                              "max_wall_seconds", "max_created_sandboxes",
-                             "daytona_concurrency"},
+                             "modal_concurrency"},
              "limits has unknown or missing fields")
     _integer(limits.get("max_updates"), "max_updates", maximum=1_000)
     _integer(limits.get("max_generated_tokens"), "max_generated_tokens", maximum=50_000_000)
     _integer(limits.get("max_training_tokens"), "max_training_tokens", maximum=50_000_000)
     _integer(limits.get("max_created_sandboxes"), "max_created_sandboxes", maximum=4_096)
     _integer(limits.get("max_wall_seconds"), "max_wall_seconds", maximum=86_400)
-    _integer(limits.get("daytona_concurrency"), "daytona_concurrency", maximum=8)
+    _integer(limits.get("modal_concurrency"), "modal_concurrency", maximum=8)
     required_creations = len(task_ids) * group_size * limits["max_updates"]
     _require(limits["max_created_sandboxes"] == required_creations,
              "max_created_sandboxes must equal the registered task sample count")
@@ -292,7 +293,7 @@ def validate_run_config(config: dict, manifest: dict, stack_lock: dict, *,
     if config["mode"] == "m2-bringup":
         _require(limits == {"max_updates": 1, "max_generated_tokens": 32768,
                             "max_training_tokens": 32768, "max_wall_seconds": 5400,
-                            "max_created_sandboxes": 8, "daytona_concurrency": 4},
+                            "max_created_sandboxes": 8, "modal_concurrency": 4},
                  "M2 bringup limits must match the approved exact batch")
     evidence = _object(config.get("required_evidence"), "required_evidence")
     _require(evidence == {"mixed_valid_group_count_min": 1,

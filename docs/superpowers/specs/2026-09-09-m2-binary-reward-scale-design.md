@@ -13,8 +13,8 @@ Prove that the Lab can train Qwen3-4B from real Harbor agent trajectories with s
 - The 200-task asset set is assembled as train80/dev20/final100, but M1 is not closed: a representative Terminal-Bench control, `overfit_16`, and frozen model baselines remain.
 - A four-task Qwen3-4B to Daytona pilot proved the model/tool/verifier/cleanup path and produced valid rewards `0/1/0/0`; it performed no optimizer step.
 - `recipe/` contains no trainer implementation. SkyRL, the GPU dependency lock, TITO, loss masks, weight synchronization, and checkpoint recovery are unimplemented.
-- Mac remains the source, Git, review, and short CPU-test control plane. M1 inference remains on shared home-5090 alongside Ollama, guarded by live free-memory admission and owned-process cleanup. M2 training does not use home-5090. Daytona owns the primary single-GPU trainer sandbox and CPU task sandboxes; Modal is the fallback trainer platform. No Mac model, container, trainer, or durable service is introduced.
-- Daytona GPU quota, runtime compatibility, paid billing eligibility, and durable volume behavior are unverified and block training. A single bounded capability probe is required; quota or capability rejection switches the training target to a separately frozen Modal config instead of repeated retries.
+- Mac remains the source, Git, review, and short CPU-test control plane. M1 inference remains on shared home-5090 alongside Ollama, guarded by live free-memory admission and owned-process cleanup. M2 training does not use home-5090. The one-shot Daytona GPU request was rejected, so Modal now owns the single-GPU trainer and Harbor CPU task sandboxes. No Mac model, container, trainer, or durable service is introduced.
+- The bounded Modal L40S/CUDA/Volume probe passed. Harbor 0.4 Modal task compatibility, the complete-stack capacity canary, and the strict step-wise bridge remain hard blockers before training.
 
 ## Architecture
 
@@ -22,11 +22,11 @@ Prove that the Lab can train Qwen3-4B from real Harbor agent trajectories with s
 
 ```text
 Mac committed source/config
-  -> bounded Daytona API submission (Modal API only on fallback)
+  -> bounded Modal API submission
   -> dedicated cloud GPU sandbox + durable Lab volume
        -> SkyRL trainer + colocated vLLM on one GPU
        -> Harbor Trial controller
-       -> Daytona CPU sandbox per rollout
+       -> Modal CPU sandbox per rollout
        -> verifier reward (0/1 or invalid)
        -> token/mask/per-token rollout-logprob training batch
        -> LoRA optimizer step
@@ -36,7 +36,7 @@ Mac committed source/config
 
 The first implementation target is a single coherent released SkyRL custom-generator contract, using the upstream Harbor-generator pattern as a reference without importing the parent Syncopate environment or business code. Exact SkyRL, PyTorch, vLLM, Transformers, Ray, Harbor, CUDA, and driver identities must be frozen together before GPU execution. A dependency being latest does not establish compatibility.
 
-The one-GPU topology is also part of the lock: a dedicated on-demand cloud GPU sandbox, `colocate_all=true`, `run_engines_locally=true`, vLLM sleep/wake enabled, LoRA policy under FSDP, and reference/critic/reward-model components disabled. Before any task sandbox is created, the chosen training sandbox must mount durable storage and complete one no-task sleep/train/wake/inference capacity canary. Daytona is tried once with ordered RTX 5090 then RTX 4090 preference; provider quota/capability failure triggers a newly frozen Modal fallback rather than changing home-5090.
+The one-GPU topology is also part of the lock: a dedicated Modal L40S, `colocate_all=true`, `run_engines_locally=true`, vLLM sleep/wake enabled, LoRA policy under FSDP, and reference/critic/reward-model components disabled. Before any task sandbox is created, the training Function must mount the Lab Volume and complete one no-task sleep/train/wake/inference capacity canary. The rejected Daytona probe is not retried and does not change home-5090.
 
 ### Trajectory contract
 
@@ -72,7 +72,7 @@ A checkpoint is accepted only after a new process loads the frozen base plus sav
 
 ### M2-A: 2-4 task bring-up
 
-Run the smallest set with a frozen `n_samples_per_prompt`. After invalid outcomes are removed, at least one prompt group must retain two or more valid samples and contain both reward 0 and reward 1. One real run must demonstrate rollout, reward, nonzero group-relative advantage, nonzero effective policy-loss tokens, loss, backward, nonzero pre-step policy gradient, optimizer, nonzero adapter update, content-proven weight handoff, and fresh-process checkpoint recovery. TITO/logprob/mask assertions, finite-number checks, typed invalid handling, exact Daytona cleanup, GPU process ownership, and artifact identities are hard gates.
+Run the smallest set with a frozen `n_samples_per_prompt`. After invalid outcomes are removed, at least one prompt group must retain two or more valid samples and contain both reward 0 and reward 1. One real run must demonstrate rollout, reward, nonzero group-relative advantage, nonzero effective policy-loss tokens, loss, backward, nonzero pre-step policy gradient, optimizer, nonzero adapter update, content-proven weight handoff, and fresh-process checkpoint recovery. TITO/logprob/mask assertions, finite-number checks, typed invalid handling, exact Modal object cleanup, GPU process ownership, and artifact identities are hard gates.
 
 Logprob difference, timing, throughput, and cost are observations, not pre-run pass thresholds.
 
@@ -105,10 +105,10 @@ Current rule:
 ## Failure handling and stop conditions
 
 - Any environment, model-HTTP, test-collection, verifier-protocol, missing-reward, cleanup-unknown, NaN/Inf, TITO, mask, weight-identity, or checkpoint-reload failure is not a model reward zero.
-- A cleanup-unknown result stops new Daytona creation for that campaign. A cloud GPU sandbox with uncertain ownership or deletion state stops the run without adopting or deleting unrelated objects.
+- A cleanup-unknown result stops new Modal object creation for that campaign. A cloud GPU or task sandbox with uncertain ownership or deletion state stops the run without adopting or deleting unrelated objects.
 - The plan stops scaling when reward groups have no usable variance, dev repeatedly degrades, the registered wall-time/cost envelope is exceeded, or task/harness identities drift.
 - Failed runs keep immutable evidence and are read-only. Mutating phases do not auto-resume: a new attempt requires a new run/attempt identity, while the ledger prevents replay of provider creation or optimizer actions. A submitted `hlab` plan is never submitted twice after an uncertain response.
-- The Daytona credential is read by the short-lived controller from the existing private configuration and injected into the training sandbox as a provider secret only when nested CPU task creation is required. It must not enter committed configs, task sandboxes, model prompts, trajectories, or logs. The training sandbox and secret injection must be destroyed and confirmed by exact object identity.
+- Modal uses its runtime identity for nested Harbor CPU sandboxes; no Daytona credential is copied into cloud training. Provider identity must not enter committed configs, task sandboxes, model prompts, trajectories, or logs. Training and task objects must be destroyed and confirmed by exact object identity.
 
 ## Documentation and artifacts
 

@@ -20,6 +20,9 @@ class ModalGpuProbeTests(unittest.TestCase):
         self.assertEqual(ast.literal_eval(volume.args[0]), "sandbox-mopd-lab-m2")
         self.assertEqual({kw.arg: ast.literal_eval(kw.value) for kw in volume.keywords},
                          {"create_if_missing": True, "version": 2})
+        source = launcher.read_text()
+        self.assertIn('"torch": str(torch.__version__)', source)
+        self.assertIn('"cuda_runtime": str(torch.version.cuda)', source)
 
 
 if __name__ == "__main__":

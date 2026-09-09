@@ -4,9 +4,9 @@
 
 **Goal:** Close the runnable M1 boundary, prove a real Qwen3-4B binary-reward RL update/recovery chain, and conditionally scale the frozen training pool from 16 to 40 to 80 tasks without exposing final-test data.
 
-**Architecture:** Mac commits immutable source and plans; M1 inference remains an allowlisted `hlab` job on shared home-5090, while M2 training runs in a dedicated Daytona GPU sandbox with a Lab volume, or a separately frozen Modal GPU fallback if Daytona is unavailable. SkyRL owns training and colocated vLLM; the Lab custom generator runs Harbor trials against Daytona CPU sandboxes and returns exact token IDs, per-token rollout logprobs, masks, rewards, and weight identities. EvoCodeBench is a separate evaluation-only panel.
+**Architecture:** Mac commits immutable source and plans; M1 inference remains an allowlisted `hlab` job on shared home-5090, while M2 training runs on the selected Modal L40S fallback with a Lab Volume. SkyRL owns training and colocated vLLM; the Lab custom generator runs Harbor trials against Modal CPU sandboxes and returns exact token IDs, per-token rollout logprobs, masks, rewards, and weight identities. EvoCodeBench is a separate evaluation-only panel.
 
-**Tech Stack:** Python 3.12, SkyRL v0.2.0 锁定的 Harbor 0.4.0、Daytona、SkyRL custom `GeneratorInterface`、PyTorch/FSDP、vLLM、Qwen3-4B LoRA、`hlab`/systemd-user、JSON audit artifacts。Harbor 0.22 只属于 M1 已有隔离环境，不是 M2 运行身份。
+**Tech Stack:** Python 3.12, SkyRL v0.2.0 锁定的 Harbor 0.4.0、Modal 1.5.5、SkyRL custom `GeneratorInterface`、PyTorch/FSDP、vLLM、Qwen3-4B LoRA、`hlab`/systemd-user、JSON audit artifacts。Daytona和Harbor 0.22只属于M1已有隔离路径，不是M2运行身份。
 
 ---
 
@@ -84,15 +84,15 @@
 
 1. Add failing tests for exact provider/config identity, controller-only credential loading, provider-secret scoping, no secret propagation into task/model records, no Mac training, source-lock verification before writes, dedicated cloud-GPU and persistent-volume receipts, exact sandbox cleanup, durable summary phases, attempt-ledger exactly-once semantics, and no duplicate submission.
 2. Implement `prepare`, `capacity-canary`, `bringup`, and `scale` subcommands with explicit config paths; scripts only dispatch `python -m recipe.entrypoint`. Failed mutating runs are not auto-resumed or overwritten.
-3. Freeze an isolated Daytona image/snapshot plus Lab-specific durable volume. Do not alter the existing M0/M1 environment on home-5090.
-4. Add one bounded capability probe: one on-demand request with ordered RTX 5090 then RTX 4090 preference, no model download or training, at most ten minutes, no automatic retry; record GPU/runtime/disk/RAM/volume evidence and confirm exact deletion. A quota/capability rejection moves the plan to Modal without retry loops.
+3. Freeze an isolated Modal image plus Lab-specific durable Volume. Do not alter the existing M0/M1 environment on home-5090.
+4. Preserve the rejected one-shot Daytona result and its no-create cleanup proof; use the completed Modal L40S/CUDA/Volume probe as platform evidence without rerunning it.
 5. Run CPU/interface tests, commit, push, then execute the approved probe. Persist dependency versions and no-GPU-import setup evidence before the real capacity canary.
 
 ## Task 7: Execute and accept M2-A
 
 **Files:** `configs/m2-bringup.json`, current docs, remote audit artifacts.
 
-1. Generate and inspect an immutable Daytona GPU plan with one on-demand RTX 5090/4090 from the verified probe, exact timeout, Lab-only durable volume, nested Daytona CPU creation cap, and stop conditions; if the probe rejected Daytona, freeze the equivalent Modal plan instead.
+1. Generate and inspect an immutable Modal GPU plan with one L40S, exact timeout, Lab-only durable Volume, nested Modal CPU creation cap, and stop conditions.
 2. Submit once using the user's approved design note; save provider sandbox/App/call identities.
 3. Monitor by run ID. Never kill or adopt unknown processes.
 4. Validate a real 2-4 task chain: after invalid filtering at least one group retains >=2 samples with both reward 0 and 1; exact token/logprob/position/mask/weight-version alignment; finite loss/backward/optimizer; nonzero effective training tokens, advantage, pre-step policy gradient, and update; inference-side content receipt and next-rollout version binding; fresh-process reload; typed errors; and complete cleanup.

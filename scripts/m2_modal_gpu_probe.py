@@ -32,8 +32,8 @@ def gpu_probe():
         "device_name": device_name,
         "device_count": torch.cuda.device_count(),
         "gpu_memory_bytes": torch.cuda.get_device_properties(0).total_memory,
-        "torch": torch.__version__,
-        "cuda_runtime": torch.version.cuda,
+        "torch": str(torch.__version__),
+        "cuda_runtime": str(torch.version.cuda),
         "python": platform.python_version(),
         "volume_writable": True,
     }

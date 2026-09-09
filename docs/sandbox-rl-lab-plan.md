@@ -1,7 +1,7 @@
 # Sandbox RL Lab · 沙箱化 Agentic RL + 多师 OPD 实施计划书
 
 > 当前执行入口：[M2分阶段实施计划](superpowers/plans/2026-09-09-m2-binary-reward-scale.md)，M1剩余边界见[200题扩池计划](plans/2026-09-08-m1-200-case-plan.md)；独立边界：[README](../README.md)。M0已完成：G1推理、G2授权8并发降级、G3正常阶段链路通过；2026-09-08用户取消M0-G4冷准备速度门槛，非将历史失败改成通过。M1的200题资产已装配，TB代表性接入、overfit_16与train/dev基线仍待完成，因此尚未验收。物理根目录统一为 `sandbox-rl-MOPD-lab/`，下文实验命名 `sandbox-rl-lab` 保留用于 W&B。
-> 用户已排除 RunPod，Mac 仅编辑/控制/短时检查、不启动实际长期服务。M1纯推理留在共享HOME-5090并与Ollama共存；M2训练暂不使用HOME-5090，首选Daytona单GPU，功能/配额不成立时回退Modal。Daytona CPU继续承担任务沙箱。用户报告 Daytona $200 credits，但官方账单文档说明免费credit不可用于GPU，余额/有效期/实际GPU配额仍须实测。两家 smoke 见 [EXPERIMENTS](EXPERIMENTS.md)，运行预算见 [BUDGET](BUDGET.md)。用户已授权独立仓库每批验证后提交推送。
+> 用户已排除 RunPod，Mac 仅编辑/控制/短时检查、不启动实际长期服务。M1纯推理留在共享HOME-5090并与Ollama共存；M2训练不使用HOME-5090。Daytona GPU的一次性请求已被提供商拒绝并确认无残留，现选择Modal单卡L40S；Harbor CPU任务沙箱也切到Modal，避免向训练容器传Daytona密钥。两家探测见 [EXPERIMENTS](EXPERIMENTS.md)，运行预算见 [BUDGET](BUDGET.md)。用户已授权独立仓库每批验证后提交推送。
 
 > 目标：以最小成本在真沙箱（容器）环境里跑通长程 agentic RL 全链路，并完成两个有原创价值的实验：
 > ① **Runtime 稳定性三臂消融**——定量回答"不稳定的执行环境到底给 RL 训练带来多大伤害、以何种机制伤害"；
@@ -21,9 +21,9 @@
 |---|---|---|
 | Mac (24GB) | 指挥部 | 代码编写、结果分析、短时控制；不跑模型、沙箱或常驻服务 |
 | 5090 服务器 (32GB, sm_120) | M1筛选与调试 | vLLM 推理与 agent 调度，与Ollama共存；实时资源不足即不启动，不停止其他人的进程；M2训练暂不在此运行 |
-| Daytona CPU Sandbox | 大规模工具执行首选 | 先通过小规模 smoke 与配额检查，再按计划扩并发；不自动等同 GPU 训练平台 |
-| Daytona GPU | M2云训练首选 | 单个专用GPU沙箱内共置rollout(vLLM)与LoRA训练；先验GPU配额、运行栈和持久卷，spot不用于正确性验收 |
-| Modal GPU | M2训练回退 | Daytona功能、配额或付费路径不成立时启用；另行冻结卡型、Volume、时限与预算 |
+| Daytona CPU Sandbox | M0/M1既有工具执行 | M1按既有凭据与清理契约继续；不向M2云训练容器传递密钥 |
+| Daytona GPU | 已拒绝的M2首选探测 | 一次性创建在provider阶段被拒绝，已确认无归属对象；本campaign不重试 |
+| Modal L40S + CPU Sandbox | 当前M2训练与工具执行 | GPU/Volume能力探测已通过；Harbor 0.4任务兼容和完整栈capacity canary通过后才训练 |
 
 home-5090 的筛选任务经已注册 hlab recipe 执行；没有 recipe 时先接入，不使用临时 SSH 后台训练。后文 pod 一词泛指云训练资源，不代表 RunPod，也不要求内嵌 Docker。
 
@@ -44,7 +44,7 @@ home-5090 的筛选任务经已注册 hlab recipe 执行；没有 recipe 时先�
 | 模型 | **Qwen3-4B**（bf16）| 降级预案：任务学不动 → Qwen3-8B；升级预案：都太容易 → 加难任务而非换模型 |
 | RL 框架 | **SkyRL + Harbor**（主）| 起点：Mercor 的 ApexAgents-SkyRL-Recipe 仓库结构；不按耗时自动切框架，只有已复现接口/实现阻塞且替代路线能满足同一判据时才另立迁移决策 |
 | 微调 | LoRA rank 32, alpha 64, 全线性层 | 优化器只吃 LoRA 参数；具体卡型容量和 colocate 可行性由 M2 实测 |
-| 沙箱 | Harbor 原生 Daytona 优先，Modal 做有界对照 | 沙箱与 GPU 分离；同一 M3 三臂保持 provider 不变 |
+| 沙箱 | M1沿用Daytona；M2使用Harbor原生Modal | 沙箱与 GPU 分离；同一 M3 三臂保持 provider 不变 |
 | Rollout | vLLM ≥0.8，同 pod | `gpu_memory_utilization` 训练/推理分割按 M2 实测定 |
 | 算法 | GRPO + 组内 baseline；配方见 0.4 | dense 模型，无需 GSPO |
 | 蒸馏 | 自写 OPD 脚本（peft + vLLM + HF forward）| OPD 无需 RL 机器，teacher 只前向 |
@@ -91,7 +91,7 @@ home-5090 的筛选任务经已注册 hlab recipe 执行；没有 recipe 时先�
    # 16k 上下文、4k 输出与工具调用需实际验收；不在共享 venv 临时安装。
    ```
    云沙箱已按最新授权实测16再8；采用8并发降级，原16失败证据保留。不混用provider结果，不要求安装主机Docker。
-3. **执行环境准备**：home-5090已通过固定prepare/probe完成依赖、模型与真实推理验证；工具沙箱使用Daytona。2026-09-08用户取消首次从零准备≤20分钟检查，不再为此重装或重下模型；依赖版本、模型身份与运行正确性仍需验证。
+3. **执行环境准备**：home-5090已通过固定prepare/probe完成M1依赖、模型与真实推理验证；M1工具沙箱使用Daytona，M2训练及工具沙箱使用Modal。2026-09-08用户取消首次从零准备≤20分钟检查，不再为此重装或重下模型；依赖版本、模型身份与运行正确性仍需验证。
 4. **Harbor 熟悉**：实际沙箱位于 Daytona/Modal，完整 trial 控制与 agent loop 最终落 5090；Mac 只允许短时接入 smoke。跑通官方示例 env start → agent.run → verify → teardown，确切 task 格式见 `docs/HARBOR_NOTES.md`。
 
 ### Gate M0
@@ -369,7 +369,7 @@ G2/G3是必交科学结果，不强迫结果为正。实验交付完整与“证
 
 ```bash
 # home-5090：仅M1经hlab doctor/projects/recipes → 精确 commit/plan → 保存 run_id
-# 云端训练：Daytona GPU优先，Modal回退；明确Sandbox/App ID、持久卷、超时和清理
+# 云端训练：Daytona GPU探测已拒绝，使用Modal L40S；明确Sandbox/App ID、持久卷、超时和清理
 # 收工：checkpoint/证据保存 → 记录费用 → 精确停止并查询确认
 # 断线后按 run_id 恢复；不通过 tmux/nohup 绕过 hlab
 ```

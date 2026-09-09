@@ -30,13 +30,14 @@
     "peft": "0.18.1",
     "flash_attn": "2.8.3+cu12torch2.10cxx11abiTRUE",
     "flashinfer_python": "0.6.6",
-    "daytona": "0.210.0"
+    "modal": "1.5.5"
   },
   "target": {
     "training_platform_order": [
       "daytona",
       "modal"
     ],
+    "selected_training_platform": "modal",
     "home5090_training": false,
     "gpu_count": 1,
     "persistence_required": true
@@ -44,11 +45,8 @@
   "entrypoint": "examples.train_integrations.harbor.entrypoints.main_harbor",
   "execution_ready": false,
   "unverified": [
-    "daytona_gpu_quota_not_probed",
-    "daytona_gpu_runtime_not_probed",
-    "daytona_volume_persistence_not_probed",
     "harbor_0.4_task_compatibility_not_run",
-    "daytona_single_gpu_capacity_canary_not_run",
+    "modal_single_gpu_capacity_canary_not_run",
     "strict_stepwise_bridge_not_implemented"
   ]
 }

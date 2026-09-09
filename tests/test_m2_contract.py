@@ -1,4 +1,7 @@
 import copy
+import hashlib
+import json
+from pathlib import Path
 import unittest
 
 from lab_runtime import m2_contract
@@ -33,8 +36,9 @@ class M2ContractTests(unittest.TestCase):
                         "torch": "2.10.0+cu128", "vllm": "0.19.0", "ray": "2.51.1",
                         "transformers": "5.3.0", "peft": "0.18.1",
                         "flash_attn": "2.8.3", "flashinfer_python": "0.6.6",
-                        "daytona": "0.161.0"},
+                        "modal": "1.5.5"},
             "target": {"training_platform_order": ["daytona", "modal"],
+                       "selected_training_platform": "modal",
                        "home5090_training": False, "gpu_count": 1,
                        "persistence_required": True},
             "entrypoint": "examples.train_integrations.harbor.entrypoints.main_harbor",
@@ -54,8 +58,8 @@ class M2ContractTests(unittest.TestCase):
             "trajectory": {"api": "chat/completions", "step_wise_trajectories": True,
                            "merge_stepwise_output": False, "return_token_ids": True,
                            "return_token_logprobs": True, "template_sha256": "1" * 64},
-            "training_backend": {"type": "daytona", "gpu_count": 1,
-                                 "gpu_types": ["RTX-5090", "RTX-4090"], "spot": False,
+            "training_backend": {"type": "modal", "gpu_count": 1,
+                                 "gpu_types": ["L40S"], "spot": False,
                                  "persistence": "volume"},
             "placement": {"gpu_isolation": "dedicated_cloud_sandbox", "colocate_all": True,
                           "run_engines_locally": True, "vllm_sleep_wake": True,
@@ -70,13 +74,13 @@ class M2ContractTests(unittest.TestCase):
                         "use_kl_loss": False, "cpu_offload": True,
                         "micro_train_batch_size_per_gpu": 1,
                         "micro_forward_batch_size_per_gpu": 1},
-            "provider": {"type": "daytona",
-                         "credential_source": "injected_secret_env",
-                         "credential_env": "DAYTONA_API_KEY", "cpus": 1, "memory_mb": 1024,
+            "provider": {"type": "modal",
+                         "credential_source": "modal_runtime_identity",
+                         "cpus": 1, "memory_mb": 1024,
                          "storage_mb": 3072, "network": False, "ttl_seconds": 300},
             "limits": {"max_updates": 1, "max_generated_tokens": 32768,
                        "max_training_tokens": 32768, "max_wall_seconds": 5400,
-                       "max_created_sandboxes": 8, "daytona_concurrency": 4},
+                       "max_created_sandboxes": 8, "modal_concurrency": 4},
             "required_evidence": {"mixed_valid_group_count_min": 1,
                                   "valid_samples_per_mixed_group_min": 2,
                                   "effective_loss_tokens_min": 1,
@@ -106,7 +110,7 @@ class M2ContractTests(unittest.TestCase):
         paths = (("sources", "skyrl", "commit"), ("sources", "skyrl", "uv_lock_sha256"),
                  ("sources", "harbor", "commit"), ("model", "revision"),
                  ("model", "model_manifest_sha256"), ("runtime", "torch"),
-                 ("runtime", "peft"), ("runtime", "daytona"),
+                 ("runtime", "peft"), ("runtime", "modal"),
                  ("target", "training_platform_order"), ("target", "home5090_training"),
                  (None, "entrypoint"), (None, "execution_ready"),
                  (None, "unverified"))
@@ -181,7 +185,7 @@ class M2ContractTests(unittest.TestCase):
         for key, value in (("max_updates", 0), ("max_updates", 2),
                            ("max_generated_tokens", 32769),
                            ("max_training_tokens", 32769),
-                           ("max_wall_seconds", 86401), ("daytona_concurrency", 9),
+                           ("max_wall_seconds", 86401), ("modal_concurrency", 9),
                            ("max_created_sandboxes", 7), ("max_created_sandboxes", 9)):
             broken = copy.deepcopy(config)
             broken["limits"][key] = value
@@ -236,6 +240,19 @@ class M2ContractTests(unittest.TestCase):
                          m2_contract.canonical_sha256({"a": 3, "b": [2, 1]}))
         with self.assertRaises(ValueError):
             m2_contract.canonical_sha256({"bad": {1, 2}})
+
+    def test_committed_bringup_config_matches_current_files(self):
+        root = Path(__file__).resolve().parents[1]
+        config_path = root / "configs/m2-bringup.json"
+        manifest_path = root / "configs/m1-pool-v2-r2.json"
+        lock_path = root / "configs/m2-stack-lock.json"
+        config = json.loads(config_path.read_text())
+        manifest = json.loads(manifest_path.read_text())
+        lock = json.loads(lock_path.read_text())
+        self.assertEqual(m2_contract.validate_run_config(
+            config, manifest, lock,
+            manifest_sha256=hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+            stack_lock_sha256=hashlib.sha256(lock_path.read_bytes()).hexdigest()), config)
 
 
 if __name__ == "__main__":
