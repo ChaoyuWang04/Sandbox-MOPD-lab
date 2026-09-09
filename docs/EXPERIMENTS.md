@@ -14,6 +14,8 @@ Daytona一次性GPU探测已按源码`adf118ab706306d51321b06403c43777aa0d9d6b`�
 
 锁定Harbor提交的官方源码已逐字核对：0.4.0包含`ModalEnvironment`，支持直接Dockerfile任务、GPU、Volume、禁网和明确终止；因此M2任务沙箱也切到Modal，不把Daytona key复制进Modal训练容器。该上游创建/终止层带两次暂态重试，正式M2适配器仍需把授权计数和cleanup-unknown停机规则接到真实路径；`harbor_0.4_task_compatibility_not_run`继续阻止训练。
 
+为避免用GPU发现简单依赖缺口，CPU-only App `ap-g4KROwURhyoXoOkVkXodGD`先检查官方`novaskyai/skyrl-train-ray-2.51.1-py3.12-cu12.8`镜像：它只预装Ray2.51.1，系统Python中torch/vLLM/Transformers/PEFT/Modal/Harbor包均未安装，终态按预注册规则记`mismatch`。这不是CUDA或训练失败，而是证明官方示例依赖`uv run`在挂载源码上另建环境。后续capacity canary因此显式叠加已锁torch2.10.0、vLLM0.19.0、Transformers5.3.0、PEFT0.18.1和Modal1.5.5；先做Qwen3-4B推理→vLLM level-1 sleep→单步LoRA反向/更新/保存→wake→再次推理，不创建Harbor任务沙箱。它通过后仍需独立验证SkyRL/Harbor真实入口，不能单凭直接组件canary清空全部未验项。
+
 ## M1 当前状态 · 实施中，未验收
 
 ### M1-close 运行与首次熔断修复

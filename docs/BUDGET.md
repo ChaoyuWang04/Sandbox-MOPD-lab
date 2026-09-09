@@ -14,6 +14,8 @@ Daytona探测实际在创建阶段被提供商拒绝，约12秒结束；未获�
 
 Modal探测App `ap-QyoWdSR0v7NW5lUMUO0CZM`已停止且tasks=0，从创建到停止约90秒（含容器等待与执行，镜像构建另约77秒）；不拿App墙钟直接冒充精确计费GPU秒数，按最保守300秒上界仍为$0.1626。没有第二次GPU重跑。后续M2-A训练和最多8个任务沙箱的精确预算仍须在capacity canary实测后冻结；Modal任务沙箱不使用Daytona credits。
 
+官方SkyRL镜像的CPU-only依赖预检App `ap-g4KROwURhyoXoOkVkXodGD`无GPU、无模型、无训练，发现镜像仅提供Ray基础层，所需训练包须另装。下一次capacity canary预注册单张L40S、8 CPU、64GiB内存、最长1800秒、并发1、重试0；按上限计算GPU $0.9756、CPU约$0.1886、内存约$0.2557，合计函数资源约$1.42，另有镜像构建/网络/Volume小额。它只做两次短推理和一个合成LoRA optimizer step，不创建任务沙箱；仅在M1 train-screen通过后提交一次，失败不自动重跑。
+
 ## 200题扩池：分层验证，取消全池双对照预算
 
 ### M1-close 冻结批次（已准备，未运行）
