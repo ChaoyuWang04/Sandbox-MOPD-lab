@@ -51,6 +51,8 @@
 
 ## Task 3: Implement exact trajectory and TITO contracts
 
+**Status 2026-09-09:** dependency-light builder/validator and five fail-closed tests are implemented; real generator consumption remains Task 4 and the stack lock stays not execution-ready.
+
 **Files:** create `recipe/tito.py`, `tests/test_m2_tito.py`; extend `lab_runtime/m2_contract.py`.
 
 1. Add failing tests for `/chat/completions + return_token_ids` step-wise prompt/generated token preservation, one finite rollout logprob per generated token, position/mask/weight-version alignment, contiguous per-trajectory turns and exact terminal markers, bounded tool-observation context, EOS/stop handling, context truncation, no transcript re-tokenization, and all-ones assistant response masks.

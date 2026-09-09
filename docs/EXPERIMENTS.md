@@ -20,6 +20,8 @@ capacity canary的固定序列仍为Qwen3-4B推理→vLLM level-1 sleep→单步
 
 第三版CPU-only App `ap-c0GyD06nsxh38uIRMzqcei`完成固定提交的冻结安装并已停止、tasks=0；272个包按`uv.lock`安装，所有核心包匹配，仅预登记的Python3.12.3/Modal1.5.5与实际SkyRL venv的Python3.12.12/Modal1.4.1不同，故首次严格比较正确返回`mismatch`。两项按锁文件和实际venv更正后，CPU-only App `ap-swJKIZzHvQTaDRxDBUvq3r`复用镜像完成逐项相等核对并正常停止：Python3.12.12、torch2.10.0+cu128、vLLM0.19.0、Transformers5.3.0、PEFT0.18.1、Ray2.51.1、Modal1.4.1、Harbor0.4.0全部匹配。预检未请求GPU；镜像内无NVIDIA driver的提示是CPU函数预期现象，不是GPU失败。
 
+固定SkyRL提交的`GeneratorOutput`和step-wise官方契约已用于实现`recipe/tito.py`的依赖无关构造/验真层：每个LLM turn保存推理引擎返回的prompt/response token、逐token rollout logprob、显式position、全1 response mask、模板SHA、权重版本、截断和观测长度；最后一步最后一个token承载0/1结果，轨迹必须连续。5项测试先取得缺模块RED，再覆盖单token、logprob、position、mask、模板、权重版本和边界篡改的fail-closed。该层拒绝文本字段，不能对trace事后重tokenize；当前仍未接入真实SkyRL generator，故`strict_stepwise_bridge_not_implemented`继续保留。
+
 ## M1 当前状态 · train-screen终止于科学门槛，未验收
 
 新的train-screen使用源码`adf118ab706306d51321b06403c43777aa0d9d6b`、plan `plan-sandbox-rl-mopd-20260909t041738z-ae521390`、run `run-sandbox-rl-mopd-20260909t041753z-fd79237d`在home-5090非独占GPU入口完成。80/80次均为有效reward，invalid=0、reward0=77、reward1=3，逐次verifier、agent阶段私有材料隔离和Daytona清理均完整；累计沙箱生命周期4155.700秒、估算$0.077254且`billing_verified=false`。两次出现组内0/1混合的题都是`self-v2-resource_lifetime-00/01`，其余18组零方差；A8+B8规则因此得到`selection_ready=false`、空`overfit_16`和`phase_accepted=false`。详细summary SHA256为`5f82248ecbb3aa876da3e3365cff7b80a555d0bae788f93fc886db5e8c104f64`；wrapper记录峰值自有显存23302MiB、自有进程组已退出。该结果证明80次推理/判分/回收链路可运行，也说明当前候选不足以构造冻结的overfit16；它不是infra失败，不授权dev20、Modal GPU canary或M2训练，且不通过放宽选择规则或追加同身份样本来改写。
