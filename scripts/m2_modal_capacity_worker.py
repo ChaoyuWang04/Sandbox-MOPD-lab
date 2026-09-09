@@ -43,7 +43,7 @@ def main() -> None:
                "model_revision": MODEL_REVISION}
     try:
         expected = {"torch": "2.10.0", "vllm": "0.19.0", "transformers": "5.3.0",
-                    "peft": "0.18.1", "ray": "2.51.1", "modal": "1.5.5",
+                    "peft": "0.18.1", "ray": "2.51.1", "modal": "1.4.1",
                     "harbor": "0.4.0"}
         observed = {"torch": str(torch.__version__).split("+")[0],
                     "vllm": str(vllm.__version__),

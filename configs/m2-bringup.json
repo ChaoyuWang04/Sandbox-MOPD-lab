@@ -4,7 +4,7 @@
   "pool_manifest": "configs/m1-pool-v2-r2.json",
   "pool_manifest_sha256": "c98a74d88d3641a02c8e9ce40505f9e4f1b26f17042aae43cab801367c600f5b",
   "stack_lock": "configs/m2-stack-lock.json",
-  "stack_lock_sha256": "a80f5fd8e1cfb612612f66b80921094ab56c9e7fa5d45238e04f4e017b34be81",
+  "stack_lock_sha256": "9bed979951323f27169da204052afb0d4db406429422aff6d1a027f2502be504",
   "start_checkpoint_sha256": "ee8091f8197d0dd4c54bfa0054672bee2787270a020966c9f1ddde78329fd65b",
   "task_ids": [
     "data_csv-train-00",

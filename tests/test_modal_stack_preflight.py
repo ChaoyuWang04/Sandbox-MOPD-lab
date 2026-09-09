@@ -20,6 +20,8 @@ class ModalStackPreflightTests(unittest.TestCase):
         self.assertIn("eddb418dd4c560db9d43ffde561f1c5e669c8990", source)
         self.assertIn("uv sync --frozen --extra fsdp --extra harbor --no-dev", source)
         self.assertIn("/root/SkyRL/.venv/bin/python", source)
+        self.assertIn('"python": "3.12.12"', source)
+        self.assertIn('"modal": "1.4.1"', source)
         self.assertNotIn("uv_pip_install", source)
 
 

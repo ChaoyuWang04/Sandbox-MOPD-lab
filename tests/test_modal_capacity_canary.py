@@ -24,6 +24,7 @@ class ModalCapacityCanaryTests(unittest.TestCase):
         self.assertIn("/root/SkyRL/.venv/bin/python", source)
         self.assertIn("Qwen/Qwen3-4B", worker)
         self.assertIn("1cfa9a7208912126459214e8b04321603b3df60c", worker)
+        self.assertIn('"modal": "1.4.1"', worker)
         self.assertIn("LLM(", worker)
         self.assertIn("llm.sleep(level=1)", worker)
         self.assertIn("loss.backward()", worker)

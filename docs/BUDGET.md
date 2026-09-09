@@ -16,6 +16,8 @@ Modal探测App `ap-QyoWdSR0v7NW5lUMUO0CZM`已停止且tasks=0，从创建到停�
 
 官方SkyRL镜像的CPU-only依赖预检App `ap-g4KROwURhyoXoOkVkXodGD`无GPU、无模型、无训练，发现镜像仅提供Ray基础层，所需训练包须另装。第二个CPU-only App `ap-TrZzCMlvSnkHSf7vv0W3kx`也未分配GPU、未下载模型或训练；普通pip在镜像构建时发现vLLM0.19的Transformers `<5`声明与SkyRL锁定5.3冲突并停止。固定SkyRL源码明确依靠uv override及锁文件解决该冲突，后续CPU预检与canary改用`uv sync --frozen --extra fsdp --extra harbor --no-dev`，不以绕过依赖或降级凑绿。下一次capacity canary预注册单张L40S、8 CPU、64GiB内存、最长1800秒、并发1、重试0；按上限计算GPU $0.9756、CPU约$0.1886、内存约$0.2557，合计函数资源约$1.42，另有镜像构建/网络/Volume小额。它只做两次短推理和一个合成LoRA optimizer step，不创建任务沙箱；仅在M1 train-screen通过后提交一次，失败不自动重跑。
 
+第三个CPU-only App `ap-c0GyD06nsxh38uIRMzqcei`完成272包冻结安装并已停止、tasks=0；首次严格比较只发现SkyRL venv实际Python3.12.12、Modal1.4.1与原登记3.12.3/1.5.5不同，其他核心包匹配。更正后CPU-only App `ap-swJKIZzHvQTaDRxDBUvq3r`复用镜像完成精确PASS并正常停止。两次均不申请GPU、不下载Qwen模型；镜像构建/网络费用待账单，不把CPU App墙钟换算成GPU消费。
+
 ## 200题扩池：分层验证，取消全池双对照预算
 
 ### M1-close 冻结批次（train-screen已终止，未通过选择门槛）

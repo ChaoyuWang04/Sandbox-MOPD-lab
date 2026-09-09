@@ -32,9 +32,9 @@ print(json.dumps({'python': platform.python_version(),
     completed = subprocess.run(["/root/SkyRL/.venv/bin/python", "-c", code],
                                text=True, capture_output=True, timeout=120, check=True)
     observed = json.loads(completed.stdout.strip())
-    expected = {"python": "3.12.3", "packages": {
+    expected = {"python": "3.12.12", "packages": {
         "torch": "2.10.0+cu128", "vllm": "0.19.0", "transformers": "5.3.0",
-        "peft": "0.18.1", "ray": "2.51.1", "modal": "1.5.5", "harbor": "0.4.0"}}
+        "peft": "0.18.1", "ray": "2.51.1", "modal": "1.4.1", "harbor": "0.4.0"}}
     receipt = {"schema_version": 1, "phase": "complete" if observed == expected else "mismatch",
                "expected": expected, "observed": observed}
     return json.dumps(receipt, sort_keys=True)

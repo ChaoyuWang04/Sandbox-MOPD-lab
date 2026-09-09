@@ -6,7 +6,7 @@
 
 **Architecture:** Mac commits immutable source and plans; M1 inference remains an allowlisted `hlab` job on shared home-5090, while M2 training runs on the selected Modal L40S fallback with a Lab Volume. SkyRL owns training and colocated vLLM; the Lab custom generator runs Harbor trials against Modal CPU sandboxes and returns exact token IDs, per-token rollout logprobs, masks, rewards, and weight identities. EvoCodeBench is a separate evaluation-only panel.
 
-**Tech Stack:** Python 3.12, SkyRL v0.2.0 锁定的 Harbor 0.4.0、Modal 1.5.5、SkyRL custom `GeneratorInterface`、PyTorch/FSDP、vLLM、Qwen3-4B LoRA、`hlab`/systemd-user、JSON audit artifacts。Daytona和Harbor 0.22只属于M1已有隔离路径，不是M2运行身份。
+**Tech Stack:** SkyRL锁定venv的Python 3.12.12、SkyRL v0.2.0、Harbor 0.4.0、Modal SDK 1.4.1、SkyRL custom `GeneratorInterface`、PyTorch/FSDP、vLLM、Qwen3-4B LoRA、`hlab`/systemd-user、JSON audit artifacts。Mac侧Modal控制器保持Lab自身锁定的1.5.5；Daytona和Harbor 0.22只属于M1已有隔离路径，不是M2训练runtime身份。
 
 ---
 
