@@ -63,6 +63,8 @@
 
 ## Task 4: Implement the Harbor-to-SkyRL generator bridge
 
+**Status 2026-09-09:** 依赖注入式纯桥接层和5项fail-closed测试已实现：消费精确chat-completion token/logprob、保持逐步顺序、整组剔除无效轨迹、记录mixed group和usage，并在取消或失败时只按已知trajectory ID回收。真实Harbor 0.4 `ModalEnvironment`适配与冻结SkyRL `GeneratorInterface`进程内兼容仍未运行；本项代码完成不清除这两个真实入口门槛。
+
 **Files:** create `recipe/generator.py`, `tests/test_m2_generator.py`; reuse `lab_runtime/m1_agent.py`, SWE hooks, and cleanup helpers without copying policy logic.
 
 1. Add failing tests using fake inference/trial adapters for endpoint discovery, exact model name, input order, frozen group ID and `n_samples_per_prompt`, valid reward 0/1, invalid exclusion, mixed-within-group detection, stop reasons, cancellation, late usage, and known-ID cleanup.

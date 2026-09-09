@@ -1,6 +1,6 @@
 # Sandbox RL Lab · 沙箱化 Agentic RL + 多师 OPD 实施计划书
 
-> 当前执行入口：[M2分阶段实施计划](superpowers/plans/2026-09-09-m2-binary-reward-scale.md)，M1剩余边界见[200题扩池计划](plans/2026-09-08-m1-200-case-plan.md)；独立边界：[README](../README.md)。M0已完成：G1推理、G2授权8并发降级、G3正常阶段链路通过；2026-09-08用户取消M0-G4冷准备速度门槛，非将历史失败改成通过。M1的200题资产已装配，TB代表性接入、overfit_16与train/dev基线仍待完成，因此尚未验收。物理根目录统一为 `sandbox-rl-MOPD-lab/`，下文实验命名 `sandbox-rl-lab` 保留用于 W&B。
+> 当前执行入口：[M2分阶段实施计划](superpowers/plans/2026-09-09-m2-binary-reward-scale.md)，M1剩余边界见[200题扩池计划](plans/2026-09-08-m1-200-case-plan.md)；独立边界：[README](../README.md)。M0已完成：G1推理、G2授权8并发降级、G3正常阶段链路通过；2026-09-08用户取消M0-G4冷准备速度门槛，非将历史失败改成通过。M1的200题资产和TB代表性接入已完成；home-5090上的80次train-screen全部有效，但只有2个混合reward题组，未达到A8+B8 `overfit_16`冻结门槛，因此按规则停止且dev20未运行，M1尚未验收。物理根目录统一为 `sandbox-rl-MOPD-lab/`，下文实验命名 `sandbox-rl-lab` 保留用于 W&B。
 > 用户已排除 RunPod，Mac 仅编辑/控制/短时检查、不启动实际长期服务。M1纯推理留在共享HOME-5090并与Ollama共存；M2训练不使用HOME-5090。Daytona GPU的一次性请求已被提供商拒绝并确认无残留，现选择Modal单卡L40S；Harbor CPU任务沙箱也切到Modal，避免向训练容器传Daytona密钥。两家探测见 [EXPERIMENTS](EXPERIMENTS.md)，运行预算见 [BUDGET](BUDGET.md)。用户已授权独立仓库每批验证后提交推送。
 
 > 目标：以最小成本在真沙箱（容器）环境里跑通长程 agentic RL 全链路，并完成两个有原创价值的实验：

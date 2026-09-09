@@ -20,7 +20,7 @@ capacity canary的固定序列仍为Qwen3-4B推理→vLLM level-1 sleep→单步
 
 第三版CPU-only App `ap-c0GyD06nsxh38uIRMzqcei`完成固定提交的冻结安装并已停止、tasks=0；272个包按`uv.lock`安装，所有核心包匹配，仅预登记的Python3.12.3/Modal1.5.5与实际SkyRL venv的Python3.12.12/Modal1.4.1不同，故首次严格比较正确返回`mismatch`。两项按锁文件和实际venv更正后，CPU-only App `ap-swJKIZzHvQTaDRxDBUvq3r`复用镜像完成逐项相等核对并正常停止：Python3.12.12、torch2.10.0+cu128、vLLM0.19.0、Transformers5.3.0、PEFT0.18.1、Ray2.51.1、Modal1.4.1、Harbor0.4.0全部匹配。预检未请求GPU；镜像内无NVIDIA driver的提示是CPU函数预期现象，不是GPU失败。
 
-固定SkyRL提交的`GeneratorOutput`和step-wise官方契约已用于实现`recipe/tito.py`的依赖无关构造/验真层：每个LLM turn保存推理引擎返回的prompt/response token、逐token rollout logprob、显式position、全1 response mask、模板SHA、权重版本、截断和观测长度；最后一步最后一个token承载0/1结果，轨迹必须连续。5项测试先取得缺模块RED，再覆盖单token、logprob、position、mask、模板、权重版本和边界篡改的fail-closed。该层拒绝文本字段，不能对trace事后重tokenize；当前仍未接入真实SkyRL generator，故`strict_stepwise_bridge_not_implemented`继续保留。
+固定SkyRL提交的`GeneratorOutput`和step-wise官方契约已用于实现`recipe/tito.py`的依赖无关构造/验真层：每个LLM turn保存推理引擎返回的prompt/response token、逐token rollout logprob、显式position、全1 response mask、模板SHA、权重版本、截断和观测长度；最后一步最后一个token承载0/1结果，轨迹必须连续。5项TITO测试先取得缺模块RED，再覆盖单token、logprob、position、mask、模板、权重版本和边界篡改的fail-closed。`recipe/generator.py`进一步实现依赖注入式Harbor→SkyRL纯桥接层，5项测试覆盖精确请求/输出顺序、整组无效剔除、mixed-group统计、非负训练步、身份/采样漂移、取消回收和零有效组审计。两层都拒绝文本字段，不能对trace事后重tokenize；但尚未在冻结SkyRL进程内和真实Harbor 0.4 `ModalEnvironment`上运行，因此真实入口的`strict_stepwise_bridge_not_implemented`与`harbor_0.4_task_compatibility_not_run`仍保留。
 
 ## M1 当前状态 · train-screen终止于科学门槛，未验收
 
